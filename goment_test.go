@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewNoDateCallsNow(t *testing.T) {
-	testTime := time.Date(2000, 12, 15, 17, 8, 00, 0, time.UTC)
+func TestNewNoDate(t *testing.T) {
+	testTime := time.Date(2000, 12, 15, 17, 8, 0, 0, time.UTC)
 	timeNow = func() time.Time {
 		return testTime
 	}
@@ -17,4 +17,24 @@ func TestNewNoDateCallsNow(t *testing.T) {
 	if assert.NoError(t, err) {
 		assert.Equal(t, lib.DateTime, testTime)
 	}
+}
+
+func TestNewFromISOString(t *testing.T) {
+	date := "2011-05-13"
+	testTime := time.Date(2011, 5, 13, 0, 0, 0, 0, time.UTC)
+
+	lib, err := New(date)
+	if assert.NoError(t, err) {
+		assert.Equal(t, lib.DateTime, testTime)
+	}
+}
+
+func TestNewThrowErrorFromInvalidISOString(t *testing.T) {
+	_, err := New("2011-05a13")
+	assert.EqualError(t, err, "Not a matching ISO-8601 date")
+}
+
+func TestNewThrowErrorIfTooManyArgs(t *testing.T) {
+	_, err := New("2018-01-01", "YYYY-MM-DD")
+	assert.EqualError(t, err, "Invalid number of arguments")
 }
