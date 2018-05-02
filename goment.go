@@ -10,7 +10,7 @@ var timeNow = time.Now
 
 // Goment is the main class.
 type Goment struct {
-	DateTime time.Time
+	time time.Time
 }
 
 // New creates an instance of the Goment library.
@@ -26,6 +26,8 @@ func New(args ...interface{}) (*Goment, error) {
 			return fromExistingTime(v)
 		case int64:
 			return fromUnixNanoseconds(v)
+		case *Goment:
+			return fromGoment(v)
 		default:
 			return &Goment{}, errors.New("Invalid argument type")
 		}
@@ -38,6 +40,23 @@ func New(args ...interface{}) (*Goment, error) {
 func Unix(unixSeconds int64) (*Goment, error) {
 	t := time.Unix(unixSeconds, 0)
 	return createGoment(t)
+}
+
+// Clone creates a new copy of the Goment instance.
+func (g *Goment) Clone() *Goment {
+	copy, _ := New()
+	copy.time = g.ToTime()
+
+	return copy
+}
+
+// ToTime returns the time.Time object that is wrapped by Goment.
+func (g *Goment) ToTime() time.Time {
+	return g.time
+}
+
+func fromGoment(g *Goment) (*Goment, error) {
+	return g.Clone(), nil
 }
 
 func fromNow() (*Goment, error) {
@@ -58,7 +77,6 @@ func fromExistingTime(t time.Time) (*Goment, error) {
 }
 
 func fromISOString(date string) (*Goment, error) {
-	// Use whatever tz is parsed for now, need to figure out if we should convert to Local.
 	parsed, err := parseISOString(date)
 	if err != nil {
 		return &Goment{}, err
