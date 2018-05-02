@@ -23,7 +23,7 @@ func New(args ...interface{}) (*Goment, error) {
 		case string:
 			return fromISOString(v)
 		case time.Time:
-			return fromTime(v)
+			return fromExistingTime(v)
 		case int64:
 			return fromUnixNanoseconds(v)
 		default:
@@ -35,27 +35,42 @@ func New(args ...interface{}) (*Goment, error) {
 }
 
 // Unix creates an instance of the Goment library from the Unix timestamp (seconds since the Unix Epoch).
-func Unix(seconds int64) (*Goment, error) {
-	return fromTime(time.Unix(seconds, 0))
+func Unix(unixSeconds int64) (*Goment, error) {
+	t := time.Unix(unixSeconds, 0)
+	return createGoment(toLocalTime(t))
 }
 
 func fromNow() (*Goment, error) {
-	return fromTime(timeNow())
+	// Convert current time to Local.
+	now := timeNow()
+	return createGoment(toLocalTime(now))
 }
 
 func fromUnixNanoseconds(unixNano int64) (*Goment, error) {
-	return fromTime(time.Unix(0, unixNano))
+	// Convert time to Local.
+	t := time.Unix(0, unixNano)
+	return createGoment(toLocalTime(t))
+}
+
+func fromExistingTime(t time.Time) (*Goment, error) {
+	// Convert existing time to Local.
+	return createGoment(toLocalTime(t))
 }
 
 func fromISOString(date string) (*Goment, error) {
+	// Use whatever tz is parsed for now, need to figure out if we should convert to Local.
 	parsed, err := parseISOString(date)
 	if err != nil {
 		return &Goment{}, err
 	}
 
-	return fromTime(parsed)
+	return createGoment(parsed)
 }
 
-func fromTime(time time.Time) (*Goment, error) {
-	return &Goment{time}, nil
+func toLocalTime(t time.Time) time.Time {
+	return t.Local()
+}
+
+func createGoment(t time.Time) (*Goment, error) {
+	return &Goment{t}, nil
 }
