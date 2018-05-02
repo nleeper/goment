@@ -24,6 +24,8 @@ func New(args ...interface{}) (*Goment, error) {
 			return fromISOString(v)
 		case time.Time:
 			return fromTime(v)
+		case int64:
+			return fromUnixNanoseconds(v)
 		default:
 			return &Goment{}, errors.New("Invalid argument type")
 		}
@@ -32,12 +34,17 @@ func New(args ...interface{}) (*Goment, error) {
 	}
 }
 
+// Unix creates an instance of the Goment library from the Unix timestamp (seconds since the Unix Epoch).
+func Unix(seconds int64) (*Goment, error) {
+	return fromTime(time.Unix(seconds, 0))
+}
+
 func fromNow() (*Goment, error) {
 	return fromTime(timeNow())
 }
 
-func fromTime(time time.Time) (*Goment, error) {
-	return &Goment{time}, nil
+func fromUnixNanoseconds(unixNano int64) (*Goment, error) {
+	return fromTime(time.Unix(0, unixNano))
 }
 
 func fromISOString(date string) (*Goment, error) {
@@ -47,4 +54,8 @@ func fromISOString(date string) (*Goment, error) {
 	}
 
 	return fromTime(parsed)
+}
+
+func fromTime(time time.Time) (*Goment, error) {
+	return &Goment{time}, nil
 }

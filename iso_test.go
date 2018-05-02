@@ -41,6 +41,6 @@ func TestISOParsing(t *testing.T) {
 func assertParsed(t *testing.T, date string, testTime time.Time) {
 	parsed, err := parseISOString(date)
 	if assert.NoError(t, err) {
-		assert.Equal(t, parsed, testTime)
+		assert.True(t, testTime.Equal(parsed))
 	}
 }
