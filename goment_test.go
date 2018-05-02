@@ -15,7 +15,7 @@ func TestNewNoDate(t *testing.T) {
 
 	lib, err := New()
 	if assert.NoError(t, err) {
-		assert.Equal(t, lib.DateTime, testTime)
+		assert.True(t, testTime.Equal(lib.DateTime))
 	}
 }
 
@@ -25,7 +25,7 @@ func TestNewFromISOString(t *testing.T) {
 
 	lib, err := New(date)
 	if assert.NoError(t, err) {
-		assert.Equal(t, lib.DateTime, testTime)
+		assert.True(t, testTime.Equal(lib.DateTime))
 	}
 }
 
@@ -34,7 +34,16 @@ func TestNewFromTime(t *testing.T) {
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
-		assert.Equal(t, lib.DateTime, testTime)
+		assert.True(t, testTime.Equal(lib.DateTime))
+	}
+}
+
+func TestNewFromUnixMilliseconds(t *testing.T) {
+	testTime := time.Now()
+
+	lib, err := New(testTime.UnixNano())
+	if assert.NoError(t, err) {
+		assert.True(t, testTime.Equal(lib.DateTime))
 	}
 }
 
@@ -51,4 +60,16 @@ func TestNewThrowErrorFromInvalidISOString(t *testing.T) {
 func TestNewThrowErrorIfTooManyArgs(t *testing.T) {
 	_, err := New("2018-01-01", "YYYY-MM-DD")
 	assert.EqualError(t, err, "Invalid number of arguments")
+}
+
+func TestUnixFromSeconds(t *testing.T) {
+	// time.Unix does not have microsecond info, so we must
+	// compare the Unix versions of the time.
+	testTime := time.Now()
+	testTimeUnix := time.Unix(testTime.Unix(), 0)
+
+	lib, err := Unix(testTime.Unix())
+	if assert.NoError(t, err) {
+		assert.True(t, testTimeUnix.Equal(lib.DateTime))
+	}
 }
