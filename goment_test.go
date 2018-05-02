@@ -29,6 +29,20 @@ func TestNewFromISOString(t *testing.T) {
 	}
 }
 
+func TestNewFromTime(t *testing.T) {
+	testTime := time.Date(2015, 11, 10, 5, 30, 0, 0, time.UTC)
+
+	lib, err := New(testTime)
+	if assert.NoError(t, err) {
+		assert.Equal(t, lib.DateTime, testTime)
+	}
+}
+
+func TestNewThrowErrorFromInvalidArgumentType(t *testing.T) {
+	_, err := New(1)
+	assert.EqualError(t, err, "Invalid argument type")
+}
+
 func TestNewThrowErrorFromInvalidISOString(t *testing.T) {
 	_, err := New("2011-05a13")
 	assert.EqualError(t, err, "Not a matching ISO-8601 date")
