@@ -8,7 +8,7 @@ import (
 )
 
 func TestNewNoDate(t *testing.T) {
-	testTime := time.Date(2000, 12, 15, 17, 8, 0, 0, time.UTC)
+	testTime := time.Date(2000, 12, 15, 17, 8, 0, 0, time.Local)
 	timeNow = func() time.Time {
 		return testTime
 	}

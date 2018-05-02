@@ -37,19 +37,19 @@ func New(args ...interface{}) (*Goment, error) {
 // Unix creates an instance of the Goment library from the Unix timestamp (seconds since the Unix Epoch).
 func Unix(unixSeconds int64) (*Goment, error) {
 	t := time.Unix(unixSeconds, 0)
-	return createGoment(toLocalTime(t))
+	return createGoment(t)
 }
 
 func fromNow() (*Goment, error) {
 	// Convert current time to Local.
 	now := timeNow()
-	return createGoment(toLocalTime(now))
+	return createGoment(now)
 }
 
 func fromUnixNanoseconds(unixNano int64) (*Goment, error) {
 	// Convert time to Local.
 	t := time.Unix(0, unixNano)
-	return createGoment(toLocalTime(t))
+	return createGoment(t)
 }
 
 func fromExistingTime(t time.Time) (*Goment, error) {
