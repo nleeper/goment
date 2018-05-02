@@ -132,7 +132,7 @@ func parseISOString(date string) (time.Time, error) {
 
 		if match[4] != "" {
 			if tzRegex.MatchString(match[4]) {
-				tzFormat = "Z"
+				tzFormat = "-0700"
 			} else {
 				return time.Time{}, errors.New("Invalid timezone format")
 			}

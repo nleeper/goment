@@ -15,7 +15,8 @@ func TestNewNoDate(t *testing.T) {
 
 	lib, err := New()
 	if assert.NoError(t, err) {
-		assert.True(t, testTime.Equal(lib.DateTime))
+		assert.True(t, testTime.Local().Equal(lib.DateTime))
+		assert.True(t, lib.DateTime.Location() == time.Local)
 	}
 }
 
@@ -26,6 +27,7 @@ func TestNewFromISOString(t *testing.T) {
 	lib, err := New(date)
 	if assert.NoError(t, err) {
 		assert.True(t, testTime.Equal(lib.DateTime))
+		assert.True(t, lib.DateTime.Location() == time.UTC)
 	}
 }
 
@@ -35,6 +37,7 @@ func TestNewFromTime(t *testing.T) {
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
 		assert.True(t, testTime.Equal(lib.DateTime))
+		assert.True(t, lib.DateTime.Location() == time.Local)
 	}
 }
 
@@ -44,6 +47,17 @@ func TestNewFromUnixMilliseconds(t *testing.T) {
 	lib, err := New(testTime.UnixNano())
 	if assert.NoError(t, err) {
 		assert.True(t, testTime.Equal(lib.DateTime))
+		assert.True(t, lib.DateTime.Location() == time.Local)
+	}
+}
+
+func TestNewFromTimeConvertUTCToLocal(t *testing.T) {
+	testNow := time.Now()
+
+	lib, err := New(testNow.UTC())
+	if assert.NoError(t, err) {
+		assert.Equal(t, lib.DateTime, testNow.Local())
+		assert.True(t, lib.DateTime.Location() == time.Local)
 	}
 }
 
@@ -71,5 +85,6 @@ func TestUnixFromSeconds(t *testing.T) {
 	lib, err := Unix(testTime.Unix())
 	if assert.NoError(t, err) {
 		assert.True(t, testTimeUnix.Equal(lib.DateTime))
+		assert.True(t, lib.DateTime.Location() == time.Local)
 	}
 }
