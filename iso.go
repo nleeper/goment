@@ -49,6 +49,18 @@ var isoTimes = []isoTimeFormat{
 //     ['YYYYDDD', /\d{7}/]
 // ]
 
+// var isoTimes = [
+//     ['HH:mm:ss.SSSS', /\d\d:\d\d:\d\d\.\d+/],
+//     ['HH:mm:ss,SSSS', /\d\d:\d\d:\d\d,\d+/],
+//     ['HH:mm:ss', /\d\d:\d\d:\d\d/],
+//     ['HH:mm', /\d\d:\d\d/],
+//     ['HHmmss.SSSS', /\d\d\d\d\d\d\.\d+/],
+//     ['HHmmss,SSSS', /\d\d\d\d\d\d,\d+/],
+//     ['HHmmss', /\d\d\d\d\d\d/],
+//     ['HHmm', /\d\d\d\d/],
+//     ['HH', /\d\d/]
+// ]
+
 type isoTimeFormat struct {
 	Format string
 	Regex  *regexp.Regexp
