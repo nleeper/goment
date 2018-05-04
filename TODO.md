@@ -1,9 +1,9 @@
 # TODO list for Goment
 * goment.go
-    * ToTime
-        * should return a clone of time.Time wrapped by Goment. Currently it returns the actual time.Time object, and is used internally by other functions.
     * fromISOString
         * uses whatever timezone is parsed for now, need to figure out if we should convert to Local. 
+    * fromExistingTime
+        * currently converts the time to Local. Should it?
 * iso.go
     * need to handle YYYYYY date formats, like +002006-01-02
     * need to handle time formats with commas, like 15:04:05,9999
@@ -11,6 +11,8 @@
     * need better test coverage
     * examine regexs and figure out if all are needed
 * add.go
+    * make sure the normalization of dates is well documented and consistent, whether it defaults to how Go handles it (Nov 31st becomes Dec 1st) or how Moment.js handles it (Nov 31st becomes Nov 30th)
+* subtract.go
     * make sure the normalization of dates is well documented and consistent, whether it defaults to how Go handles it (Nov 31st becomes Dec 1st) or how Moment.js handles it (Nov 31st becomes Nov 30th)
 * getters.go
     * [implement Weekday method, make locale aware](https://momentjs.com/docs/#/get-set/weekday/)

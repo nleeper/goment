@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-// Add mutates the original moment by adding time.
+// Add mutates the original Goment by adding time.
 func (g *Goment) Add(args ...interface{}) *Goment {
 	if len(args) > 0 {
 		switch val := args[0].(type) {

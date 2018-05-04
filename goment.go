@@ -60,13 +60,11 @@ func fromGoment(g *Goment) (*Goment, error) {
 }
 
 func fromNow() (*Goment, error) {
-	// Convert current time to Local.
 	now := timeNow()
 	return createGoment(now)
 }
 
 func fromUnixNanoseconds(unixNano int64) (*Goment, error) {
-	// Convert time to Local.
 	t := time.Unix(0, unixNano)
 	return createGoment(t)
 }

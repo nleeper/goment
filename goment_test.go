@@ -91,21 +91,6 @@ func TestNewThrowErrorIfTooManyArgs(t *testing.T) {
 	assert.EqualError(t, err, "Invalid number of arguments")
 }
 
-// func TestToTimeReturnsCopyOfInternalTime(t *testing.T) {
-//     testTime := time.Date(2011, 5, 13, 0, 0, 0, 0, time.UTC)
-
-//     lib, err := New(testTime)
-//     if assert.NoError(t, err) {
-//             internal := lib.ToTime()
-//             assert.True(t, internal.Equal(lib.ToTime()))
-
-//             internal.Add(time.Duration(time.Hour * 6))
-//             fmt.Println(internal)
-//             fmt.Println(lib.ToTime())
-//             assert.False(t, internal.Equal(lib.ToTime()))
-//     }
-// }
-
 func TestCloneReturnsClone(t *testing.T) {
 	testTime := time.Date(2011, 5, 13, 0, 0, 0, 0, time.UTC)
 
