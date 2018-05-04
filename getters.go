@@ -119,12 +119,12 @@ func (g *Goment) ISOWeekYear() int {
 	return year
 }
 
-// WeeksInYear gets the number of weeks according to locale in the current moment's year.
+// WeeksInYear gets the number of weeks according to locale in the current Goment's year.
 func (g *Goment) WeeksInYear() int {
 	return 0
 }
 
-// ISOWeeksInYear gets the number of weeks in the current moment's year, according to ISO weeks.
+// ISOWeeksInYear gets the number of weeks in the current Goment's year, according to ISO weeks.
 func (g *Goment) ISOWeeksInYear() int {
 	return 0
 }
