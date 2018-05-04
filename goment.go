@@ -70,8 +70,7 @@ func fromUnixNanoseconds(unixNano int64) (*Goment, error) {
 }
 
 func fromExistingTime(t time.Time) (*Goment, error) {
-	// Convert existing time to Local.
-	return createGoment(toLocalTime(t))
+	return createGoment(t)
 }
 
 func fromISOString(date string) (*Goment, error) {
@@ -81,10 +80,6 @@ func fromISOString(date string) (*Goment, error) {
 	}
 
 	return createGoment(parsed)
-}
-
-func toLocalTime(t time.Time) time.Time {
-	return t.Local()
 }
 
 func createGoment(t time.Time) (*Goment, error) {
