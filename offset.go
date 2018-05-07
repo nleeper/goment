@@ -31,5 +31,6 @@ func (g *Goment) SetUTCOffset(offset int) *Goment {
 
 	loc := time.FixedZone("Offset", offset*multiplier)
 	g.time = g.ToTime().In(loc)
+
 	return g
 }

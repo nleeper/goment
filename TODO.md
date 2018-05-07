@@ -7,6 +7,9 @@
 * iso.go
     * need to handle YYYYYY date formats, like +002006-01-02
     * need to handle time formats with commas, like 15:04:05,9999
+    * need to investigate nanosecond parsing - when parsing something like 2011-04-02 03:04:05.10
+        * becomes 2011-04-02 03:04:05.1 +0000 UTC
+        * if construct same date with time.Date(2011, 4, 2, 3, 4, 5, 10, time.UTC), it becomes 2011-04-02 03:04:05.00000001 +0000 UTC
     * combine isoDateFormat & isoTimeFormat structs to common struct
     * need better test coverage
     * examine regexs and figure out if all are needed
@@ -28,3 +31,6 @@
 * start_end_of.go
     * need to handle StartOf('week'), must be locale aware
     * need to handle EndOf('week'), must be locale aware
+    * simplify repeated units across files
+* _test.go
+    * add messages to asserts

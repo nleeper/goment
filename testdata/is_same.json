@@ -1,0 +1,410 @@
+{
+    "no_units": {
+        "date": "2011-04-02 03:04:05.10",
+        "cases": [
+            {
+                "unit": "",
+                "true": [
+                    {
+                        "message": "millisecond match",
+                        "date": "2011-04-02 03:04:05.10"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "year is later",
+                        "date": "2012-04-02 03:04:05.10"
+                    },
+                    {
+                        "message": "year is earlier",
+                        "date": "2010-04-02 03:04:05.10"
+                    },
+                    {
+                        "message": "month is later",
+                        "date": "2011-05-02 03:04:05.10"
+                    },
+                    {
+                        "message": "month is earlier",
+                        "date": "2011-03-02 03:04:05.10"
+                    },
+                    {
+                        "message": "day is later",
+                        "date": "2011-04-03 03:04:05.10"
+                    },
+                    {
+                        "message": "day is earlier",
+                        "date": "2011-04-01 03:04:05.10"
+                    },
+                    {
+                        "message": "hour is later",
+                        "date": "2011-04-02 04:04:05.10"
+                    },
+                    {
+                        "message": "hour is earlier",
+                        "date": "2011-04-02 02:04:05.10"
+                    },
+                    {
+                        "message": "minute is later",
+                        "date": "2011-04-02 03:05:05.10"
+                    },
+                    {
+                        "message": "minute is earlier",
+                        "date": "2011-04-02 03:03:05.10"
+                    },
+                    {
+                        "message": "second is later",
+                        "date": "2011-04-02 03:04:06.10"
+                    },
+                    {
+                        "message": "second is earlier",
+                        "date": "2011-04-02 03:04:04.10"
+                    },
+                    {
+                        "message": "nanosecond is later",
+                        "date": "2011-04-02 03:04:05.11"
+                    },
+                    {
+                        "message": "nanosecond is earlier",
+                        "date": "2011-04-02 03:04:05.09"
+                    }
+                ]
+            }
+        ]
+    },
+    "year": {
+        "date": "2011-02-02 03:04:05.06",
+        "cases": [
+            {
+                "unit": "year",
+                "true": [
+                    {
+                        "message": "year match",
+                        "date": "2011-06-06 07:08:09.10"
+                    },
+                    {
+                        "message": "exact start of year",
+                        "date": "2011-01-01 00:00:00"
+                    },
+                    {
+                        "message": "exact end of year",
+                        "date": "2011-12-31 23:59:59.999999999"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "year mismatch",
+                        "date": "2012-06-06 07:08:09.10"
+                    },
+                    {
+                        "message": "start of next year",
+                        "date": "2012-01-01 00:00:00"
+                    },
+                    {
+                        "message": "end of previous year",
+                        "date": "2010-12-31 23:59:59.999999999"
+                    }
+                ]
+            },
+            {
+                "unit": "years",
+                "true": [
+                    {
+                        "message": "plural should work",
+                        "date": "2011-06-06 07:08:09.10"
+                    }
+                ],
+                "false": []
+            }
+        ]
+    },
+    "month": {
+        "date": "2011-03-03 04:05:06.07",
+        "cases": [
+            {
+                "unit": "month",
+                "true": [
+                    {
+                        "message": "month match",
+                        "date": "2011-03-06 07:08:09.10"
+                    },
+                    {
+                        "message": "exact start of month",
+                        "date": "2011-03-01 00:00:00"
+                    },
+                    {
+                        "message": "exact end of month",
+                        "date": "2011-03-31 23:59:59.999999999"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "year mismatch",
+                        "date": "2012-03-06 07:08:09.10"
+                    },
+                    {
+                        "message": "month mismatch",
+                        "date": "2011-06-06 07:08:09.10"
+                    },
+                    {
+                        "message": "start of next month",
+                        "date": "2011-04-01 00:00:00"
+                    },
+                    {
+                        "message": "end of previous month",
+                        "date": "2011-02-27 23:59:59.999999999"
+                    }
+                ]
+            },
+            {
+                "unit": "months",
+                "true": [
+                    {
+                        "message": "plural should work",
+                        "date": "2011-03-06 07:08:09.10"
+                    }
+                ],
+                "false": []
+            }
+        ]
+    },
+    "day": {
+        "date": "2011-02-02 03:04:05.06",
+        "cases": [
+            {
+                "unit": "day",
+                "true": [
+                    {
+                        "message": "day match",
+                        "date": "2011-02-02 07:08:09.10"
+                    },
+                    {
+                        "message": "exact start of day",
+                        "date": "2011-02-02 00:00:00.000"
+                    },
+                    {
+                        "message": "exact end of day",
+                        "date": "2011-02-02 23:59:59.999999999"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "year mismatch",
+                        "date": "2012-02-02 07:08:09.10"
+                    },
+                    {
+                        "message": "month mismatch",
+                        "date": "2011-03-02 07:08:09.10"
+                    },
+                    {
+                        "message": "day mismatch",
+                        "date": "2011-02-03 07:08:09.10"
+                    },
+                    {
+                        "message": "start of next day",
+                        "date": "2011-02-03 00:00:00.000"
+                    },
+                    {
+                        "message": "end of previous day",
+                        "date": "2011-02-01 23:59:59.999999999"
+                    }
+                ]
+            },
+            {
+                "unit": "days",
+                "true": [
+                    {
+                        "message": "plural should work",
+                        "date": "2011-02-02 07:08:09.10"
+                    }
+                ],
+                "false": []
+            }
+        ]
+    },
+    "hour": {
+        "date": "2011-02-02 03:04:05.06",
+        "cases": [
+            {
+                "unit": "hour",
+                "true": [
+                    {
+                        "message": "hour match",
+                        "date": "2011-02-02 03:08:09.10"
+                    },
+                    {
+                        "message": "exact start of hour",
+                        "date": "2011-02-02 03:00:00.000"
+                    },
+                    {
+                        "message": "exact end of hour",
+                        "date": "2011-02-02 03:59:59.999999999"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "year mismatch",
+                        "date": "2012-02-02 03:08:09.10"
+                    },
+                    {
+                        "message": "month mismatch",
+                        "date": "2011-03-02 03:08:09.10"
+                    },
+                    {
+                        "message": "day mismatch",
+                        "date": "2011-02-03 03:08:09.10"
+                    },
+                    {
+                        "message": "hour mismatch",
+                        "date": "2011-02-02 04:08:09.10"
+                    },
+                    {
+                        "message": "start of next hour",
+                        "date": "2011-02-02 04:00:00.000"
+                    },
+                    {
+                        "message": "end of previous hour",
+                        "date": "2011-02-02 02:59:59.999999999"
+                    }
+                ]
+            },
+            {
+                "unit": "hours",
+                "true": [
+                    {
+                        "message": "plural should work",
+                        "date": "2011-02-02 03:08:09.10"
+                    }
+                ],
+                "false": []
+            }
+        ]
+    },
+    "minute": {
+        "date": "2011-02-02 03:04:05.06",
+        "cases": [
+            {
+                "unit": "minute",
+                "true": [
+                    {
+                        "message": "minute match",
+                        "date": "2011-02-02 03:04:09.10"
+                    },
+                    {
+                        "message": "exact start of minute",
+                        "date": "2011-02-02 03:04:00.000"
+                    },
+                    {
+                        "message": "exact end of minute",
+                        "date": "2011-02-02 03:04:59.999999999"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "year mismatch",
+                        "date": "2012-02-02 03:04:09.10"
+                    },
+                    {
+                        "message": "month mismatch",
+                        "date": "2011-03-02 03:04:09.10"
+                    },
+                    {
+                        "message": "day mismatch",
+                        "date": "2011-02-03 03:04:09.10"
+                    },
+                    {
+                        "message": "hour mismatch",
+                        "date": "2011-02-02 04:04:09.10"
+                    },
+                    {
+                        "message": "minute mismatch",
+                        "date": "2011-02-02 03:05:09.10"
+                    },
+                    {
+                        "message": "start of next minute",
+                        "date": "2011-02-02 03:05:00.000"
+                    },
+                    {
+                        "message": "end of previous minute",
+                        "date": "2011-02-02 03:03:59.999999999"
+                    }
+                ]
+            },
+            {
+                "unit": "minutes",
+                "true": [
+                    {
+                        "message": "plural should work",
+                        "date": "2011-02-02 03:04:09.10"
+                    }
+                ],
+                "false": []
+            }
+        ]
+    },
+    "second": {
+        "date": "2011-02-02 03:04:05.06",
+        "cases": [
+            {
+                "unit": "second",
+                "true": [
+                    {
+                        "message": "second match",
+                        "date": "2011-02-02 03:04:05.10"
+                    },
+                    {
+                        "message": "exact start of second",
+                        "date": "2011-02-02 03:04:05.000"
+                    },
+                    {
+                        "message": "exact end of second",
+                        "date": "2011-02-02 03:04:05.999999999"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "year mismatch",
+                        "date": "2012-02-02 03:04:05.10"
+                    },
+                    {
+                        "message": "month mismatch",
+                        "date": "2011-03-02 03:04:05.10"
+                    },
+                    {
+                        "message": "day mismatch",
+                        "date": "2011-02-03 03:04:05.10"
+                    },
+                    {
+                        "message": "hour mismatch",
+                        "date": "2011-02-02 04:04:05.10"
+                    },
+                    {
+                        "message": "minute mismatch",
+                        "date": "2011-02-02 03:05:05.10"
+                    },
+                    {
+                        "message": "second mismatch",
+                        "date": "2011-02-02 03:04:06.10"
+                    },
+                    {
+                        "message": "start of next second",
+                        "date": "2011-02-02 03:04:06.000"
+                    },
+                    {
+                        "message": "end of previous second",
+                        "date": "2011-02-02 03:04:04.999999999"
+                    }
+                ]
+            },
+            {
+                "unit": "seconds",
+                "true": [
+                    {
+                        "message": "plural should work",
+                        "date": "2011-02-02 03:04:05.10"
+                    }
+                ],
+                "false": []
+            }
+        ]
+    }
+}

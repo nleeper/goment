@@ -5,9 +5,9 @@ import (
 	"time"
 )
 
-// Get is a string getter using the unit. Returns 0 if unsupported property.
-func (g *Goment) Get(unit string) int {
-	switch unit {
+// Get is a string getter using the units. Returns 0 if unsupported property.
+func (g *Goment) Get(units string) int {
+	switch units {
 	case "y", "year", "years":
 		return g.Year()
 	case "M", "month", "months":
@@ -129,9 +129,9 @@ func (g *Goment) ISOWeeksInYear() int {
 	return 0
 }
 
-// Set is a generic setter, accepting unit as the first argument, and value as the second.
-func (g *Goment) Set(unit string, value int) *Goment {
-	switch unit {
+// Set is a generic setter, accepting units as the first argument, and value as the second.
+func (g *Goment) Set(units string, value int) *Goment {
+	switch units {
 	case "y", "year", "years":
 		return g.SetYear(value)
 	case "M", "month", "months":
@@ -296,12 +296,4 @@ func (g *Goment) DaysInMonth() int {
 
 func daysInMonth(month, year int) int {
 	return time.Date(year, time.Month(month+1), 0, 0, 0, 0, 0, time.UTC).Day()
-}
-
-// Query functions
-
-// IsLeapYear returns true if that year is a leap year, and false if it is not.
-func (g *Goment) IsLeapYear() bool {
-	last := time.Date(g.Year()+1, 1, 0, 0, 0, 0, 0, time.UTC).YearDay()
-	return last == 366
 }

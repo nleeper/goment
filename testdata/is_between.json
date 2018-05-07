@@ -1,0 +1,646 @@
+{
+    "no_units": {
+        "date": "2011-04-02 03:04:05.10",
+        "cases": [
+            {
+                "unit": "",
+                "true": [
+                    {
+                        "message": "year is between",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10"
+                    },
+                    {
+                        "message": "month is between",
+                        "date": "2011-03-02 03:04:05.10",
+                        "later_date": "2011-05-02 03:04:05.10"
+                    },
+                    {
+                        "message": "day is between",
+                        "date": "2011-04-01 03:04:05.10",
+                        "later_date": "2011-04-03 03:04:05.10"
+                    },
+                    {
+                        "message": "hour is between",
+                        "date": "2011-04-02 02:04:05.10",
+                        "later_date": "2011-04-02 04:04:05.10"
+                    },
+                    {
+                        "message": "minute is between",
+                        "date": "2011-04-02 03:03:05.10",
+                        "later_date": "2011-04-02 03:05:05.10"
+                    },
+                    {
+                        "message": "second is between",
+                        "date": "2011-04-02 03:04:04.10",
+                        "later_date": "2011-04-02 03:04:06.10"
+                    },
+                    {
+                        "message": "minute is between",
+                        "date": "2011-04-02 03:04:05.09",
+                        "later_date": "2011-04-02 03:04:05.11"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "year is later",
+                        "date": "2009-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10"
+                    },
+                    {
+                        "message": "year is earlier",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2013-04-02 03:04:05.10"
+                    },
+                    {
+                        "message": "month is later",
+                        "date": "2011-02-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10"
+                    },
+                    {
+                        "message": "month is earlier",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2011-06-02 03:04:05.10"
+                    },
+                    {
+                        "message": "day is later",
+                        "date": "2011-04-01 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10"
+                    },
+                    {
+                        "message": "day is earlier",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2011-04-04 03:04:05.10"
+                    },
+                    {
+                        "message": "hour is later",
+                        "date": "2011-04-02 02:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10"
+                    },
+                    {
+                        "message": "hour is earlier",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 05:04:05.10"
+                    },
+                    {
+                        "message": "minute is later",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:06:05.10"
+                    },
+                    {
+                        "message": "minute is earlier",
+                        "date": "2011-04-02 03:02:05.10",
+                        "later_date": "2011-04-02 03:04:05.10"
+                    },
+                    {
+                        "message": "second is later",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:07.10"
+                    },
+                    {
+                        "message": "second is earlier",
+                        "date": "2011-04-02 03:04:03.10",
+                        "later_date": "2011-04-02 03:04:05.10"
+                    },
+                    {
+                        "message": "millisecond is later",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.12"
+                    },
+                    {
+                        "message": "millisecond is earlier",
+                        "date": "2011-04-02 03:04:05.08",
+                        "later_date": "2011-04-02 03:04:05.10"
+                    }
+                ]
+            }
+        ]
+    },
+    "year": {
+        "date": "2011-02-02 03:04:05.06",
+        "cases": [
+            {
+                "unit": "year",
+                "true": [
+                    {
+                        "message": "year is between",
+                        "date": "2010-06-06 07:08:09.10",
+                        "later_date": "2012-06-06 07:08:09.10"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "year match",
+                        "date": "2011-06-06 07:08:09.10",
+                        "later_date": "2011-06-06 07:08:09.10"
+                    },
+                    {
+                        "message": "year is earlier",
+                        "date": "2011-06-06 07:08:09.10",
+                        "later_date": "2013-06-06 07:08:09.10"
+                    },
+                    {
+                        "message": "year is later",
+                        "date": "2010-06-06 07:08:09.10",
+                        "later_date": "2011-06-06 07:08:09.10"
+                    }
+                ]
+            },
+            {
+                "unit": "years",
+                "true": [
+                    {
+                        "message": "plural should work",
+                        "date": "2010-06-06 07:08:09.10",
+                        "later_date": "2012-06-06 07:08:09.10"
+                    }
+                ],
+                "false": []
+            }
+        ]
+    },
+    "month": {
+        "date": "2011-02-02 03:04:05.06",
+        "cases": [
+            {
+                "unit": "month",
+                "true": [
+                    {
+                        "message": "month is between",
+                        "date": "2011-01-31 23:59:59.999999999",
+                        "later_date": "2011-03-01 00:00:00.000"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "month match",
+                        "date": "2011-02-06 07:08:09.10",
+                        "later_date": "2011-02-06 07:08:09.10"
+                    },
+                    {
+                        "message": "month is earlier",
+                        "date": "2011-02-06 07:08:09.10",
+                        "later_date": "2011-03-06 07:08:09.10"
+                    },
+                    {
+                        "message": "month is later",
+                        "date": "2011-12-06 07:08:09.10",
+                        "later_date": "2011-02-06 07:08:09.10"
+                    }
+                ]
+            },
+            {
+                "unit": "months",
+                "true": [
+                    {
+                        "message": "plural should work",
+                        "date": "2011-01-06 07:08:09.10",
+                        "later_date": "2011-03-06 07:08:09.10"
+                    }
+                ],
+                "false": []
+            }
+        ]
+    },
+    "day": {
+        "date": "2011-02-02 03:04:05.06",
+        "cases": [
+            {
+                "unit": "day",
+                "true": [
+                    {
+                        "message": "day is between",
+                        "date": "2011-02-01 07:08:09.10",
+                        "later_date": "2011-02-03 07:08:09.10"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "day match",
+                        "date": "2011-02-02 07:08:09.10",
+                        "later_date": "2011-02-02 07:08:09.10"
+                    },
+                    {
+                        "message": "day is earlier",
+                        "date": "2011-02-02 07:08:09.10",
+                        "later_date": "2011-02-04 07:08:09.10"
+                    },
+                    {
+                        "message": "day is later",
+                        "date": "2011-02-01 07:08:09.10",
+                        "later_date": "2011-02-02 07:08:09.10"
+                    }
+                ]
+            },
+            {
+                "unit": "days",
+                "true": [
+                    {
+                        "message": "plural should work",
+                        "date": "2011-02-01 07:08:09.10",
+                        "later_date": "2011-02-03 07:08:09.10"
+                    }
+                ],
+                "false": []
+            }
+        ]
+    },
+    "hour": {
+        "date": "2011-02-02 03:04:05.06",
+        "cases": [
+            {
+                "unit": "hour",
+                "true": [
+                    {
+                        "message": "hour is between",
+                        "date": "2011-02-02 02:59:59.999999999",
+                        "later_date": "2011-02-02 04:00:00.000"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "hour match",
+                        "date": "2011-02-02 03:05:09.10",
+                        "later_date": "2011-02-02 03:09:09.10"
+                    },
+                    {
+                        "message": "hour is earlier",
+                        "date": "2011-02-02 07:08:09.10",
+                        "later_date": "2011-02-02 07:08:09.10"
+                    },
+                    {
+                        "message": "hour is later",
+                        "date": "2011-02-02 07:08:09.10",
+                        "later_date": "2011-02-02 07:08:09.10"
+                    }
+                ]
+            },
+            {
+                "unit": "hours",
+                "true": [
+                    {
+                        "message": "plural should work",
+                        "date": "2011-02-02 01:59:59.999999999",
+                        "later_date": "2011-02-02 04:00:00.000"
+                    }
+                ],
+                "false": []
+            }
+        ]
+    },
+    "minute": {
+        "date": "2011-02-02 03:04:05.06",
+        "cases": [
+            {
+                "unit": "minute",
+                "true": [
+                    {
+                        "message": "minute is between",
+                        "date": "2011-02-02 03:03:59.999999999",
+                        "later_date": "2011-02-02 03:05:00.000"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "minute match",
+                        "date": "2011-02-02 03:04:09.10",
+                        "later_date": "2011-02-02 03:04:09.10"
+                    },
+                    {
+                        "message": "minute is earlier",
+                        "date": "2011-02-02 03:05:00.000",
+                        "later_date": "2011-02-02 03:08:09.10"
+                    },
+                    {
+                        "message": "minute is later",
+                        "date": "2011-02-02 03:02:09.10",
+                        "later_date": "2011-02-02 03:03:59.999999999"
+                    }
+                ]
+            },
+            {
+                "unit": "minutes",
+                "true": [
+                    {
+                        "message": "plural should work",
+                        "date": "2011-02-02 03:03:09.10",
+                        "later_date": "2011-02-02 03:05:09.10"
+                    }
+                ],
+                "false": []
+            }
+        ]
+    },
+    "second": {
+        "date": "2011-02-02 03:04:05.06",
+        "cases": [
+            {
+                "unit": "second",
+                "true": [
+                    {
+                        "message": "second is between",
+                        "date": "2011-02-02 03:04:04.999999999",
+                        "later_date": "2011-02-02 03:04:06.000"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "second match",
+                        "date": "2011-02-02 03:04:05.10",
+                        "later_date": "2011-02-02 03:04:05.10"
+                    },
+                    {
+                        "message": "second is earlier",
+                        "date": "2011-02-02 03:04:06.000",
+                        "later_date": "2011-02-02 03:04:07.10"
+                    },
+                    {
+                        "message": "second is later",
+                        "date": "2011-02-02 03:04:03.10",
+                        "later_date": "2011-02-02 03:04:04.999999999"
+                    }
+                ]
+            },
+            {
+                "unit": "seconds",
+                "true": [
+                    {
+                        "message": "plural should work",
+                        "date": "2011-02-02 03:04:04.10",
+                        "later_date": "2011-02-02 03:04:06.10"
+                    }
+                ],
+                "false": []
+            }
+        ]
+    },
+    "no_units_inclusivity": {
+        "date": "2011-04-02 03:04:05.10",
+        "cases": [
+            {
+                "unit": "",
+                "true": [
+                    {
+                        "message": "start and end are excluded, is between",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "()"
+                    },
+                    {
+                        "message": "start is excluded and end is included should succeed on end date",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "(]"
+                    },
+                    {
+                        "message": "start is excluded and end is included, is between",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "(]"
+                    },
+                    {
+                        "message": "start is included and end is excluded should succeed on same start date",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "[)"
+                    },
+                    {
+                        "message": "start is included and end is excluded, is between",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "[)"
+                    },
+                    {
+                        "message": "start and end inclusive should succeed on same start date",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "[]"
+                    },
+                    {
+                        "message": "start and end inclusive should succeed on same end date",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "[]"
+                    },
+                    {
+                        "message": "start and end inclusive, is between",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "[]"
+                    },
+                    {
+                        "message": "start and end inclusive, should handle same end and start date",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "[]"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "start and end are excluded, start is equal to goment",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "()"
+                    },
+                    {
+                        "message": "start and end are excluded, end is equal to goment",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "()"
+                    },
+                    {
+                        "message": "start and end are excluded, is not between",
+                        "date": "2009-04-02 03:04:05.10",
+                        "later_date": "2010-04-02 03:04:05.10",
+                        "inclusivity": "()"
+                    },
+                    {
+                        "message": "start and end are excluded, should fail on same start/end date",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "()"
+                    },
+                    {
+                        "message": "start is excluded and end is included should fail on same start date",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "(]"
+                    },
+                    {
+                        "message": "start is excluded and end is included, is not between",
+                        "date": "2009-04-02 03:04:05.10",
+                        "later_date": "2010-04-02 03:04:05.10",
+                        "inclusivity": "(]"
+                    },
+                    {
+                        "message": "start is excluded and end is included, should fail on same start/end date",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "(]"
+                    },
+                    {
+                        "message": "start is included and end is excluded should fail on same end date",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "[)"
+                    },
+                    {
+                        "message": "start is included and end is excluded, is not between",
+                        "date": "2009-04-02 03:04:05.10",
+                        "later_date": "2010-04-02 03:04:05.10",
+                        "inclusivity": "[)"
+                    },
+                    {
+                        "message": "start is included and end is excluded, should fail on same end and start date",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "[)"
+                    },
+                    {
+                        "message": "start and end inclusive, is not between",
+                        "date": "2009-04-02 03:04:05.10",
+                        "later_date": "2010-04-02 03:04:05.10",
+                        "inclusivity": "[]"
+                    }
+                ]
+            }
+        ]
+    },
+    "second_inclusivity": {
+        "date": "2011-04-02 03:04:05.10",
+        "cases": [
+            {
+                "unit": "second",
+                "true": [
+                    {
+                        "message": "options, no inclusive",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10"
+                    },
+                    {
+                        "message": "start and end are excluded, is between",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "()"
+                    },
+                    {
+                        "message": "start is excluded and end is included should succeed on end date",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "(]"
+                    },
+                    {
+                        "message": "start is excluded and end is included, is between",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "(]"
+                    },
+                    {
+                        "message": "start is included and end is excluded should succeed on same start date",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "[)"
+                    },
+                    {
+                        "message": "start is included and end is excluded, is between",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "[)"
+                    },
+                    {
+                        "message": "start and end inclusive should succeed on same start date",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "[]"
+                    },
+                    {
+                        "message": "start and end inclusive should succeed on same end date",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "[]"
+                    },
+                    {
+                        "message": "start and end inclusive, is between",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "[]"
+                    },
+                    {
+                        "message": "start and end inclusive, should handle same end and start date",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "[]"
+                    }
+                ],
+                "false": [
+                    {
+                        "message": "start and end are excluded, start is equal to goment",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "()"
+                    },
+                    {
+                        "message": "start and end are excluded, end is equal to goment",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "()"
+                    },
+                    {
+                        "message": "start and end are excluded, is not between",
+                        "date": "2009-04-02 03:04:05.10",
+                        "later_date": "2010-04-02 03:04:05.10",
+                        "inclusivity": "()"
+                    },
+                    {
+                        "message": "start and end are excluded, should fail on same start/end date",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "()"
+                    },
+                    {
+                        "message": "start is excluded and end is included should fail on same start date",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2012-04-02 03:04:05.10",
+                        "inclusivity": "(]"
+                    },
+                    {
+                        "message": "start is excluded and end is included, is not between",
+                        "date": "2009-04-02 03:04:05.10",
+                        "later_date": "2010-04-02 03:04:05.10",
+                        "inclusivity": "(]"
+                    },
+                    {
+                        "message": "start is excluded and end is included, should fail on same start/end date",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "(]"
+                    },
+                    {
+                        "message": "start is included and end is excluded should fail on same end date",
+                        "date": "2010-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "[)"
+                    },
+                    {
+                        "message": "start is included and end is excluded, is not between",
+                        "date": "2009-04-02 03:04:05.10",
+                        "later_date": "2010-04-02 03:04:05.10",
+                        "inclusivity": "[)"
+                    },
+                    {
+                        "message": "start is included and end is excluded, should fail on same end and start date",
+                        "date": "2011-04-02 03:04:05.10",
+                        "later_date": "2011-04-02 03:04:05.10",
+                        "inclusivity": "[)"
+                    },
+                    {
+                        "message": "start and end inclusive, is not between",
+                        "date": "2009-04-02 03:04:05.10",
+                        "later_date": "2010-04-02 03:04:05.10",
+                        "inclusivity": "[]"
+                    }
+                ]
+            }
+        ]
+    }
+}
