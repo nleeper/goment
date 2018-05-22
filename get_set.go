@@ -2,7 +2,6 @@ package goment
 
 import (
 	"math"
-	"time"
 )
 
 // Get is a string getter using the units. Returns 0 if unsupported property.
@@ -285,15 +284,4 @@ func (g *Goment) SetWeekYear(weekYear int) *Goment {
 // SetISOWeekYear sets the ISO week-year.
 func (g *Goment) SetISOWeekYear(weekYear int) *Goment {
 	return g
-}
-
-// Format functions.
-
-// DaysInMonth returns the number of days in the set month.
-func (g *Goment) DaysInMonth() int {
-	return daysInMonth(g.Month(), g.Year())
-}
-
-func daysInMonth(month, year int) int {
-	return time.Date(year, time.Month(month+1), 0, 0, 0, 0, 0, time.UTC).Day()
 }

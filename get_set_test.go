@@ -582,30 +582,3 @@ func TestSetYear(t *testing.T) {
 		assert.Equal(t, lib.Year(), 2015)
 	}
 }
-
-func TestDaysInMonth(t *testing.T) {
-	lib, err := New("2000-01-25")
-	if assert.NoError(t, err) {
-		assert.Equal(t, lib.DaysInMonth(), 31)
-	}
-
-	lib, err = New("2000-02-05")
-	if assert.NoError(t, err) {
-		assert.Equal(t, lib.DaysInMonth(), 29)
-	}
-
-	lib, err = New("2001-02-05")
-	if assert.NoError(t, err) {
-		assert.Equal(t, lib.DaysInMonth(), 28)
-	}
-
-	lib, err = New("2000-06-12")
-	if assert.NoError(t, err) {
-		assert.Equal(t, lib.DaysInMonth(), 30)
-	}
-
-	lib, err = New("2000-12-25")
-	if assert.NoError(t, err) {
-		assert.Equal(t, lib.DaysInMonth(), 31)
-	}
-}

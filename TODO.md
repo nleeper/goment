@@ -28,9 +28,23 @@
     * [implement SetISOWeek method, should set the ISO week of the year](https://momentjs.com/docs/#/get-set/iso-week/)
     * [implement SetWeekYear method, make locale aware](https://momentjs.com/docs/#/get-set/week-year/)
     * [implement SetISOWeekYear method, should set the ISO week-year](https://momentjs.com/docs/#/get-set/iso-week-year/)
+    * [implement Minimum method](https://momentjs.com/docs/#/get-set/min/)
+    * [implement Maximum method](https://momentjs.com/docs/#/get-set/max/)
 * start_end_of.go
     * need to handle StartOf('week'), must be locale aware
     * need to handle EndOf('week'), must be locale aware
     * simplify repeated units across files
+* relative_time.go
+    * use Format method to do Calendar formatting instead of string replacing
+        ``` 
+        var defaultCalendar = map[string]string{
+            "sameDay":  "[Today at] LT",
+            "nextDay":  "[Tomorrow at] LT",
+            "nextWeek": "dddd [at] LT",
+            "lastDay":  "[Yesterday at] LT",
+            "lastWeek": "[Last] dddd [at] LT",
+            "sameElse": "L",
+        }
+        ```
 * _test.go
     * add messages to asserts

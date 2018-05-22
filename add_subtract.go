@@ -115,7 +115,7 @@ func (g *Goment) Subtract(args ...interface{}) *Goment {
 					case "m", "minute", "minutes":
 						g.subtractMinutes(val)
 					case "s", "second", "seconds":
-						g.substractSeconds(val)
+						g.subtractSeconds(val)
 					case "ms", "millisecond", "milliseconds":
 						g.subtractMilliseconds(val)
 					case "ns", "nanosecond", "nanoseconds":
@@ -156,7 +156,7 @@ func (g *Goment) subtractMinutes(minutes int) *Goment {
 	return g.addMinutes(minutes * -1)
 }
 
-func (g *Goment) substractSeconds(seconds int) *Goment {
+func (g *Goment) subtractSeconds(seconds int) *Goment {
 	return g.addSeconds(seconds * -1)
 }
 

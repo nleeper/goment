@@ -13,8 +13,8 @@ type Goment struct {
 	time time.Time
 }
 
-// Time is a class to define a time.
-type Time struct {
+// DateTime is a class to define a date & time.
+type DateTime struct {
 	Year       int
 	Month      int
 	Day        int
@@ -39,8 +39,8 @@ func New(args ...interface{}) (*Goment, error) {
 			return fromUnixNanoseconds(v)
 		case *Goment:
 			return fromGoment(v)
-		case Time:
-			return fromGomentTime(v)
+		case DateTime:
+			return fromDateTime(v)
 		default:
 			return &Goment{}, errors.New("Invalid argument type")
 		}
@@ -63,13 +63,8 @@ func (g *Goment) Clone() *Goment {
 	return copy
 }
 
-// ToTime returns the time.Time object that is wrapped by Goment.
-func (g *Goment) ToTime() time.Time {
-	return g.time
-}
-
-func fromGomentTime(t Time) (*Goment, error) {
-	d := time.Date(t.Year, time.Month(t.Month), t.Day, t.Hour, t.Minute, t.Second, t.Nanosecond, time.Local)
+func fromDateTime(dt DateTime) (*Goment, error) {
+	d := time.Date(dt.Year, time.Month(dt.Month), dt.Day, dt.Hour, dt.Minute, dt.Second, dt.Nanosecond, time.Local)
 	return fromExistingTime(d)
 }
 
@@ -78,13 +73,11 @@ func fromGoment(g *Goment) (*Goment, error) {
 }
 
 func fromNow() (*Goment, error) {
-	now := timeNow()
-	return createGoment(now)
+	return fromExistingTime(timeNow())
 }
 
 func fromUnixNanoseconds(unixNano int64) (*Goment, error) {
-	t := time.Unix(0, unixNano)
-	return createGoment(t)
+	return fromExistingTime(time.Unix(0, unixNano))
 }
 
 func fromExistingTime(t time.Time) (*Goment, error) {
