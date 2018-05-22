@@ -41,6 +41,23 @@ func TestNewFromTime(t *testing.T) {
 	}
 }
 
+func TestNewFromGomentTime(t *testing.T) {
+	testGomentTime := Time{
+		Year:  2015,
+		Month: 1,
+		Day:   25,
+		Hour:  10,
+	}
+
+	testTime := time.Date(2015, 1, 25, 10, 0, 0, 0, time.Local)
+
+	lib, err := New(testGomentTime)
+	if assert.NoError(t, err) {
+		assert.True(t, testTime.Equal(lib.ToTime()))
+		assert.True(t, lib.ToTime().Location() == time.Local)
+	}
+}
+
 func TestNewFromUnixMilliseconds(t *testing.T) {
 	testTime := time.Now()
 

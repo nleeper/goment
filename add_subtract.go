@@ -12,9 +12,8 @@ func (g *Goment) Add(args ...interface{}) *Goment {
 			g.addDuration(val)
 		case int:
 			if len(args) == 2 {
-				unit, ok := args[1].(string)
-				if ok {
-					switch unit {
+				if units, ok := args[1].(string); ok {
+					switch units {
 					case "y", "year", "years":
 						g.addYears(val)
 					case "Q", "quarter", "quarters":
@@ -99,9 +98,8 @@ func (g *Goment) Subtract(args ...interface{}) *Goment {
 			g.subtractDuration(val)
 		case int:
 			if len(args) == 2 {
-				unit, ok := args[1].(string)
-				if ok {
-					switch unit {
+				if units, ok := args[1].(string); ok {
+					switch units {
 					case "y", "year", "years":
 						g.subtractYears(val)
 					case "Q", "quarter", "quarters":

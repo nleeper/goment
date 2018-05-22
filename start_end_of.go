@@ -1,25 +1,25 @@
 package goment
 
 // StartOf mutates the original Goment by setting it to the start of a unit of time.
-func (g *Goment) StartOf(unit string) *Goment {
-	switch unit {
-	case "year":
+func (g *Goment) StartOf(units string) *Goment {
+	switch units {
+	case "y", "year", "years":
 		g.startOfYear()
-	case "quarter":
+	case "Q", "quarter", "quarters":
 		g.startOfQuarter()
-	case "month":
+	case "M", "month", "months":
 		g.startOfMonth()
-	case "week":
+	case "w", "week", "weeks":
 		g.startOfWeek()
-	case "isoWeek":
+	case "W", "isoWeek", "isoWeeks":
 		g.startOfISOWeek()
-	case "day", "date":
+	case "d", "day", "days", "date":
 		g.startOfDay()
-	case "hour":
+	case "h", "hour", "hours":
 		g.startOfHour()
-	case "minute":
+	case "m", "minute", "minutes":
 		g.startOfMinute()
-	case "second":
+	case "s", "second", "seconds":
 		g.startOfSecond()
 	}
 	return g
@@ -63,25 +63,25 @@ func (g *Goment) startOfSecond() *Goment {
 }
 
 // EndOf mutates the original Goment by setting it to the end of a unit of time.
-func (g *Goment) EndOf(unit string) *Goment {
-	switch unit {
-	case "year":
+func (g *Goment) EndOf(units string) *Goment {
+	switch units {
+	case "y", "year", "years":
 		g.endOfYear()
-	case "quarter":
+	case "Q", "quarter", "quarters":
 		g.endOfQuarter()
-	case "month":
+	case "M", "month", "months":
 		g.endOfMonth()
-	case "week":
+	case "w", "week", "weeks":
 		g.endOfWeek()
-	case "isoWeek":
+	case "W", "isoWeek", "isoWeeks":
 		g.endOfISOWeek()
-	case "day", "date":
+	case "d", "day", "days", "date":
 		g.endOfDay()
-	case "hour":
+	case "h", "hour", "hours":
 		g.endOfHour()
-	case "minute":
+	case "m", "minute", "minutes":
 		g.endOfMinute()
-	case "second":
+	case "s", "second", "seconds":
 		g.endOfSecond()
 	}
 	return g

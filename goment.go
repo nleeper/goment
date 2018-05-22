@@ -13,6 +13,17 @@ type Goment struct {
 	time time.Time
 }
 
+// Time is a class to define a time.
+type Time struct {
+	Year       int
+	Month      int
+	Day        int
+	Hour       int
+	Minute     int
+	Second     int
+	Nanosecond int
+}
+
 // New creates an instance of the Goment library.
 func New(args ...interface{}) (*Goment, error) {
 	switch len(args) {
@@ -28,6 +39,8 @@ func New(args ...interface{}) (*Goment, error) {
 			return fromUnixNanoseconds(v)
 		case *Goment:
 			return fromGoment(v)
+		case Time:
+			return fromGomentTime(v)
 		default:
 			return &Goment{}, errors.New("Invalid argument type")
 		}
@@ -53,6 +66,11 @@ func (g *Goment) Clone() *Goment {
 // ToTime returns the time.Time object that is wrapped by Goment.
 func (g *Goment) ToTime() time.Time {
 	return g.time
+}
+
+func fromGomentTime(t Time) (*Goment, error) {
+	d := time.Date(t.Year, time.Month(t.Month), t.Day, t.Hour, t.Minute, t.Second, t.Nanosecond, time.Local)
+	return fromExistingTime(d)
 }
 
 func fromGoment(g *Goment) (*Goment, error) {

@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetByUnit(t *testing.T) {
+func TestGetByUnits(t *testing.T) {
 	lib, err := New("2015-04-06 10:11:12.4567")
 	if assert.NoError(t, err) {
 		assert.Equal(t, lib.Get("y"), 2015)
@@ -193,7 +193,7 @@ func TestISOWeekYear(t *testing.T) {
 	}
 }
 
-func TestSetByUnit(t *testing.T) {
+func TestSetByUnits(t *testing.T) {
 	lib, err := New("2015-04-06 10:11:12.4567")
 	if assert.NoError(t, err) {
 		lib.Set("y", 2016)
@@ -247,7 +247,7 @@ func TestSetByUnit(t *testing.T) {
 	}
 }
 
-func TestSetUnknownUnit(t *testing.T) {
+func TestSetUnknownUnits(t *testing.T) {
 	testTime := time.Date(2011, 10, 11, 15, 20, 1, 10000, time.Local)
 
 	lib, err := New(testTime)
@@ -607,17 +607,5 @@ func TestDaysInMonth(t *testing.T) {
 	lib, err = New("2000-12-25")
 	if assert.NoError(t, err) {
 		assert.Equal(t, lib.DaysInMonth(), 31)
-	}
-}
-
-func TestIsLeapYear(t *testing.T) {
-	lib, err := New("2000-06-06")
-	if assert.NoError(t, err) {
-		assert.True(t, lib.IsLeapYear())
-	}
-
-	lib, err = New("2010-05-07")
-	if assert.NoError(t, err) {
-		assert.False(t, lib.IsLeapYear())
 	}
 }
