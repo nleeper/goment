@@ -1,8 +1,7 @@
 language: go
 
 go:
-  - "1.10.x"
-  - master
+  - tip
 
 before_install:
   - go get -t ./...

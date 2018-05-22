@@ -30,27 +30,23 @@ func TestIsTime(t *testing.T) {
 }
 
 func TestIsDST(t *testing.T) {
-	lib, err := New(Time{
-		Year:  2011,
-		Month: 3,
-		Day:   12,
-	})
+	location, _ := time.LoadLocation("America/Chicago")
 
+	date := time.Date(2011, 3, 12, 0, 0, 0, 0, location)
+
+	lib, err := New(date)
 	if assert.NoError(t, err) {
 		assert.False(t, lib.IsDST())
 	}
 
-	lib, err = New(Time{
-		Year:  2011,
-		Month: 3,
-		Day:   14,
-	})
+	date = time.Date(2011, 3, 14, 0, 0, 0, 0, location)
 
+	lib, err = New(date)
 	if assert.NoError(t, err) {
 		assert.True(t, lib.IsDST())
 	}
 
-	lib, err = New()
+	lib, err = New(time.Date(2017, 5, 3, 0, 0, 0, 0, location))
 	if assert.NoError(t, err) {
 		assert.False(t, lib.SetMonth(1).IsDST())
 		assert.True(t, lib.SetMonth(7).IsDST())
