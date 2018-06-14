@@ -41,8 +41,8 @@ func TestNewFromTime(t *testing.T) {
 	}
 }
 
-func TestNewFromGomentTime(t *testing.T) {
-	testGomentTime := Time{
+func TestNewFromDateTime(t *testing.T) {
+	testGomentTime := DateTime{
 		Year:  2015,
 		Month: 1,
 		Day:   25,
@@ -58,7 +58,7 @@ func TestNewFromGomentTime(t *testing.T) {
 	}
 }
 
-func TestNewFromUnixMilliseconds(t *testing.T) {
+func TestNewFromUnixNanoseconds(t *testing.T) {
 	testTime := time.Now()
 
 	lib, err := New(testTime.UnixNano())

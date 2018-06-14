@@ -8,11 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type testParseable struct {
-	DateTime   string
-	ParsedTime time.Time
-}
-
 func TestISOParsing(t *testing.T) {
 	parseable := []testParseable{
 		testParseable{"2010-01-01", time.Date(2010, 1, 1, 0, 0, 0, 0, time.UTC)},
