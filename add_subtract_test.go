@@ -8,7 +8,7 @@ import (
 )
 
 func TestAddNoArgsIgnored(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -18,7 +18,7 @@ func TestAddNoArgsIgnored(t *testing.T) {
 }
 
 func TestAddTooManyArgsIgnored(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -28,7 +28,7 @@ func TestAddTooManyArgsIgnored(t *testing.T) {
 }
 
 func TestAddInvalidFirstArgTypeIgnored(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -38,7 +38,7 @@ func TestAddInvalidFirstArgTypeIgnored(t *testing.T) {
 }
 
 func TestAddInvalidSecondArgTypeIgnored(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -48,7 +48,7 @@ func TestAddInvalidSecondArgTypeIgnored(t *testing.T) {
 }
 
 func TestAddInvalidSecondArgValueIgnored(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -68,7 +68,7 @@ func TestAddDuration(t *testing.T) {
 }
 
 func TestAddYears(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -78,7 +78,7 @@ func TestAddYears(t *testing.T) {
 }
 
 func TestAddQuarters(t *testing.T) {
-	testTime := time.Date(2014, 4, 11, 0, 0, 0, 0, time.Local)
+	testTime := time.Date(2014, 4, 11, 0, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -89,7 +89,7 @@ func TestAddQuarters(t *testing.T) {
 }
 
 func TestAddMonths(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -100,7 +100,7 @@ func TestAddMonths(t *testing.T) {
 }
 
 func TestAddWeeks(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -112,7 +112,7 @@ func TestAddWeeks(t *testing.T) {
 }
 
 func TestAddDays(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -124,7 +124,7 @@ func TestAddDays(t *testing.T) {
 }
 
 func TestAddHours(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 15, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 15, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -134,7 +134,7 @@ func TestAddHours(t *testing.T) {
 }
 
 func TestAddMinutes(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 15, 30, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 15, 30, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -144,7 +144,7 @@ func TestAddMinutes(t *testing.T) {
 }
 
 func TestAddSeconds(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 15, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 15, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -154,7 +154,7 @@ func TestAddSeconds(t *testing.T) {
 }
 
 func TestAddMilliseconds(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 15, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 15, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -165,7 +165,7 @@ func TestAddMilliseconds(t *testing.T) {
 }
 
 func TestAddNanoseconds(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 15, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 15, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -175,7 +175,7 @@ func TestAddNanoseconds(t *testing.T) {
 }
 
 func TestSubtractNoArgsIgnored(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -185,7 +185,7 @@ func TestSubtractNoArgsIgnored(t *testing.T) {
 }
 
 func TestSubtractTooManyArgsIgnored(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -195,7 +195,7 @@ func TestSubtractTooManyArgsIgnored(t *testing.T) {
 }
 
 func TestSubtractInvalidFirstArgTypeIgnored(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -205,7 +205,7 @@ func TestSubtractInvalidFirstArgTypeIgnored(t *testing.T) {
 }
 
 func TestSubtractInvalidSecondArgTypeIgnored(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -215,7 +215,7 @@ func TestSubtractInvalidSecondArgTypeIgnored(t *testing.T) {
 }
 
 func TestSubtractInvalidSecondArgValueIgnored(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -235,7 +235,7 @@ func TestSubtractDuration(t *testing.T) {
 }
 
 func TestSubtractYears(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -245,7 +245,7 @@ func TestSubtractYears(t *testing.T) {
 }
 
 func TestSubtractQuarters(t *testing.T) {
-	testTime := time.Date(2014, 8, 11, 0, 0, 0, 0, time.Local)
+	testTime := time.Date(2014, 8, 11, 0, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -256,7 +256,7 @@ func TestSubtractQuarters(t *testing.T) {
 }
 
 func TestSubtractMonths(t *testing.T) {
-	testTime := time.Date(2017, 11, 1, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 11, 1, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -267,7 +267,7 @@ func TestSubtractMonths(t *testing.T) {
 }
 
 func TestSubtractWeeks(t *testing.T) {
-	testTime := time.Date(2017, 1, 22, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 22, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -279,7 +279,7 @@ func TestSubtractWeeks(t *testing.T) {
 }
 
 func TestSubtractDays(t *testing.T) {
-	testTime := time.Date(2017, 1, 17, 18, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 17, 18, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -291,7 +291,7 @@ func TestSubtractDays(t *testing.T) {
 }
 
 func TestSubtractHours(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 15, 0, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 15, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -301,7 +301,7 @@ func TestSubtractHours(t *testing.T) {
 }
 
 func TestSubtractMinutes(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 15, 30, 0, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 15, 30, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -311,7 +311,7 @@ func TestSubtractMinutes(t *testing.T) {
 }
 
 func TestSubtractSeconds(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 15, 0, 30, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 15, 0, 30, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -321,7 +321,7 @@ func TestSubtractSeconds(t *testing.T) {
 }
 
 func TestSubtractMilliseconds(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 15, 0, 30, 0, time.Local)
+	testTime := time.Date(2017, 1, 1, 15, 0, 30, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -332,7 +332,7 @@ func TestSubtractMilliseconds(t *testing.T) {
 }
 
 func TestSubtractNanoseconds(t *testing.T) {
-	testTime := time.Date(2017, 1, 1, 15, 0, 0, 1000, time.Local)
+	testTime := time.Date(2017, 1, 1, 15, 0, 0, 1000, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {

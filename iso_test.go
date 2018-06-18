@@ -27,9 +27,9 @@ func TestISOParsing(t *testing.T) {
 		testParseable{"2013-02-08 09:30:26.123-0600", time.Date(2013, 2, 8, 9, 30, 26, calculateNanoseconds(123), getLocation("America/Chicago"))},
 		testParseable{"2013-02-08 09+0700", time.Date(2013, 2, 8, 9, 0, 0, 0, getLocation("Antarctica/Davis"))},
 		// testParseable{"2013-02-08 09+07:00", time.Date(2013, 2, 8, 9, 0, 0, 0, getLocation("America/Chicago"))}, // Need to support : in tz
-		// testParseable{"2013-02-08 09:30:26,123", time.Date(2013, 2, 8, 9, 30, 26, 123*1000*1000, time.Local)}, comma in date string not supported by Go
-		// testParseable{"+002010-01-01", time.Date(2010, 1, 1, 0, 0, 0, 0, time.Local)},
-		// testParseable{"-002010-01-01", time.Date(2010, 1, 1, 0, 0, 0, 0, time.Local)},
+		// testParseable{"2013-02-08 09:30:26,123", time.Date(2013, 2, 8, 9, 30, 26, 123*1000*1000, chicagoLocation())}, comma in date string not supported by Go
+		// testParseable{"+002010-01-01", time.Date(2010, 1, 1, 0, 0, 0, 0, chicagoLocation())},
+		// testParseable{"-002010-01-01", time.Date(2010, 1, 1, 0, 0, 0, 0, chicagoLocation())},
 	}
 
 	for _, p := range parseable {

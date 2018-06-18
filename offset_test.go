@@ -19,18 +19,18 @@ func TestLocalUsesLocalTime(t *testing.T) {
 }
 
 func TestUTCUsesUTCTime(t *testing.T) {
-	testTime := time.Date(2011, 5, 13, 14, 0, 0, 0, time.Local)
+	testTime := time.Date(2011, 5, 13, 14, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
-		assert.Equal(t, lib.ToTime().Location(), time.Local)
+		assert.Equal(t, lib.ToTime().Location(), chicagoLocation())
 		lib.UTC()
 		assert.Equal(t, lib.ToTime().Location(), time.UTC)
 	}
 }
 
 func TestUTCOffsetForLocal(t *testing.T) {
-	testTime := time.Date(2011, 5, 13, 14, 0, 0, 0, time.Local)
+	testTime := time.Date(2011, 5, 13, 14, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
