@@ -75,7 +75,7 @@ func TestGetMinute(t *testing.T) {
 }
 
 func TestGetHour(t *testing.T) {
-	testTime := time.Date(2017, 8, 2, 18, 0, 33, 0, time.Local)
+	testTime := time.Date(2017, 8, 2, 18, 0, 33, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -121,8 +121,8 @@ func TestDayOfYear(t *testing.T) {
 }
 
 func TestISOWeek(t *testing.T) {
-	testTime := time.Date(2005, 1, 1, 0, 0, 0, 0, time.Local)
-	testTime2 := time.Date(2007, 12, 30, 0, 0, 0, 0, time.Local)
+	testTime := time.Date(2005, 1, 1, 0, 0, 0, 0, chicagoLocation())
+	testTime2 := time.Date(2007, 12, 30, 0, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -179,8 +179,8 @@ func TestYear(t *testing.T) {
 }
 
 func TestISOWeekYear(t *testing.T) {
-	testTime := time.Date(2005, 1, 1, 0, 0, 0, 0, time.Local)
-	testTime2 := time.Date(2007, 12, 30, 0, 0, 0, 0, time.Local)
+	testTime := time.Date(2005, 1, 1, 0, 0, 0, 0, chicagoLocation())
+	testTime2 := time.Date(2007, 12, 30, 0, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -248,7 +248,7 @@ func TestSetByUnits(t *testing.T) {
 }
 
 func TestSetUnknownUnits(t *testing.T) {
-	testTime := time.Date(2011, 10, 11, 15, 20, 1, 10000, time.Local)
+	testTime := time.Date(2011, 10, 11, 15, 20, 1, 10000, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -258,7 +258,7 @@ func TestSetUnknownUnits(t *testing.T) {
 }
 
 func TestSetNanosecond(t *testing.T) {
-	testTime := time.Date(2011, 10, 11, 15, 20, 1, 10000, time.Local)
+	testTime := time.Date(2011, 10, 11, 15, 20, 1, 10000, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -269,7 +269,7 @@ func TestSetNanosecond(t *testing.T) {
 }
 
 func TestSetNanosecondOutOfRange(t *testing.T) {
-	testTime := time.Date(2011, 10, 11, 15, 20, 1, 600000, time.Local)
+	testTime := time.Date(2011, 10, 11, 15, 20, 1, 600000, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -282,7 +282,7 @@ func TestSetNanosecondOutOfRange(t *testing.T) {
 }
 
 func TestSetMillisecond(t *testing.T) {
-	testTime := time.Date(2011, 10, 11, 15, 20, 5, 0, time.Local)
+	testTime := time.Date(2011, 10, 11, 15, 20, 5, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -295,7 +295,7 @@ func TestSetMillisecond(t *testing.T) {
 }
 
 func TestSetMillisecondOutOfRange(t *testing.T) {
-	testTime := time.Date(2011, 10, 11, 15, 20, 55, 0, time.Local)
+	testTime := time.Date(2011, 10, 11, 15, 20, 55, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -311,7 +311,7 @@ func TestSetMillisecondOutOfRange(t *testing.T) {
 }
 
 func TestSetSecond(t *testing.T) {
-	testTime := time.Date(2011, 10, 11, 15, 20, 25, 0, time.Local)
+	testTime := time.Date(2011, 10, 11, 15, 20, 25, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -322,7 +322,7 @@ func TestSetSecond(t *testing.T) {
 }
 
 func TestSetSecondOutOfRange(t *testing.T) {
-	testTime := time.Date(2011, 10, 11, 15, 20, 41, 0, time.Local)
+	testTime := time.Date(2011, 10, 11, 15, 20, 41, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -335,7 +335,7 @@ func TestSetSecondOutOfRange(t *testing.T) {
 }
 
 func TestSetMinute(t *testing.T) {
-	testTime := time.Date(2011, 10, 11, 15, 20, 0, 0, time.Local)
+	testTime := time.Date(2011, 10, 11, 15, 20, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -346,7 +346,7 @@ func TestSetMinute(t *testing.T) {
 }
 
 func TestSetMinuteOutOfRange(t *testing.T) {
-	testTime := time.Date(2011, 10, 11, 15, 20, 0, 0, time.Local)
+	testTime := time.Date(2011, 10, 11, 15, 20, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -359,7 +359,7 @@ func TestSetMinuteOutOfRange(t *testing.T) {
 }
 
 func TestSetHour(t *testing.T) {
-	testTime := time.Date(2011, 10, 11, 15, 0, 0, 0, time.Local)
+	testTime := time.Date(2011, 10, 11, 15, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
@@ -370,7 +370,7 @@ func TestSetHour(t *testing.T) {
 }
 
 func TestSetHourOutOfRange(t *testing.T) {
-	testTime := time.Date(2011, 10, 11, 23, 0, 0, 0, time.Local)
+	testTime := time.Date(2011, 10, 11, 23, 0, 0, 0, chicagoLocation())
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {

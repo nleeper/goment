@@ -7,6 +7,11 @@ type testParseable struct {
 	ParsedTime time.Time
 }
 
+func chicagoLocation() *time.Location {
+	location, _ := time.LoadLocation("America/Chicago")
+	return location
+}
+
 func simpleNow() *Goment {
 	lib, _ := New()
 	return lib

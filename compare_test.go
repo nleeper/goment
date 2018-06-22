@@ -64,7 +64,7 @@ func runTestsForBetweenScenario(t *testing.T, scenario compareTestScenario, f fu
 }
 
 func TestIsBeforeUsesNowIfNoArguments(t *testing.T) {
-	testTime := time.Date(2018, 12, 15, 17, 8, 0, 0, time.Local)
+	testTime := time.Date(2018, 12, 15, 17, 8, 0, 0, chicagoLocation())
 	timeNow = func() time.Time {
 		return testTime
 	}
@@ -256,7 +256,7 @@ func TestIsSameSecond(t *testing.T) {
 }
 
 func TestIsAfterUsesNowIfNoArguments(t *testing.T) {
-	testTime := time.Date(2018, 12, 15, 17, 8, 0, 0, time.Local)
+	testTime := time.Date(2018, 12, 15, 17, 8, 0, 0, chicagoLocation())
 	timeNow = func() time.Time {
 		return testTime
 	}

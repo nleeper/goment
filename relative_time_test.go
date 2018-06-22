@@ -144,7 +144,7 @@ func TestToNowRelativeTime(t *testing.T) {
 }
 
 func TestFromRelativeTime(t *testing.T) {
-	testTime := time.Date(2007, 1, 28, 0, 0, 0, 0, time.Local)
+	testTime := time.Date(2007, 1, 28, 0, 0, 0, 0, chicagoLocation())
 	lib := simpleTime(testTime)
 
 	assert.Equal(t, "a few seconds ago", lib.From(simpleTime(testTime).Add(44, "s")), "44 seconds = a few seconds ago")
@@ -206,7 +206,7 @@ func TestFromRelativeTime(t *testing.T) {
 }
 
 func TestToRelativeTime(t *testing.T) {
-	testTime := time.Date(2007, 1, 28, 0, 0, 0, 0, time.Local)
+	testTime := time.Date(2007, 1, 28, 0, 0, 0, 0, chicagoLocation())
 	lib := simpleTime(testTime)
 
 	assert.Equal(t, "in a few seconds", lib.To(simpleTime(testTime).Add(44, "s")), "44 seconds = in a few seconds")
