@@ -20,6 +20,7 @@ func TestFormats(t *testing.T) {
 		"W Wo WW": "6 6th 06",
 		"h hh":    "3 03",
 		"H HH":    "15 15",
+		"k kk":    "16 16",
 		"m mm":    "25 25",
 		"s ss":    "50 50",
 		"a A":     "pm PM",
