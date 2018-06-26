@@ -4,7 +4,7 @@ import (
 	"math"
 )
 
-// Get is a string getter using the units. Returns 0 if unsupported property.
+// Get is a string getter using the supplied units. Returns 0 if unsupported property.
 func (g *Goment) Get(units string) int {
 	switch units {
 	case "y", "year", "years":
