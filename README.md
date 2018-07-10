@@ -16,12 +16,51 @@ Creates a Goment object for the current local time returned by time.Now().
 ```
 goment.New()
 ```
-
 #### From ISO 8601 string
 Creates a Goment object by parsing the string as an ISO 8601 date time. The timezone will be UTC unless supplied in the string.
 ```
 goment.New('2013-02-08 09:30:26')
 ```
+#### From string + format
+Creates a Goment object by parsing the string using the supplied format. The timezone will be the local timezone unless supplied in the string.
+
+The parsing tokens are similar to the formatting tokens used in [Goment#Format](#format).
+
+##### Supported tokens
+|   | Token | Output |
+| - | ----- | ------ |
+| Month | M | 1 2 ... 11 12 |
+| | MM | 01 01 ... 11 12 |
+| | MMM | Jan Feb ... Nov Dec |
+| | MMMM | January February ... November December |
+| Day of Month | D | 1 2 ... 30 31 |
+| | Do | 1st 2nd ... 30th 31st |
+| | DD | 01 02 ... 30 31 |
+| Day of Year | DDD	 | 1 2 ... 364 365 |
+| | DDDD | 001 002 ... 364 365 |
+| Year | YY | 70 71 ... 29 30 |
+| | YYYY | 1970 1971 ... 2029 2030 |
+| | Y | -25 |
+| Quarter | Q | 1 2 3 4 |
+| AM/PM	| A | AM PM |
+| | a |	am pm |
+| Hour| H | 0 1 ... 22 23 |
+| | HH | 00 01 ... 22 23 |
+| | h | 1 2 ... 11 12 |
+| | hh | 01 02 ... 11 12 |
+| | k | 1 2 ... 23 24 |
+| | kk | 01 02 ... 23 24 |
+| Minute | m | 0 1 ... 58 59 |
+| | mm | 00 01 ... 58 59 |
+| Second | s | 0 1 ... 58 59 |
+| | ss | 00 01 ... 58 59 |
+| Time Zone	| Z | -07:00 -06:00 ... +06:00 +07:00 |
+| | ZZ | -0700 -0600 ... +0600 +0700 |
+| Unix Timestamp | X | 1360013296 |
+```
+goment.New("12-25-1995", "MM-DD-YYYY")
+```
+
 #### From Unix nanoseconds
 Creates a Goment object from the Unix nanoseconds since the Unix Epoch.
 ```
@@ -341,6 +380,7 @@ Format takes a string of tokens and replaces them with their corresponding value
 | | WW | 01 02 ... 52 53 |
 | Year | YY | 70 71 ... 29 30 |
 | | YYYY | 1970 1971 ... 2029 2030 |
+| | Y | 1970 1971 ... 9999 +10000 +10001 |
 | Quarter | Q | 1 2 3 4 |
 | AM/PM	| A | AM PM |
 | | a |	am pm |

@@ -22,6 +22,7 @@ type DateTime struct {
 	Minute     int
 	Second     int
 	Nanosecond int
+	Location   *time.Location
 }
 
 // New creates an instance of the Goment library.
@@ -44,6 +45,14 @@ func New(args ...interface{}) (*Goment, error) {
 		default:
 			return &Goment{}, errors.New("Invalid argument type")
 		}
+	case 2:
+		if date, ok := args[0].(string); ok {
+			if format, ok := args[1].(string); ok {
+				return fromStringWithFormat(date, format)
+			}
+			return &Goment{}, errors.New("Second argument must be a format string")
+		}
+		return &Goment{}, errors.New("First argument must be a datetime string")
 	default:
 		return &Goment{}, errors.New("Invalid number of arguments")
 	}
@@ -64,7 +73,13 @@ func (g *Goment) Clone() *Goment {
 }
 
 func fromDateTime(dt DateTime) (*Goment, error) {
-	d := time.Date(dt.Year, time.Month(dt.Month), dt.Day, dt.Hour, dt.Minute, dt.Second, dt.Nanosecond, time.Local)
+	// Default to local time if not provided.
+	loc := time.Local
+	if dt.Location != nil {
+		loc = dt.Location
+	}
+
+	d := time.Date(dt.Year, time.Month(dt.Month), dt.Day, dt.Hour, dt.Minute, dt.Second, dt.Nanosecond, loc)
 	return fromExistingTime(d)
 }
 
@@ -82,6 +97,15 @@ func fromUnixNanoseconds(unixNano int64) (*Goment, error) {
 
 func fromExistingTime(t time.Time) (*Goment, error) {
 	return createGoment(t)
+}
+
+func fromStringWithFormat(date string, format string) (*Goment, error) {
+	parsed, err := parseFromFormat(date, format)
+	if err != nil {
+		return &Goment{}, err
+	}
+
+	return createGoment(parsed)
 }
 
 func fromISOString(date string) (*Goment, error) {

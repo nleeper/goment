@@ -76,6 +76,7 @@ func (g *Goment) ToDateTime() DateTime {
 		Minute:     g.Minute(),
 		Second:     g.Second(),
 		Nanosecond: g.Nanosecond(),
+		Location:   g.ToTime().Location(),
 	}
 }
 

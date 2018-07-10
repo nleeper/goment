@@ -46,5 +46,12 @@
             "sameElse": "L",
         }
         ```
+* format.go
+    * support fractional seconds, like S SS SSS SSSS...
+* parse.go
+    * support fractional seconds, S SS SSS
+    * support weekday parsing, like e
+    * support week parsing, like w, ww, W, WW
+    * support week year parsing, like gg, gggg, GG, GGGG
 * _test.go
     * add messages to asserts

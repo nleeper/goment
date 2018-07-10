@@ -18,6 +18,9 @@ func TestNewNoDate(t *testing.T) {
 		assert.True(t, testTime.Local().Equal(lib.ToTime()))
 		assert.True(t, lib.ToTime().Location() == time.Local)
 	}
+
+	// Reset timeNow.
+	timeNow = time.Now
 }
 
 func TestNewFromISOString(t *testing.T) {
@@ -28,6 +31,16 @@ func TestNewFromISOString(t *testing.T) {
 	if assert.NoError(t, err) {
 		assert.True(t, testTime.Equal(lib.ToTime()))
 		assert.True(t, lib.ToTime().Location() == time.UTC)
+	}
+}
+
+func TestNewFromFormat(t *testing.T) {
+	date := "05-13-2011"
+	testTime := time.Date(2011, 5, 13, 0, 0, 0, 0, time.Local)
+
+	lib, err := New(date, "MM-DD-YYYY")
+	if assert.NoError(t, err) {
+		assert.True(t, testTime.Equal(lib.ToTime()))
 	}
 }
 
@@ -94,8 +107,16 @@ func TestNewThrowErrorFromInvalidISOString(t *testing.T) {
 }
 
 func TestNewThrowErrorIfTooManyArgs(t *testing.T) {
-	_, err := New("2018-01-01", "YYYY-MM-DD")
+	_, err := New("2018-01-01", "YYYY-MM-DD", "third")
 	assert.EqualError(t, err, "Invalid number of arguments")
+}
+
+func TestNewThrowErrorIfInvalidArgsForFormat(t *testing.T) {
+	_, err := New(1, "YYYY-MM-DD")
+	assert.EqualError(t, err, "First argument must be a datetime string")
+
+	_, err = New("2018-01-01", 2)
+	assert.EqualError(t, err, "Second argument must be a format string")
 }
 
 func TestCloneReturnsClone(t *testing.T) {

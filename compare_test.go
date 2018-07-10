@@ -73,6 +73,9 @@ func TestIsBeforeUsesNowIfNoArguments(t *testing.T) {
 	if assert.NoError(t, err) {
 		assert.True(t, lib.IsBefore())
 	}
+
+	// Reset timeNow.
+	timeNow = time.Now
 }
 
 func TestIsBeforeReturnsFalseInvalidFirstArgument(t *testing.T) {
@@ -169,6 +172,9 @@ func TestIsSameReturnsFalseIfNoArguments(t *testing.T) {
 	if assert.NoError(t, err) {
 		assert.False(t, lib.IsSame())
 	}
+
+	// Reset timeNow.
+	timeNow = time.Now
 }
 
 func TestIsSameReturnsFalseInvalidFirstArgument(t *testing.T) {
@@ -265,6 +271,9 @@ func TestIsAfterUsesNowIfNoArguments(t *testing.T) {
 	if assert.NoError(t, err) {
 		assert.True(t, lib.IsAfter())
 	}
+
+	// Reset timeNow.
+	timeNow = time.Now
 }
 
 func TestIsAfterReturnsFalseInvalidFirstArgument(t *testing.T) {

@@ -27,6 +27,9 @@ func (g *Goment) IsDST() bool {
 
 // IsLeapYear returns true if that year is a leap year, and false if it is not.
 func (g *Goment) IsLeapYear() bool {
-	last := time.Date(g.Year()+1, 1, 0, 0, 0, 0, 0, time.UTC).YearDay()
-	return last == 366
+	return daysInYear(g.Year()) == 366
+}
+
+func daysInYear(year int) int {
+	return time.Date(year+1, 1, 0, 0, 0, 0, 0, time.UTC).YearDay()
 }
