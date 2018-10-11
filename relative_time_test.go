@@ -73,6 +73,9 @@ func TestFromNowRelativeTime(t *testing.T) {
 		assert.Equal(t, "3 years ago", lib.FromNow(), "years threshold")
 		assert.Equal(t, "3 years", lib.FromNow(true), "years threshold without suffix")
 	}
+
+	// Reset timeNow.
+	timeNow = time.Now
 }
 
 func TestToNowRelativeTime(t *testing.T) {
@@ -141,6 +144,9 @@ func TestToNowRelativeTime(t *testing.T) {
 		assert.Equal(t, "in 3 years", lib.ToNow(), "years threshold")
 		assert.Equal(t, "3 years", lib.ToNow(true), "years threshold without suffix")
 	}
+
+	// Reset timeNow.
+	timeNow = time.Now
 }
 
 func TestFromRelativeTime(t *testing.T) {
@@ -307,4 +313,7 @@ func TestCalendarDay(t *testing.T) {
 
 	assert.Equal(t, "01/12/2000", weeksAgo.Calendar())
 	assert.Equal(t, "29/12/2000", weeksFromNow.Calendar())
+
+	// Reset timeNow.
+	timeNow = time.Now
 }

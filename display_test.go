@@ -149,7 +149,16 @@ func TestToDateTime(t *testing.T) {
 
 	lib, err := New(testTime)
 	if assert.NoError(t, err) {
-		assert.Equal(t, DateTime{testTime.Year(), int(testTime.Month()), testTime.Day(), testTime.Hour(), testTime.Minute(), testTime.Second(), testTime.Nanosecond()}, lib.ToDateTime())
+		assert.Equal(t, DateTime{testTime.Year(), int(testTime.Month()), testTime.Day(), testTime.Hour(), testTime.Minute(), testTime.Second(), testTime.Nanosecond(), time.Local}, lib.ToDateTime())
+	}
+}
+
+func TestToDateTimeWithUTC(t *testing.T) {
+	testTime := time.Now().UTC()
+
+	lib, err := New(testTime)
+	if assert.NoError(t, err) {
+		assert.Equal(t, DateTime{testTime.Year(), int(testTime.Month()), testTime.Day(), testTime.Hour(), testTime.Minute(), testTime.Second(), testTime.Nanosecond(), time.UTC}, lib.ToDateTime())
 	}
 }
 

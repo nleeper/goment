@@ -5,6 +5,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/nleeper/goment/internal/regexps"
 )
 
 // Thanks to https://github.com/go-shadow/moment/blob/master/moment_parser.go for help on formatReplacements and regex.
@@ -33,6 +35,7 @@ var formatReplacements = map[string]string{
 	"W":    "<stdIsoWeekOfYear>",
 	"Wo":   "<stdIsoWeekOfYear><stdOrdinal>",
 	"WW":   "<stdIsoWeekOfYearZero>",
+	"Y":    "<stdSingleYear>",
 	"YY":   "06",
 	"YYYY": "2006",
 	"Q":    "<stdQuarter>",
@@ -50,7 +53,7 @@ var formatReplacements = map[string]string{
 	"ss":   "05",
 	"z":    "MST",
 	"zz":   "MST",
-	"Z":    "Z07:00",
+	"Z":    "-07:00",
 	"ZZ":   "-0700",
 	"X":    "<stdUnix>",
 	"LT":   "3:04 PM",
@@ -67,22 +70,22 @@ var formatReplacements = map[string]string{
 
 // Format takes a string of tokens and replaces them with their corresponding values to display the Goment.
 func (g *Goment) Format(args ...interface{}) string {
-	layout := ""
+	format := ""
 
 	numArgs := len(args)
 	if numArgs < 1 {
-		layout = "YYYY-MM-DDTHH:mm:ssZ"
+		format = "YYYY-MM-DDTHH:mm:ssZ"
 	} else {
-		layout = args[0].(string)
+		format = args[0].(string)
 	}
 
-	format := convert(layout)
-	formatted := g.ToTime().Format(format)
+	layout := convertToGoLayout(format)
+	formatted := g.ToTime().Format(layout)
 
-	return performReplacements(g, formatted)
+	return performFormatReplacements(g, formatted)
 }
 
-func performReplacements(g *Goment, formatted string) string {
+func performFormatReplacements(g *Goment, formatted string) string {
 	if strings.Contains(formatted, "<std") {
 		formatted = strings.Replace(formatted, "<stdDayOfYear>", fmt.Sprintf("%d", g.DayOfYear()), -1)
 		formatted = strings.Replace(formatted, "<stdDayOfYearZero>", g.dayOfYearZero(), -1)
@@ -98,6 +101,7 @@ func performReplacements(g *Goment, formatted string) string {
 		formatted = strings.Replace(formatted, "<stdShortDay>", fmt.Sprintf("%v", g.ToTime().Weekday().String()[0:2]), -1)
 		formatted = strings.Replace(formatted, "<stdTwentyFourHour>", fmt.Sprintf("%v", g.Hour()+1), -1)
 		formatted = strings.Replace(formatted, "<stdTwentyFourHourZero>", g.twentyFourHourZero(), -1)
+		formatted = strings.Replace(formatted, "<stdSingleYear>", g.singleDigitYear(), -1)
 
 		if strings.Contains(formatted, "<stdOrdinal>") {
 			regex := regexp.MustCompile("([0-9]+)(?:<stdOrdinal>)")
@@ -156,6 +160,14 @@ func (g *Goment) twentyFourHourZero() string {
 	return fmt.Sprintf("%d", hour)
 }
 
+func (g *Goment) singleDigitYear() string {
+	year := g.Year()
+	if year <= 9999 {
+		return strconv.Itoa(year)
+	}
+	return fmt.Sprintf("+%v", year)
+}
+
 func ordinal(x int) string {
 	suffix := "th"
 	switch x % 10 {
@@ -175,21 +187,18 @@ func ordinal(x int) string {
 	return strconv.Itoa(x) + suffix
 }
 
-func convert(layout string) string {
-	reBrackets := regexp.MustCompile(`\[([^\[\]]*)\]`)
-	reFormats := regexp.MustCompile("(LT[S]?|LL?L?L?|l{1,4}|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|SS?S?|X|zz?|ZZ?|Q)")
-
-	bracketMatch := reBrackets.FindAllStringSubmatch(layout, -1)
+func convertToGoLayout(layout string) string {
+	bracketMatch := regexps.BracketRegex.FindAllString(layout, -1)
 	bracketsFound := len(bracketMatch) > 0
 
 	if bracketsFound {
 		for i := range bracketMatch {
-			layout = strings.Replace(layout, bracketMatch[i][0], makeToken(i+1), 1)
+			layout = strings.Replace(layout, bracketMatch[i], makeToken(i+1), 1)
 		}
 	}
 
 	var match [][]int
-	if match = reFormats.FindAllStringSubmatchIndex(layout, -1); match == nil {
+	if match = regexps.TokenRegex.FindAllStringIndex(layout, -1); match == nil {
 		return layout
 	}
 
@@ -213,7 +222,7 @@ func convert(layout string) string {
 
 	if bracketsFound {
 		for i := range bracketMatch {
-			layout = strings.Replace(layout, makeToken(i+1), bracketMatch[i][1], 1)
+			layout = strings.Replace(layout, makeToken(i+1), bracketMatch[i][1:len(bracketMatch[i])-1], 1)
 		}
 	}
 
