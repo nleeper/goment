@@ -6,7 +6,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nleeper/goment/internal/constants"
 	"github.com/nleeper/goment/internal/regexps"
 	"github.com/pkg/errors"
 )
@@ -126,6 +125,7 @@ type isoDateFormat struct {
 }
 
 type parseConfig struct {
+	Locale            LocaleDetails
 	IsUTC             bool
 	TzMinutes         int
 	DayOfYear         int
@@ -285,6 +285,7 @@ func parseToGoment(date, format string) (*Goment, error) {
 	}
 
 	config := &parseConfig{
+		getGlobalLocaleDetails(),
 		false,
 		-99999,
 		-1,
@@ -445,11 +446,11 @@ func parseMonth(input string, config *parseConfig) {
 }
 
 func parseLongMonth(input string, config *parseConfig) {
-	config.ParsedArray[monthIdx] = constants.LongMonthNames[strings.ToLower(input)]
+	config.ParsedArray[monthIdx] = config.Locale.Resources.Months[strings.ToLower(input)]
 }
 
 func parseShortMonth(input string, config *parseConfig) {
-	config.ParsedArray[monthIdx] = constants.ShortMonthNames[strings.ToLower(input)]
+	config.ParsedArray[monthIdx] = config.Locale.Resources.ShortMonths[strings.ToLower(input)]
 }
 
 func parseSingleDigitYear(input string, config *parseConfig) {
@@ -518,7 +519,7 @@ func parseOffset(input string, config *parseConfig) {
 
 func parseLongDayName(input string, config *parseConfig) {
 	longDayName := strings.ToLower(input)
-	if val, ok := constants.LongDayNames[longDayName]; ok {
+	if val, ok := config.Locale.Resources.Days[longDayName]; ok {
 		createWeekConfig(config)
 		config.Week["day"] = val
 	}
@@ -526,7 +527,7 @@ func parseLongDayName(input string, config *parseConfig) {
 
 func parseShortDayName(input string, config *parseConfig) {
 	shortDayName := strings.ToLower(input)
-	if val, ok := constants.ShortDayNames[shortDayName]; ok {
+	if val, ok := config.Locale.Resources.ShortDays[shortDayName]; ok {
 		createWeekConfig(config)
 		config.Week["day"] = val
 	}

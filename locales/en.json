@@ -1,4 +1,6 @@
 {
     "months": "January_February_March_April_May_June_July_August_September_October_November_December",
-    "shortMonths": "Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec"
+    "shortMonths": "Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec",
+    "days": "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday",
+    "shortDays": "Sun_Mon_Tue_Wed_Thu_Fri_Sat"
 }

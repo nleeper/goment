@@ -15,10 +15,18 @@ const DefaultLocaleCode = "en"
 var globalLocale = loadKnownLocale(DefaultLocaleCode)
 var cachedLocales = map[string]LocaleDetails{}
 
-// LocaleDetails is a struct containing the details of the loaded locale.
+// LocaleDetails contains the details of the loaded locale.
 type LocaleDetails struct {
 	Code      string
-	Resources map[string]string
+	Resources LocaleResources
+}
+
+// LocaleResources contains the different locale values.
+type LocaleResources struct {
+	Months      map[string]int
+	ShortMonths map[string]int
+	Days        map[string]int
+	ShortDays   map[string]int
 }
 
 // Locale gets the current global locale code.
@@ -29,6 +37,11 @@ func Locale() string {
 // Locale gets the locale code for the current Goment instance.
 func (g *Goment) Locale() string {
 	return g.locale.Code
+}
+
+// LocaleDetails gets the locale details for the current Goment instance.
+func (g *Goment) LocaleDetails() LocaleDetails {
+	return g.locale
 }
 
 // SetLocale sets the global locale for all Coment instances.
@@ -67,31 +80,70 @@ func loadKnownLocale(localeCode string) LocaleDetails {
 }
 
 func loadLocale(localeCode string) (LocaleDetails, error) {
-	localeCode = strings.ToLower(localeCode)
-	if cached, exist := cachedLocales[localeCode]; exist {
+	var tempResources map[string]string
+
+	normalizedCode := strings.ToLower(localeCode)
+	if cached, exist := cachedLocales[normalizedCode]; exist {
 		return cached, nil
 	}
 
-	if !localeExists(localeCode) {
-		return LocaleDetails{}, errors.New("Locale " + localeCode + "is not supported")
+	if !localeExists(normalizedCode) {
+		return LocaleDetails{}, errors.New("Locale " + normalizedCode + "is not supported")
 	}
 
-	locale := LocaleDetails{Code: localeCode}
-
 	// TODO - make this more easily testable
-	localeJSON, err := ioutil.ReadFile(buildLocalePath(localeCode))
+	localeJSON, err := ioutil.ReadFile(buildLocalePath(normalizedCode))
 	if err != nil {
 		return LocaleDetails{}, errors.New("Error reading in locale file")
 	}
 
-	err = json.Unmarshal(localeJSON, &locale.Resources)
+	err = json.Unmarshal(localeJSON, &tempResources)
 	if err != nil {
 		return LocaleDetails{}, errors.New("Invalid locale JSON file")
 	}
 
-	cachedLocales[localeCode] = locale
+	locale := LocaleDetails{
+		Code:      normalizedCode,
+		Resources: loadLocaleResources(tempResources),
+	}
+
+	cachedLocales[normalizedCode] = locale
 
 	return locale, nil
+}
+
+func loadLocaleResources(resources map[string]string) LocaleResources {
+	localeResources := LocaleResources{}
+
+	if temp, ok := resources["months"]; ok {
+		parsed := strings.Split(strings.ToLower(temp), "_")
+		localeResources.Months = loadToMap(parsed, 1)
+	}
+
+	if temp, ok := resources["shortMonths"]; ok {
+		parsed := strings.Split(strings.ToLower(temp), "_")
+		localeResources.ShortMonths = loadToMap(parsed, 1)
+	}
+
+	if temp, ok := resources["days"]; ok {
+		parsed := strings.Split(strings.ToLower(temp), "_")
+		localeResources.Days = loadToMap(parsed, 0)
+	}
+
+	if temp, ok := resources["shortDays"]; ok {
+		parsed := strings.Split(strings.ToLower(temp), "_")
+		localeResources.ShortDays = loadToMap(parsed, 0)
+	}
+
+	return localeResources
+}
+
+func loadToMap(vals []string, offset int) map[string]int {
+	mapValues := make(map[string]int)
+	for v := range vals {
+		mapValues[vals[v]] = v + offset
+	}
+	return mapValues
 }
 
 func localeExists(localeCode string) bool {
