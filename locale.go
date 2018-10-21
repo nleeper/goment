@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -23,10 +24,12 @@ type LocaleDetails struct {
 
 // LocaleResources contains the different locale values.
 type LocaleResources struct {
-	Months      map[string]int
-	ShortMonths map[string]int
-	Days        map[string]int
-	ShortDays   map[string]int
+	Months        map[string]int
+	ShortMonths   map[string]int
+	Days          map[string]int
+	ShortDays     map[string]int
+	MonthsRegex   *regexp.Regexp
+	WeekdaysRegex *regexp.Regexp
 }
 
 // Locale gets the current global locale code.
@@ -133,6 +136,14 @@ func loadLocaleResources(resources map[string]string) LocaleResources {
 	if temp, ok := resources["shortDays"]; ok {
 		parsed := strings.Split(strings.ToLower(temp), "_")
 		localeResources.ShortDays = loadToMap(parsed, 0)
+	}
+
+	if temp, ok := resources["monthsRegex"]; ok {
+		localeResources.MonthsRegex = regexp.MustCompile(temp)
+	}
+
+	if temp, ok := resources["weekdaysRegex"]; ok {
+		localeResources.WeekdaysRegex = regexp.MustCompile(temp)
 	}
 
 	return localeResources

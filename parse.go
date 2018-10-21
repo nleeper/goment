@@ -70,8 +70,8 @@ var isoTimes = []isoTimeFormat{
 var parseReplacements = map[string]parseReplacement{
 	"M":    createParseReplacement("M", "month", regexps.MatchOneToTwo, monthIdx),
 	"MM":   createParseReplacement("MM", "month", regexps.MatchOneToTwo, monthIdx),
-	"MMM":  createParseReplacement("MMM", "month", regexps.MonthsRegex, parseShortMonth),
-	"MMMM": createParseReplacement("MMMM", "month", regexps.MonthsRegex, parseLongMonth),
+	"MMM":  createParseReplacement("MMM", "month", monthsRegex, parseShortMonth),
+	"MMMM": createParseReplacement("MMMM", "month", monthsRegex, parseLongMonth),
 	"D":    createParseReplacement("D", "day", regexps.MatchOneToTwo, dateIdx),
 	"Do":   createParseReplacement("Do", "day", regexps.DayOfMonthOrdinal, parseOrdinalDate),
 	"DD":   createParseReplacement("DD", "day", regexps.MatchOneToTwo, dateIdx),
@@ -87,8 +87,8 @@ var parseReplacements = map[string]parseReplacement{
 	// // "w":  createParseReplacement("w", "weekOfYear", regexps.MatchOneToTwo, nil),
 	// // "ww": createParseReplacement("ww", "weekOfYear", regexps.MatchOneToTwo, nil),
 	// // "e":    createParseReplacement("e", "dayOfWeek", regexps.MatchOneToTwo, nil),
-	// "ddd":  createParseReplacement("ddd", "weekday", regexps.WeekdaysRegex, parseShortDayName),
-	// "dddd": createParseReplacement("dddd", "weekday", regexps.WeekdaysRegex, parseLongDayName),
+	// "ddd":  createParseReplacement("ddd", "weekday", weekdaysRegex, parseShortDayName),
+	// "dddd": createParseReplacement("dddd", "weekday", weekdaysRegex, parseLongDayName),
 	// // "GGGG": createParseReplacement("GGGG", "isoWeekyear", regexps.MatchOneToFour, nil),
 	// // "GG":   createParseReplacement("GG", "isoWeekYear", regexps.MatchOneToTwo, nil),
 	// // "W": createParseReplacement("W", "isoWeekOfYear", regexps.MatchOneToTwo, nil),
@@ -139,39 +139,44 @@ type parseConfig struct {
 type parseReplacement struct {
 	Match         string
 	Type          string
-	Regex         *regexp.Regexp
+	RegexFunction func(*parseConfig) *regexp.Regexp
 	ParseFunction func(string, *parseConfig)
 }
 
 func createParseReplacement(args ...interface{}) parseReplacement {
 	if len(args) == 4 {
+		var regexFunc func(*parseConfig) *regexp.Regexp
+		var parseFunc func(string, *parseConfig)
+
 		match := args[0].(string)
 		replaceType := args[1].(string)
-		regex := args[2].(*regexp.Regexp)
+
+		switch v := args[2].(type) {
+		case func(*parseConfig) *regexp.Regexp:
+			regexFunc = v
+		case *regexp.Regexp:
+			regexFunc = func(config *parseConfig) *regexp.Regexp {
+				return v
+			}
+		}
 
 		switch v := args[3].(type) {
 		case func(string, *parseConfig):
-			return parseReplacement{
-				match,
-				replaceType,
-				regex,
-				v,
-			}
+			parseFunc = v
 		case int:
-			return parseReplacement{
-				match,
-				replaceType,
-				regex,
-				func(input string, config *parseConfig) {
-					config.ParsedArray[v] = parseNumber(input)
-				},
+			parseFunc = func(input string, config *parseConfig) {
+				config.ParsedArray[v] = parseNumber(input)
 			}
-		default:
-			return parseReplacement{}
 		}
-	} else {
-		return parseReplacement{}
+
+		return parseReplacement{
+			match,
+			replaceType,
+			regexFunc,
+			parseFunc,
+		}
 	}
+	return parseReplacement{}
 }
 
 func createISOTimeFormat(format, regex string) isoTimeFormat {
@@ -304,7 +309,9 @@ func parseToGoment(date, format string) (*Goment, error) {
 
 		if rep, ok := parseReplacements[token]; ok {
 			// Find the input value matching the token.
-			found := rep.Regex.FindStringIndex(parseString)
+			regex := rep.RegexFunction(config)
+
+			found := regex.FindStringIndex(parseString)
 			if found != nil {
 				input = parseString[found[0]:found[1]]
 				parseString = parseString[found[1]:len(parseString)]
@@ -439,6 +446,14 @@ func defaults(parsed, current map[int]int, idx int) int {
 		return value
 	}
 	return 0
+}
+
+func monthsRegex(config *parseConfig) *regexp.Regexp {
+	return config.Locale.Resources.MonthsRegex
+}
+
+func weekdaysRegex(config *parseConfig) *regexp.Regexp {
+	return config.Locale.Resources.WeekdaysRegex
 }
 
 func parseMonth(input string, config *parseConfig) {
