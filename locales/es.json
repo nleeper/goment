@@ -1,4 +1,8 @@
 {
-    "months": "January_February_March_April_May_June_July_August_September_October_November_December",
-    "shortMonths": "Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec"
+    "months": "enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre",
+    "shortMonths": "ene_feb_mar_abr_may_jun_jul_ago_sep_oct_nov_dic",
+    "monthsRegex": "(?i)(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\\.?|feb\\.?|mar\\.?|abr\\.?|may\\.?|jun\\.?|jul\\.?|ago\\.?|sep\\.?|oct\\.?|nov\\.?|dic\\.?)",
+    "days": "domingo_lunes_martes_miércoles_jueves_viernes_sábado",
+    "shortDays": "dom._lun._mar._mié._jue._vie._sáb.",
+    "weekdaysRegex": "(?i)(domingo|lunes|martes|miércoles|jueves|viernes|sábado|dom\\.?|lun\\.?|mar\\.?|mié\\.?|jue\\.?|vie\\.?|sáb\\.?)"
 }
