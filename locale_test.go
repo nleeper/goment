@@ -2,6 +2,7 @@ package goment
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -89,6 +90,47 @@ func TestEsLocale(t *testing.T) {
 	assert.Equal(t, shortDays, details.Resources.ShortDays)
 }
 
+func TestEsFormat(t *testing.T) {
+
+	formats := map[string]string{
+		"dddd, MMMM Do YYYY, h:mm:ss a": "domingo, febrero 14º 2010, 3:25:50 pm",
+		"ddd, hA":                       "dom., 3PM",
+		// ['M Mo MM MMMM MMM',                   '2 2º 02 febrero feb.'],
+		// ['YYYY YY',                            '2010 10'],
+		// ['D Do DD',                            '14 14º 14'],
+		// ['d do dddd ddd dd',                   '0 0º domingo dom. do'],
+		// ['DDD DDDo DDDD',                      '45 45º 045'],
+		// ['w wo ww',                            '6 6º 06'],
+		// ['YYYY-MMM-DD',                        '2010-feb-14'],
+		// ['h hh',                               '3 03'],
+		// ['H HH',                               '15 15'],
+		// ['m mm',                               '25 25'],
+		// ['s ss',                               '50 50'],
+		// ['a A',                                'pm PM'],
+		// ['[the] DDDo [day of the year]',       'the 45º day of the year'],
+		// ['LTS',                                '15:25:50'],
+		// ['L',                                  '14/02/2010'],
+		// ['LL',                                 '14 de febrero de 2010'],
+		// ['LLL',                                '14 de febrero de 2010 15:25'],
+		// ['LLLL',                               'domingo, 14 de febrero de 2010 15:25'],
+		// ['l',                                  '14/2/2010'],
+		// ['ll',                                 '14 de feb. de 2010'],
+		// ['lll',                                '14 de feb. de 2010 15:25'],
+		// ['llll',                               'dom., 14 de feb. de 2010 15:25']
+	}
+
+	lib := simpleTime(time.Date(2010, 2, 14, 15, 25, 50, 125000000, chicagoLocation()))
+	lib.SetLocale("es")
+
+	for p, r := range formats {
+		assert.Equal(t, r, lib.Format(p), r)
+	}
+}
+
+func TestEsParse(t *testing.T) {
+
+}
+
 func TestFrLocale(t *testing.T) {
 	months := map[string]int{"janvier": 1, "février": 2, "mars": 3, "avril": 4, "mai": 5, "juin": 6, "juillet": 7, "août": 8, "septembre": 9, "octobre": 10, "novembre": 11, "décembre": 12}
 	shortMonths := map[string]int{"janv.": 1, "févr.": 2, "mars": 3, "avr.": 4, "mai": 5, "juin": 6, "juil.": 7, "août": 8, "sept.": 9, "oct.": 10, "nov.": 11, "déc.": 12}
@@ -104,4 +146,12 @@ func TestFrLocale(t *testing.T) {
 	assert.Equal(t, shortMonths, details.Resources.ShortMonths)
 	assert.Equal(t, days, details.Resources.Days)
 	assert.Equal(t, shortDays, details.Resources.ShortDays)
+}
+
+func TestFrFormat(t *testing.T) {
+
+}
+
+func TestFrParse(t *testing.T) {
+
 }
