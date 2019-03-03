@@ -155,3 +155,19 @@ func TestFrFormat(t *testing.T) {
 func TestFrParse(t *testing.T) {
 
 }
+func TestDeLocale(t *testing.T) {
+	months := map[string]int{"Januar": 1, "Februar": 2, "März": 3, "April": 4, "Mai": 5, "Juni": 6, "Juli": 7, "August": 8, "September": 9, "Oktober": 10, "November": 11, "Dezember": 12}
+	shortMonths := map[string]int{"Jan.": 1, "Feb.": 2, "März": 3, "Apr.": 4, "Mai": 5, "Juni": 6, "Juli": 7, "Aug.": 8, "Sep.": 9, "Okt.": 10, "Nov.": 11, "Dez.": 12}
+	days := map[string]int{"Sonntag": 0, "Montag": 1, "Dienstag": 2, "Mittwoch": 3, "Donnerstag": 4, "Freitag": 5, "Samstag": 6}
+	shortDays := map[string]int{"So.": 0, "Mo.": 1, "Di.": 2, "Mi.": 3, "Do.": 4, "Fr.": 5, "Sa.": 6}
+
+	lib, _ := New()
+	assert.NoError(t, lib.SetLocale("de"))
+
+	details := lib.LocaleDetails()
+	assert.Equal(t, "de", details.Code)
+	assert.Equal(t, months, details.Resources.Months)
+	assert.Equal(t, shortMonths, details.Resources.ShortMonths)
+	assert.Equal(t, days, details.Resources.Days)
+	assert.Equal(t, shortDays, details.Resources.ShortDays)
+}

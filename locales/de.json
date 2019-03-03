@@ -1,0 +1,8 @@
+{
+    "months": "Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember",
+    "shortMonths": "Jan._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.",
+    "monthsRegex": "(?i)(januar|februar|märz|maerz|april|mai|juni|juli|august|september|oktober|november|dezember|jan\\.?|feb\\.?|mar\\.?|maer\\.?|apr\\.?|mai\\.?|jun\\.?|jul\\.?|aug\\.?|sep\\.?|okt\\.?|nov\\.?|dez\\.?)",
+    "days": "Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag",
+    "shortDays": "So._Mo._Di._Mi._Do._Fr._Sa.",
+    "weekdaysRegex": "(?i)(sonntag|montag|dienstag|mittwoch|donnerstag|freitag|samstag|so\\.?|mo\\.?|di\\.?|mi\\.?|do\\.?|fr\\.?|sa\\.?)"
+}
