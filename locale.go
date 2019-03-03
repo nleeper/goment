@@ -119,22 +119,22 @@ func loadLocaleResources(resources map[string]string) LocaleResources {
 	localeResources := LocaleResources{}
 
 	if temp, ok := resources["months"]; ok {
-		parsed := strings.Split(strings.ToLower(temp), "_")
+		parsed := strings.Split(temp, "_")
 		localeResources.Months = loadToMap(parsed, 1)
 	}
 
 	if temp, ok := resources["shortMonths"]; ok {
-		parsed := strings.Split(strings.ToLower(temp), "_")
+		parsed := strings.Split(temp, "_")
 		localeResources.ShortMonths = loadToMap(parsed, 1)
 	}
 
 	if temp, ok := resources["days"]; ok {
-		parsed := strings.Split(strings.ToLower(temp), "_")
+		parsed := strings.Split(temp, "_")
 		localeResources.Days = loadToMap(parsed, 0)
 	}
 
 	if temp, ok := resources["shortDays"]; ok {
-		parsed := strings.Split(strings.ToLower(temp), "_")
+		parsed := strings.Split(temp, "_")
 		localeResources.ShortDays = loadToMap(parsed, 0)
 	}
 
