@@ -1,9 +1,8 @@
 package goment
 
 import (
+	"errors"
 	"time"
-
-	"github.com/pkg/errors"
 )
 
 var timeNow = time.Now

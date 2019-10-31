@@ -1,6 +1,7 @@
 package goment
 
 import (
+	"errors"
 	"regexp"
 	"strconv"
 	"strings"
@@ -8,7 +9,6 @@ import (
 
 	"github.com/nleeper/goment/internal/constants"
 	"github.com/nleeper/goment/internal/regexps"
-	"github.com/pkg/errors"
 )
 
 var yearIdx = 0
