@@ -49,7 +49,7 @@ func TestFormatParsing(t *testing.T) {
 		"DD_MM_YYYY":          []string{"12_02_1999"},
 		"DD:MM:YYYY":          []string{"12:02:1999"},
 		"D-M-YY":              []string{"2-2-99"},
-		"Y":                   []string{"-25"},
+		"Y":                   []string{"-0025"},
 		"YY":                  []string{"99"},
 		"DDD-YYYY":            []string{"300-1999"},
 		"YYYY-DDD":            []string{"1999-300"},

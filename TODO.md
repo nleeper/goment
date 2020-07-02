@@ -5,7 +5,6 @@
     * fromExistingTime
         * should the method convert the time to Local?
 * iso.go
-    * need to handle YYYYYY date formats, like +002006-01-02
     * need to handle time formats with commas, like 15:04:05,9999
     * need to investigate nanosecond parsing - when parsing something like 2011-04-02 03:04:05.10
         * becomes 2011-04-02 03:04:05.1 +0000 UTC
