@@ -79,14 +79,21 @@ func (g *Goment) Format(args ...interface{}) string {
 		format = args[0].(string)
 	}
 
-	layout := convertToGoLayout(format)
+	layout, bracketMatches := convertToGoLayout(format)
 	formatted := g.ToTime().Format(layout)
 
-	return performFormatReplacements(g, formatted)
+	return performFormatReplacements(g, formatted, bracketMatches)
 }
 
-func performFormatReplacements(g *Goment, formatted string) string {
+func performFormatReplacements(g *Goment, formatted string, bracketMatches []string) string {
 	if strings.Contains(formatted, "<std") {
+		// Replace back any bracketed text.
+		if len(bracketMatches) > 0 {
+			for i := range bracketMatches {
+				formatted = strings.Replace(formatted, makeStdReplace(i), bracketMatches[i][1:len(bracketMatches[i])-1], 1)
+			}
+		}
+
 		formatted = strings.Replace(formatted, "<stdDayOfYear>", fmt.Sprintf("%d", g.DayOfYear()), -1)
 		formatted = strings.Replace(formatted, "<stdDayOfYearZero>", g.dayOfYearZero(), -1)
 		formatted = strings.Replace(formatted, "<stdDayOfWeek>", fmt.Sprintf("%d", g.Day()), -1)
@@ -187,21 +194,24 @@ func ordinal(x int) string {
 	return strconv.Itoa(x) + suffix
 }
 
-func convertToGoLayout(layout string) string {
+func convertToGoLayout(layout string) (string, []string) {
 	bracketMatch := regexps.BracketRegex.FindAllString(layout, -1)
 	bracketsFound := len(bracketMatch) > 0
 
+	// Replace bracketed text with token like $1. Formatting tokens like this will avoid Goment format match below.
 	if bracketsFound {
 		for i := range bracketMatch {
-			layout = strings.Replace(layout, bracketMatch[i], makeToken(i+1), 1)
+			layout = strings.Replace(layout, bracketMatch[i], makeBracketToken(i), 1)
 		}
 	}
 
+	// Find any Goment formats that are not standard to Go formatting (DDD, Mo, etc).
 	var match [][]int
 	if match = regexps.TokenRegex.FindAllStringIndex(layout, -1); match == nil {
-		return layout
+		return layout, bracketMatch
 	}
 
+	// Replace any Goment-only formats with supported std tokens (<stdDayOfYear>, <stdOrdinal>, etc).
 	for i := range match {
 		start, end := match[i][0], match[i][1]
 		matchText := layout[start:end]
@@ -220,15 +230,20 @@ func convertToGoLayout(layout string) string {
 		}
 	}
 
+	// Replace bracket tokens with replacements like <stdReplaceA>.
 	if bracketsFound {
 		for i := range bracketMatch {
-			layout = strings.Replace(layout, makeToken(i+1), bracketMatch[i][1:len(bracketMatch[i])-1], 1)
+			layout = strings.Replace(layout, makeBracketToken(i), makeStdReplace(i), 1)
 		}
 	}
 
-	return layout
+	return layout, bracketMatch
 }
 
-func makeToken(num int) string {
-	return fmt.Sprintf("$%v", num)
+func makeBracketToken(num int) string {
+	return fmt.Sprintf("$%v", num+1)
+}
+
+func makeStdReplace(num int) string {
+	return fmt.Sprintf("<stdReplace%c>", rune(num+65))
 }
