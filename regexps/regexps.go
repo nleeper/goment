@@ -2,8 +2,11 @@ package regexps
 
 import "regexp"
 
+// LocaleRegex is used to parse locale specific formats out of tokens.
+var LocaleRegex = regexp.MustCompile(`(\[[^\[]*\])|(\\)?(LT[S]?|LL?L?L?|l{1,4})`)
+
 // TokenRegex is used to parse tokens out of formats.
-var TokenRegex = regexp.MustCompile("(LT[S]?|LL?L?L?|l{1,4}|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|YYYYY|YYYY|YY?|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|SS?S?|X|zz?|ZZ?|Q)")
+var TokenRegex = regexp.MustCompile(`(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|y{2,4}|yo?|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|SS?S?|X|zz?|ZZ?|.)`)
 
 // BracketRegex is used to find brackets in formats.
 var BracketRegex = regexp.MustCompile(`\[([^\[\]]*)\]`)

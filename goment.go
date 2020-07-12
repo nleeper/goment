@@ -3,13 +3,16 @@ package goment
 import (
 	"errors"
 	"time"
+
+	"github.com/nleeper/goment/locales"
 )
 
 var timeNow = time.Now
 
 // Goment is the main class.
 type Goment struct {
-	time time.Time
+	time   time.Time
+	locale locales.LocaleDetails
 }
 
 // DateTime is a class to define a date & time.
@@ -117,5 +120,5 @@ func fromISOString(date string) (*Goment, error) {
 }
 
 func createGoment(t time.Time) (*Goment, error) {
-	return &Goment{t}, nil
+	return &Goment{t, getGlobalLocaleDetails()}, nil
 }
