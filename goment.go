@@ -70,6 +70,7 @@ func Unix(unixSeconds int64) (*Goment, error) {
 func (g *Goment) Clone() *Goment {
 	copy, _ := New()
 	copy.time = g.ToTime()
+	copy.locale = g.locale
 
 	return copy
 }

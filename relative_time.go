@@ -2,8 +2,8 @@ package goment
 
 import (
 	"math"
-	"strconv"
-	"strings"
+
+	"github.com/nleeper/goment/locales"
 )
 
 var thresholds = map[string]int{
@@ -13,32 +13,6 @@ var thresholds = map[string]int{
 	"h":  22, // hours to day
 	"d":  26, // days to month
 	"M":  11, // months to year
-}
-
-var defaultRelativeTime = map[string]string{
-	"future": "in %s",
-	"past":   "%s ago",
-	"s":      "a few seconds",
-	"ss":     "%d seconds",
-	"m":      "a minute",
-	"mm":     "%d minutes",
-	"h":      "an hour",
-	"hh":     "%d hours",
-	"d":      "a day",
-	"dd":     "%d days",
-	"M":      "a month",
-	"MM":     "%d months",
-	"y":      "a year",
-	"yy":     "%d years",
-}
-
-var defaultCalendar = map[string]string{
-	"sameDay":  "Today at %t",
-	"nextDay":  "Tomorrow at %t",
-	"nextWeek": "%d at %t",
-	"lastDay":  "Yesterday at %t",
-	"lastWeek": "Last %d at %t",
-	"sameElse": "%v",
 }
 
 // ToNow returns the relative time to now to the Goment time.
@@ -79,7 +53,7 @@ func (g *Goment) To(args ...interface{}) string {
 			withoutSuffix = args[1].(bool)
 		}
 
-		return humanize(to, g, withoutSuffix)
+		return humanize(to, g, withoutSuffix, g.locale)
 	}
 	return ""
 }
@@ -122,7 +96,7 @@ func (g *Goment) From(args ...interface{}) string {
 			withoutSuffix = args[1].(bool)
 		}
 
-		return humanize(g, from, withoutSuffix)
+		return humanize(g, from, withoutSuffix, g.locale)
 	}
 	return ""
 }
@@ -152,11 +126,14 @@ func (g *Goment) Calendar(args ...interface{}) string {
 
 	format := getCalendarFormat(g, sod)
 
-	timeReplaced := strings.Replace(defaultCalendar[format], "%t", g.ToTime().Format("3:04pm"), 1)
-	dayReplaced := strings.Replace(timeReplaced, "%d", g.ToTime().Weekday().String(), 1)
-	dateReplaced := strings.Replace(dayReplaced, "%v", g.ToTime().Format("02/01/2006"), 1)
+	calFunc, ok := g.locale.Calendar[format]
+	if !ok {
+		return ""
+	}
 
-	return dateReplaced
+	layout := calFunc(g.Hour(), g.Day())
+
+	return g.Format(layout)
 }
 
 func getCalendarFormat(g *Goment, sod *Goment) string {
@@ -184,7 +161,7 @@ func getCalendarFormat(g *Goment, sod *Goment) string {
 	return "sameElse"
 }
 
-func humanize(to *Goment, from *Goment, withoutSuffix bool) string {
+func humanize(to *Goment, from *Goment, withoutSuffix bool, locale locales.LocaleDetails) string {
 	localTo := to.Local()
 	localFrom := from.Local()
 
@@ -252,18 +229,7 @@ func humanize(to *Goment, from *Goment, withoutSuffix bool) string {
 		number = seconds
 	}
 
-	relTime := strings.Replace(defaultRelativeTime[format], "%d", strconv.Itoa(number), 1)
-
-	if withoutSuffix {
-		return relTime
-	}
-
-	futurePast := defaultRelativeTime["future"]
-	if past {
-		futurePast = defaultRelativeTime["past"]
-	}
-
-	return strings.Replace(futurePast, "%s", relTime, 1)
+	return locale.RelativeTime(format, number, withoutSuffix, past)
 }
 
 func roundAndAbs(num float64) int {

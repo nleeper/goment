@@ -1,6 +1,7 @@
 package locales
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/nleeper/goment/regexps"
@@ -10,7 +11,13 @@ type ordinalFunction func(int, string) string
 
 type meridiemFunction func(int, int, bool) string
 
+type calendarFunction func(int, int) string
+
 type longDateFormats map[string]string
+
+type relativeTimeFormats map[string]string
+
+type calendarFunctions map[string]calendarFunction
 
 // LocaleDetails contains the details of the loaded locale.
 type LocaleDetails struct {
@@ -24,6 +31,24 @@ type LocaleDetails struct {
 	MeridiemFunc    meridiemFunction
 	FirstDayOfWeek  int
 	LongDateFormats longDateFormats
+	RelativeTimes   relativeTimeFormats
+	Calendar        calendarFunctions
+}
+
+// RelativeTime returns the relative time for the period.
+func (ld *LocaleDetails) RelativeTime(format string, number int, withoutSuffix bool, past bool) string {
+	relTime := strings.Replace(ld.RelativeTimes[format], "%d", strconv.Itoa(number), 1)
+
+	if withoutSuffix {
+		return relTime
+	}
+
+	futurePast := ld.RelativeTimes["future"]
+	if past {
+		futurePast = ld.RelativeTimes["past"]
+	}
+
+	return strings.Replace(futurePast, "%s", relTime, 1)
 }
 
 // LongDateFormat returns the format for the matching long date token.
@@ -62,7 +87,7 @@ func Map(vs []string, f func(string) string) []string {
 }
 
 // NewLocale loads new LocaleDetails.
-func NewLocale(code string, wd []string, wds []string, wdm []string, m []string, ms []string, of ordinalFunction, mf meridiemFunction, dow int, ld longDateFormats) LocaleDetails {
+func NewLocale(code string, wd []string, wds []string, wdm []string, m []string, ms []string, of ordinalFunction, mf meridiemFunction, dow int, ld longDateFormats, rt relativeTimeFormats, cal calendarFunctions) LocaleDetails {
 	if mf == nil {
 		mf = func(hours int, minutes int, isLower bool) string {
 			m := ""
@@ -89,5 +114,7 @@ func NewLocale(code string, wd []string, wds []string, wdm []string, m []string,
 		MeridiemFunc:    mf,
 		FirstDayOfWeek:  dow,
 		LongDateFormats: ld,
+		RelativeTimes:   rt,
+		Calendar:        cal,
 	}
 }

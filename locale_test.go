@@ -138,6 +138,87 @@ func TestEsShortDayFormatWithUnicode(t *testing.T) {
 	assert.Equal(t, "sá", lib.Format("dd"))
 }
 
+func TestEsRelativeTime(t *testing.T) {
+	testTime := time.Date(2007, 1, 28, 0, 0, 0, 0, chicagoLocation())
+	lib := simpleTime(testTime)
+
+	lib.SetLocale("es")
+
+	assert.Equal(t, "hace unos segundos", lib.From(simpleTime(testTime).Add(44, "s")), "44 seconds = a few seconds ago")
+	assert.Equal(t, "unos segundos", lib.From(simpleTime(testTime).Add(44, "s"), true), "44 seconds = a few seconds")
+	assert.Equal(t, "hace un minuto", lib.From(simpleTime(testTime).Add(1, "m")), "1 minute = a minute ago")
+	assert.Equal(t, "un minuto", lib.From(simpleTime(testTime).Add(1, "m"), true), "1 minute = a minute")
+	assert.Equal(t, "hace 44 minutos", lib.From(simpleTime(testTime).Add(44, "m")), "44 minutes = 44 minutes ago")
+	assert.Equal(t, "44 minutos", lib.From(simpleTime(testTime).Add(44, "m"), true), "44 minutes = 44 minutes")
+	assert.Equal(t, "hace una hora", lib.From(simpleTime(testTime).Add(1, "h")), "1 hour = an hour ago")
+	assert.Equal(t, "una hora", lib.From(simpleTime(testTime).Add(1, "h"), true), "1 hour = an hour")
+	assert.Equal(t, "hace 2 horas", lib.From(simpleTime(testTime).Add(2, "h")), "2 hours = 2 hours ago")
+	assert.Equal(t, "2 horas", lib.From(simpleTime(testTime).Add(2, "h"), true), "2 hours = 2 hours")
+	assert.Equal(t, "hace un día", lib.From(simpleTime(testTime).Add(1, "d")), "1 day = a day ago")
+	assert.Equal(t, "un día", lib.From(simpleTime(testTime).Add(1, "d"), true), "1 day = a day")
+	assert.Equal(t, "hace 5 días", lib.From(simpleTime(testTime).Add(5, "d")), "5 days = 5 days ago")
+	assert.Equal(t, "5 días", lib.From(simpleTime(testTime).Add(5, "d"), true), "5 days = 5 days")
+	assert.Equal(t, "hace un mes", lib.From(simpleTime(testTime).Add(1, "M")), "1 month = a month ago")
+	assert.Equal(t, "un mes", lib.From(simpleTime(testTime).Add(1, "M"), true), "1 month = a month")
+	assert.Equal(t, "hace 5 meses", lib.From(simpleTime(testTime).Add(5, "M")), "5 months = 5 months ago")
+	assert.Equal(t, "5 meses", lib.From(simpleTime(testTime).Add(5, "M"), true), "5 months = 5 months")
+	assert.Equal(t, "hace un año", lib.From(simpleTime(testTime).Add(1, "y")), "1 year = a year ago")
+	assert.Equal(t, "un año", lib.From(simpleTime(testTime).Add(1, "y"), true), "1 year = a year")
+	assert.Equal(t, "hace 5 años", lib.From(simpleTime(testTime).Add(5, "y")), "5 years = 5 years ago")
+	assert.Equal(t, "5 años", lib.From(simpleTime(testTime).Add(5, "y"), true), "5 years = 5 years")
+}
+
+func TestEsCalendarDay(t *testing.T) {
+	testTime := time.Date(2000, 12, 15, 12, 0, 0, 0, time.UTC)
+	timeNow = func() time.Time {
+		return testTime
+	}
+
+	SetLocale("es")
+
+	refTime := simpleTime(testTime)
+
+	assert.Equal(t, "hoy a las 12:00", simpleGoment(refTime).Calendar(), "today at the same time")
+	assert.Equal(t, "hoy a las 12:25", simpleGoment(refTime).Add(25, "m").Calendar(), "now plus 25 min")
+	assert.Equal(t, "hoy a las 13:00", simpleGoment(refTime).Add(1, "h").Calendar(), "now plus 1 hour")
+	assert.Equal(t, "mañana a las 12:00", simpleGoment(refTime).Add(1, "d").Calendar(), "tomorrow at the same time")
+	assert.Equal(t, "hoy a las 11:00", simpleGoment(refTime).Subtract(1, "h").Calendar(), "now minus 1 hour")
+	assert.Equal(t, "ayer a las 12:00", simpleGoment(refTime).Subtract(1, "d").Calendar(), "yesterday at the same time")
+
+	refTime = simpleTime(testTime)
+
+	assert.Equal(t, "domingo a las 12:00", refTime.Add(2, "d").Calendar(), "Today + 2 days current time")
+	refTime.StartOf("day")
+	assert.Equal(t, "domingo a las 0:00", refTime.Calendar(), "Today + 2 days beginning of day")
+	refTime.EndOf("day")
+	assert.Equal(t, "domingo a las 23:59", refTime.Calendar(), "Today + 2 days end of day")
+
+	refTime = simpleTime(testTime)
+
+	assert.Equal(t, "el miércoles pasado a las 12:00", refTime.Subtract(2, "d").Calendar(), "Today - 2 days current time")
+	refTime.StartOf("day")
+	assert.Equal(t, "el miércoles pasado a las 0:00", refTime.Calendar(), "Today - 2 days beginning of day")
+	refTime.EndOf("day")
+	assert.Equal(t, "el miércoles pasado a las 23:59", refTime.Calendar(), "Today - 2 days end of day")
+
+	weeksAgo := simpleTime(testTime).Subtract(1, "w")
+	weeksFromNow := simpleTime(testTime).Add(1, "w")
+
+	assert.Equal(t, "08/12/2000", weeksAgo.Calendar())
+	assert.Equal(t, "22/12/2000", weeksFromNow.Calendar())
+
+	weeksAgo = simpleTime(testTime).Subtract(2, "w")
+	weeksFromNow = simpleTime(testTime).Add(2, "w")
+
+	assert.Equal(t, "01/12/2000", weeksAgo.Calendar())
+	assert.Equal(t, "29/12/2000", weeksFromNow.Calendar())
+
+	// Reset timeNow.
+	timeNow = time.Now
+
+	SetLocale("en")
+}
+
 func TestFrLocale(t *testing.T) {
 	longDays := []string{"dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"}
 	shortDays := []string{"dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."}
@@ -237,5 +318,86 @@ func TestFrOrdinal(t *testing.T) {
 	// assert.Equal(t, "2e 2e", simple(DateTime{Year: 2017, Month: 1, Day: 11}).Format("wo Wo"))
 	assert.Equal(t, "1re", simple(DateTime{Year: 2017, Month: 1, Day: 4}).Format("Wo"))
 	assert.Equal(t, "2e", simple(DateTime{Year: 2017, Month: 1, Day: 11}).Format("Wo"))
+	SetLocale("en")
+}
+
+func TestFrRelativeTime(t *testing.T) {
+	testTime := time.Date(2007, 1, 28, 0, 0, 0, 0, chicagoLocation())
+	lib := simpleTime(testTime)
+
+	lib.SetLocale("fr")
+
+	assert.Equal(t, "il y a quelques secondes", lib.From(simpleTime(testTime).Add(44, "s")), "44 seconds = a few seconds ago")
+	assert.Equal(t, "quelques secondes", lib.From(simpleTime(testTime).Add(44, "s"), true), "44 seconds = a few seconds")
+	assert.Equal(t, "il y a une minute", lib.From(simpleTime(testTime).Add(1, "m")), "1 minute = a minute ago")
+	assert.Equal(t, "une minute", lib.From(simpleTime(testTime).Add(1, "m"), true), "1 minute = a minute")
+	assert.Equal(t, "il y a 44 minutes", lib.From(simpleTime(testTime).Add(44, "m")), "44 minutes = 44 minutes ago")
+	assert.Equal(t, "44 minutes", lib.From(simpleTime(testTime).Add(44, "m"), true), "44 minutes = 44 minutes")
+	assert.Equal(t, "il y a une heure", lib.From(simpleTime(testTime).Add(1, "h")), "1 hour = an hour ago")
+	assert.Equal(t, "une heure", lib.From(simpleTime(testTime).Add(1, "h"), true), "1 hour = an hour")
+	assert.Equal(t, "il y a 2 heures", lib.From(simpleTime(testTime).Add(2, "h")), "2 hours = 2 hours ago")
+	assert.Equal(t, "2 heures", lib.From(simpleTime(testTime).Add(2, "h"), true), "2 hours = 2 hours")
+	assert.Equal(t, "il y a un jour", lib.From(simpleTime(testTime).Add(1, "d")), "1 day = a day ago")
+	assert.Equal(t, "un jour", lib.From(simpleTime(testTime).Add(1, "d"), true), "1 day = a day")
+	assert.Equal(t, "il y a 5 jours", lib.From(simpleTime(testTime).Add(5, "d")), "5 days = 5 days ago")
+	assert.Equal(t, "5 jours", lib.From(simpleTime(testTime).Add(5, "d"), true), "5 days = 5 days")
+	assert.Equal(t, "il y a un mois", lib.From(simpleTime(testTime).Add(1, "M")), "1 month = a month ago")
+	assert.Equal(t, "un mois", lib.From(simpleTime(testTime).Add(1, "M"), true), "1 month = a month")
+	assert.Equal(t, "il y a 5 mois", lib.From(simpleTime(testTime).Add(5, "M")), "5 months = 5 months ago")
+	assert.Equal(t, "5 mois", lib.From(simpleTime(testTime).Add(5, "M"), true), "5 months = 5 months")
+	assert.Equal(t, "il y a un an", lib.From(simpleTime(testTime).Add(1, "y")), "1 year = a year ago")
+	assert.Equal(t, "un an", lib.From(simpleTime(testTime).Add(1, "y"), true), "1 year = a year")
+	assert.Equal(t, "il y a 5 ans", lib.From(simpleTime(testTime).Add(5, "y")), "5 years = 5 years ago")
+	assert.Equal(t, "5 ans", lib.From(simpleTime(testTime).Add(5, "y"), true), "5 years = 5 years")
+}
+
+func TestFrCalendarDay(t *testing.T) {
+	testTime := time.Date(2000, 12, 15, 12, 0, 0, 0, time.UTC)
+	timeNow = func() time.Time {
+		return testTime
+	}
+
+	SetLocale("fr")
+
+	refTime := simpleTime(testTime)
+
+	assert.Equal(t, "Aujourd’hui à 12:00", simpleGoment(refTime).Calendar(), "today at the same time")
+	assert.Equal(t, "Aujourd’hui à 12:25", simpleGoment(refTime).Add(25, "m").Calendar(), "now plus 25 min")
+	assert.Equal(t, "Aujourd’hui à 13:00", simpleGoment(refTime).Add(1, "h").Calendar(), "now plus 1 hour")
+	assert.Equal(t, "Demain à 12:00", simpleGoment(refTime).Add(1, "d").Calendar(), "tomorrow at the same time")
+	assert.Equal(t, "Aujourd’hui à 11:00", simpleGoment(refTime).Subtract(1, "h").Calendar(), "now minus 1 hour")
+	assert.Equal(t, "Hier à 12:00", simpleGoment(refTime).Subtract(1, "d").Calendar(), "yesterday at the same time")
+
+	refTime = simpleTime(testTime)
+
+	assert.Equal(t, "dimanche à 12:00", refTime.Add(2, "d").Calendar(), "Today + 2 days current time")
+	refTime.StartOf("day")
+	assert.Equal(t, "dimanche à 00:00", refTime.Calendar(), "Today + 2 days beginning of day")
+	refTime.EndOf("day")
+	assert.Equal(t, "dimanche à 23:59", refTime.Calendar(), "Today + 2 days end of day")
+
+	refTime = simpleTime(testTime)
+
+	assert.Equal(t, "mercredi dernier à 12:00", refTime.Subtract(2, "d").Calendar(), "Today - 2 days current time")
+	refTime.StartOf("day")
+	assert.Equal(t, "mercredi dernier à 00:00", refTime.Calendar(), "Today - 2 days beginning of day")
+	refTime.EndOf("day")
+	assert.Equal(t, "mercredi dernier à 23:59", refTime.Calendar(), "Today - 2 days end of day")
+
+	weeksAgo := simpleTime(testTime).Subtract(1, "w")
+	weeksFromNow := simpleTime(testTime).Add(1, "w")
+
+	assert.Equal(t, "08/12/2000", weeksAgo.Calendar())
+	assert.Equal(t, "22/12/2000", weeksFromNow.Calendar())
+
+	weeksAgo = simpleTime(testTime).Subtract(2, "w")
+	weeksFromNow = simpleTime(testTime).Add(2, "w")
+
+	assert.Equal(t, "01/12/2000", weeksAgo.Calendar())
+	assert.Equal(t, "29/12/2000", weeksFromNow.Calendar())
+
+	// Reset timeNow.
+	timeNow = time.Now
+
 	SetLocale("en")
 }

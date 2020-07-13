@@ -281,38 +281,38 @@ func TestCalendarDay(t *testing.T) {
 
 	refTime := simpleTime(testTime)
 
-	assert.Equal(t, "Today at 12:00pm", simpleGoment(refTime).Calendar(), "today at the same time")
-	assert.Equal(t, "Today at 12:25pm", simpleGoment(refTime).Add(25, "m").Calendar(), "now plus 25 min")
-	assert.Equal(t, "Today at 1:00pm", simpleGoment(refTime).Add(1, "h").Calendar(), "now plus 1 hour")
-	assert.Equal(t, "Tomorrow at 12:00pm", simpleGoment(refTime).Add(1, "d").Calendar(), "tomorrow at the same time")
-	assert.Equal(t, "Today at 11:00am", simpleGoment(refTime).Subtract(1, "h").Calendar(), "now minus 1 hour")
-	assert.Equal(t, "Yesterday at 12:00pm", simpleGoment(refTime).Subtract(1, "d").Calendar(), "yesterday at the same time")
+	assert.Equal(t, "Today at 12:00 PM", simpleGoment(refTime).Calendar(), "today at the same time")
+	assert.Equal(t, "Today at 12:25 PM", simpleGoment(refTime).Add(25, "m").Calendar(), "now plus 25 min")
+	assert.Equal(t, "Today at 1:00 PM", simpleGoment(refTime).Add(1, "h").Calendar(), "now plus 1 hour")
+	assert.Equal(t, "Tomorrow at 12:00 PM", simpleGoment(refTime).Add(1, "d").Calendar(), "tomorrow at the same time")
+	assert.Equal(t, "Today at 11:00 AM", simpleGoment(refTime).Subtract(1, "h").Calendar(), "now minus 1 hour")
+	assert.Equal(t, "Yesterday at 12:00 PM", simpleGoment(refTime).Subtract(1, "d").Calendar(), "yesterday at the same time")
 
 	refTime = simpleTime(testTime)
-	assert.Equal(t, "Sunday at 12:00pm", refTime.Add(2, "d").Calendar(), "Today + 2 days current time")
+	assert.Equal(t, "Sunday at 12:00 PM", refTime.Add(2, "d").Calendar(), "Today + 2 days current time")
 	refTime.StartOf("day")
-	assert.Equal(t, "Sunday at 12:00am", refTime.Calendar(), "Today + 2 days beginning of day")
+	assert.Equal(t, "Sunday at 12:00 AM", refTime.Calendar(), "Today + 2 days beginning of day")
 	refTime.EndOf("day")
-	assert.Equal(t, "Sunday at 11:59pm", refTime.Calendar(), "Today + 2 days end of day")
+	assert.Equal(t, "Sunday at 11:59 PM", refTime.Calendar(), "Today + 2 days end of day")
 
 	refTime = simpleTime(testTime)
-	assert.Equal(t, "Last Wednesday at 12:00pm", refTime.Subtract(2, "d").Calendar(), "Today - 2 days current time")
+	assert.Equal(t, "Last Wednesday at 12:00 PM", refTime.Subtract(2, "d").Calendar(), "Today - 2 days current time")
 	refTime.StartOf("day")
-	assert.Equal(t, "Last Wednesday at 12:00am", refTime.Calendar(), "Today - 2 days beginning of day")
+	assert.Equal(t, "Last Wednesday at 12:00 AM", refTime.Calendar(), "Today - 2 days beginning of day")
 	refTime.EndOf("day")
-	assert.Equal(t, "Last Wednesday at 11:59pm", refTime.Calendar(), "Today - 2 days end of day")
+	assert.Equal(t, "Last Wednesday at 11:59 PM", refTime.Calendar(), "Today - 2 days end of day")
 
 	weeksAgo := simpleTime(testTime).Subtract(1, "w")
 	weeksFromNow := simpleTime(testTime).Add(1, "w")
 
-	assert.Equal(t, "08/12/2000", weeksAgo.Calendar())
-	assert.Equal(t, "22/12/2000", weeksFromNow.Calendar())
+	assert.Equal(t, "12/08/2000", weeksAgo.Calendar())
+	assert.Equal(t, "12/22/2000", weeksFromNow.Calendar())
 
 	weeksAgo = simpleTime(testTime).Subtract(2, "w")
 	weeksFromNow = simpleTime(testTime).Add(2, "w")
 
-	assert.Equal(t, "01/12/2000", weeksAgo.Calendar())
-	assert.Equal(t, "29/12/2000", weeksFromNow.Calendar())
+	assert.Equal(t, "12/01/2000", weeksAgo.Calendar())
+	assert.Equal(t, "12/29/2000", weeksFromNow.Calendar())
 
 	// Reset timeNow.
 	timeNow = time.Now

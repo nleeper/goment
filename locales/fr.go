@@ -49,4 +49,40 @@ var FrLocale = NewLocale(
 		"LLL":  "D MMMM YYYY HH:mm",
 		"LLLL": "dddd D MMMM YYYY HH:mm",
 	},
+	relativeTimeFormats{
+		"future": "dans %s",
+		"past":   "il y a %s",
+		"s":      "quelques secondes",
+		"ss":     "%d secondes",
+		"m":      "une minute",
+		"mm":     "%d minutes",
+		"h":      "une heure",
+		"hh":     "%d heures",
+		"d":      "un jour",
+		"dd":     "%d jours",
+		"M":      "un mois",
+		"MM":     "%d mois",
+		"y":      "un an",
+		"yy":     "%d ans",
+	},
+	calendarFunctions{
+		"sameDay": func(hours int, day int) string {
+			return "[Aujourd’hui à] LT"
+		},
+		"nextDay": func(hours int, day int) string {
+			return "[Demain à] LT"
+		},
+		"nextWeek": func(hours int, day int) string {
+			return "dddd [à] LT"
+		},
+		"lastDay": func(hours int, day int) string {
+			return "[Hier à] LT"
+		},
+		"lastWeek": func(hours int, day int) string {
+			return "dddd [dernier à] LT"
+		},
+		"sameElse": func(hours int, day int) string {
+			return "L"
+		},
+	},
 )
