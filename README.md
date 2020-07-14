@@ -1,6 +1,9 @@
 ![Go](https://github.com/nleeper/goment/workflows/Go/badge.svg)
 
 # Goment
+###### Current Version: 1.1.0
+###### [Changelog](CHANGELOG.md)
+
 Goment is a port of the popular Javascript datetime library [Moment.js](https://momentjs.com/). It follows the Moment.js API closely, with some changes to make it more Go-like (e.g. using nanoseconds instead of milliseconds). 
 
 Goment is still a work in progress. Please feel free to fork and contribute missing methods, locale/languages functionality, or just provide more idiomatic Go if you see some areas to improve. I have a list of things that need added/fixed in [TODO.md](TODO.md), but will create issues for them at some point.
@@ -11,6 +14,7 @@ Goment is still a work in progress. Please feel free to fork and contribute miss
 * [Manipulate](#manipulate)
 * [Display](#display)
 * [Query](#query)
+* [i18n](#i18n)
 
 ### Parsing
 #### From now
@@ -109,77 +113,77 @@ Get is a string getter using the supplied units.
 * ns, nanosecond, nanoseconds
 
 ```
-g.Get('hours')
+g.Get('hours') // 22
 ```
 #### Nanosecond
 Get the nanoseconds of the Goment object.
 ```
-g.Nanosecond()
+g.Nanosecond() // 600
 ```
 #### Millisecond
 Get the milliseconds of the Goment object.
 ```
-g.Millisecond()
+g.Millisecond() // 330
 ```
 #### Second
 Get the seconds of the Goment object.
 ```
-g.Second()
+g.Second() // 33
 ```
 #### Minute
 Get the minutes of the Goment object.
 ```
-g.Minute()
+g.Minute() // 45
 ```
 #### Hour
 Get the hours of the Goment object.
 ```
-g.Hour()
+g.Hour() // 22
 ```
 #### Date
 Get the day of the month of the Goment object.
 ```
-g.Date()
+g.Date() // 19
 ```
 #### Day
 Get the day of the week (Sunday = 0...) of the Goment object.
 ```
-g.Day()
+g.Day() // 2
 ```
 #### ISOWeekday
 Gets the Goment object ISO day of the week with 1 being Monday and 7 being Sunday.
 ```
-g.ISOWeekday()
+g.ISOWeekday() // 4
 ```
 #### DayOfYear
 Gets the day of the year of the Goment object.
 ```
-g.DayOfYear()
+g.DayOfYear() // 100
 ```
 #### ISOWeek
 Gets the ISO week of the year of the Goment object.
 ```
-g.ISOWeek()
+g.ISOWeek() // 6
 ```
 #### Month
 Gets the month (January = 1...) of the Goment object.
 ```
-g.Month()
+g.Month() // 2
 ```
 #### Quarter
 Gets the quarter (1 to 4) of the Goment object.
 ```
-g.Quarter()
+g.Quarter() // 1
 ```
 #### Year
 Gets the year of the Goment object.
 ```
-g.Year()
+g.Year() // 2013
 ```
 #### ISOWeekYear
 Gets the ISO week-year of the Goment object.
 ```
-g.ISOWeekYear()
+g.ISOWeekYear() // 2013
 ```
 #### Set
 Set is a generic setter, accepting units as the first argument, and value as the second.
@@ -341,7 +345,7 @@ g.UTC()
 #### UTCOffset
 UTCOffset gets the Goment's UTC offset in minutes.
 ```
-g.UTCOffset()
+g.UTCOffset() // -6
 ```
 #### SetUTCOffset
 SetUTCOffset sets the Goment's UTC offset in minutes. If the offset is less than 16 and greater than -16, the value is treated as hours.
@@ -381,6 +385,8 @@ Format takes a string of tokens and replaces them with their corresponding value
 | | Wo | 1st 2nd ... 52nd 53rd |
 | | WW | 01 02 ... 52 53 |
 | Year | YY | 70 71 ... 29 30 |
+| | YYYYYY | -001970 -001971 ... +001970 +001971 |
+| | YYYYY | 01970 01971 ... 02010 02100 |
 | | YYYY | 1970 1971 ... 2029 2030 |
 | | Y | 1970 1971 ... 9999 +10000 +10001 |
 | Quarter | Q | 1 2 3 4 |
@@ -400,6 +406,7 @@ Format takes a string of tokens and replaces them with their corresponding value
 | | Z | -07:00 -06:00 ... +06:00 +07:00 |
 | | ZZ | -0700 -0600 ... +0600 +0700 |
 | Unix Timestamp | X | 1360013296 |
+| Unix Millisecond Timestamp | x | 1360013296123 |
 | Time | LT | 8:30 PM |
 | Time with seconds	| LTS | 8:30:25 PM |
 | Month numeral, day of month, year	| L	| 09/04/1986 |
@@ -412,47 +419,47 @@ Format takes a string of tokens and replaces them with their corresponding value
 | | llll | Thu, Sep 4, 1986 8:30 PM |
 
 ```
-g.Format('YYYY-MM-DD')
+g.Format('YYYY-MM-DD') // 2020-05-01
 ```
 #### FromNow
 FromNow returns the relative time from now to the Goment time.
 ```
-g.FromNow()
+g.FromNow() // 10 months ago
 ```
 #### ToNow
 ToNow returns the relative time to now to the Goment time.
 ```
-g.ToNow()
+g.ToNow() // minutes
 ```
 #### From
 From returns the relative time from the supplied time to the Goment time.
 ```
-g.From(goment.New())
+g.From(goment.New()) // a day ago
 ```
 #### To
 To returns the relative time from the Goment time to the supplied time.
 ```
-g.To(goment.New())
+g.To(goment.New()) // in a minute
 ```
 #### Calendar
 Calendar displays time relative to a given referenceTime (defaults to now).
 ```
-g.Calendar()
+g.Calendar() // Today at 1:00 PM
 ```
-Difference
+#### Difference
 Diff returns the difference between two Goments as an integer.
 ```
-g.Diff(goment.New(), 'years')
+g.Diff(goment.New(), 'years') // 3
 ```
 #### ToUnix
 ToUnix returns the Unix timestamp (the number of seconds since the Unix Epoch).
 ```
-g.ToUnix()
+g.ToUnix() // 1360310950
 ```
 #### DaysInMonth
 DaysInMonth returns the number of days in the set month.
 ```
-g.DaysInMonth()
+g.DaysInMonth() // 28
 ```
 #### ToTime
 ToTime returns the time.Time object that is wrapped by Goment.
@@ -462,78 +469,134 @@ g.ToTime()
 #### ToArray
 ToArray returns an array that mirrors the parameters from time.Date().
 ```
-g.ToArray()
+g.ToArray() // [2013 2 8 8 9 10 0]
 ```
 #### ToDateTime
 ToDateTime returns a Goment.DateTime struct.
 ```
-g.ToDateTime()
+g.ToDateTime() // {2013 2 8 8 9 10 0 UTC}
 ```
 #### ToString
-ToString returns a string representation of the Goment time.
+ToString returns an English string representation of the Goment time.
 ```
-g.ToString()
+g.ToString() // 2006-01-02 15:04:05.999999999 -0700 MST
 ```
 #### ToISOString
 ToISOString returns a ISO8601 standard representation of the Goment time.
 ```
-g.ToISOString()
+g.ToISOString() // 2016-04-12T19:46:47.286Z
 ```
 
 ### Query
 #### IsBefore
 IsBefore will check if a Goment is before another Goment.
 ```
-g.IsBefore(goment.New())
+g.IsBefore(goment.New()) // true
 ```
 #### IsAfter
 IsAfter will check if a Goment is after another Goment.
 ```
-g.IsAfter(goment.New())
+g.IsAfter(goment.New()) // false
 ```
 #### IsSame
 IsSame will check if a Goment is the same as another Goment.
 ```
-g.IsSame(goment.New())
+g.IsSame(goment.New()) // true
 ```
 #### IsSameOrBefore
 IsSameOrBefore will check if a Goment is before or the same as another Goment.
 ```
-g.IsSameOrBefore(goment.New())
+g.IsSameOrBefore(goment.New()) // true
 ```
 #### IsSameOrAfter
 IsSameOrAfter will check if a Goment is after or the same as another Goment.
 ```
-g.IsSameOrAfter(goment.New())
+g.IsSameOrAfter(goment.New()) // false
 ```
 #### IsBetween
 IsBetween will check if a Goment is between two other Goments.
 ```
-g.IsBetween(goment.New(), goment.New().Add(5, 'days))
+g.IsBetween(goment.New(), goment.New().Add(5, 'days)) // true
 ```
 #### IsDST
 IsDST checks if the Goment is in daylight saving time.
 ```
-g.IsDST()
+g.IsDST() // true
 ```
 #### IsLeapYear
 IsLeapYear returns true if the Goment's year is a leap year, and false if it is not.
 ```
-g.IsLeapYear()
+g.IsLeapYear() // false
 ```
 #### IsTime
 IsTime will check if a variable is a time.Time object.
 ```
-g.IsTime(time.Now())
+g.IsTime(time.Now()) // true
 ```
 #### IsGoment
 IsGoment will check if a variable is a Goment object.
 ```
-g.IsGoment(goment.New())
+g.IsGoment(goment.New()) // true
 ```
 
+### i18n
+Goment has support for internationalization. 
 
+In addition to assigning a global locale, you can assign a locale to a specific Goment object.
 
+\* Currently, only formatting functions like `Format`, `To`, `From`, `ToNow`, `FromNow` & `Calendar` use locales. Only English (United States) datetime formats are able to be parsed at this time.
 
+#### Changing global locale
+By default, Goment uses English (United States) locale strings. Changing the global locale does not affect existing Goment instances.
+```
+SetLocale("es")
+```
 
+#### Getting global locale
+```
+Locale() // es
+```
 
+#### Changing locale for Goment instance
+```
+g.SetLocale("fr")
+```
+
+#### Getting locale for Goment instance
+```
+g.Locale() // fr
+```
+
+#### Weekdays
+Returns a list of weekdays in the current locale.
+```
+g.Weekdays() // [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ]
+```
+#### WeekdaysShort
+Returns a list of abbreviated weekdays in the current locale.
+```
+g.WeekdaysShort() // [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ]
+```
+#### WeekdaysMin
+Returns a list of abbreviated weekdays in the current locale.
+```
+g.WeekdaysMin() // [ "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" ]
+```
+#### Months
+Returns a list of months in the current locale.
+```
+g.Months() // [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
+```
+
+#### MonthsShort
+Returns a list of abbreviated month names in the current locale.
+```
+g.MonthsShort() // [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
+```
+
+#### Adding a new locale
+To add a new locale, there are a few steps to follow. You must first add a new file in the `/locales` folder. This should be named the locale code, e.g. `fr.go`. Inside this file, you need to create a new `LocaleDetails` object and provide the required values for month names, weekday names, ordinal function, etc. Please use one of the existing locales for reference.
+
+After you've created the locale file, add a line to `locale.go` in the `supportedLocales` map. This should be a map from the locale code to an instance of the `LocaleDetails` object you created above.
+
+Lastly, please add test cases to `locale_test.go` that test the different datetime formats, and the relative time formats.
