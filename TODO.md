@@ -33,18 +33,6 @@
     * need to handle StartOf('week'), must be locale aware
     * need to handle EndOf('week'), must be locale aware
     * simplify repeated units across files
-* relative_time.go
-    * use Format method to do Calendar formatting instead of string replacing
-        ``` 
-        var defaultCalendar = map[string]string{
-            "sameDay":  "[Today at] LT",
-            "nextDay":  "[Tomorrow at] LT",
-            "nextWeek": "dddd [at] LT",
-            "lastDay":  "[Yesterday at] LT",
-            "lastWeek": "[Last] dddd [at] LT",
-            "sameElse": "L",
-        }
-        ```
 * format.go
     * support fractional seconds, like S SS SSS SSSS...
 * parse.go

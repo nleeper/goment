@@ -5,6 +5,13 @@ import (
 	"strings"
 )
 
+func getEsCalendarPronoun(hours int) string {
+	if hours != 1 {
+		return "las"
+	}
+	return "la"
+}
+
 // EsLocale is the Spanish language locale.
 var EsLocale = NewLocale(
 	"es",
@@ -25,5 +32,41 @@ var EsLocale = NewLocale(
 		"LL":   "D [de] MMMM [de] YYYY",
 		"LLL":  "D [de] MMMM [de] YYYY H:mm",
 		"LLLL": "dddd, D [de] MMMM [de] YYYY H:mm",
+	},
+	relativeTimeFormats{
+		"future": "en %s",
+		"past":   "hace %s",
+		"s":      "unos segundos",
+		"ss":     "%d segundos",
+		"m":      "un minuto",
+		"mm":     "%d minutos",
+		"h":      "una hora",
+		"hh":     "%d horas",
+		"d":      "un día",
+		"dd":     "%d días",
+		"M":      "un mes",
+		"MM":     "%d meses",
+		"y":      "un año",
+		"yy":     "%d años",
+	},
+	calendarFunctions{
+		"sameDay": func(hours int, day int) string {
+			return "[hoy a " + getEsCalendarPronoun(hours) + "] LT"
+		},
+		"nextDay": func(hours int, day int) string {
+			return "[mañana a " + getEsCalendarPronoun(hours) + "] LT"
+		},
+		"nextWeek": func(hours int, day int) string {
+			return "dddd [a " + getEsCalendarPronoun(hours) + "] LT"
+		},
+		"lastDay": func(hours int, day int) string {
+			return "[ayer a " + getEsCalendarPronoun(hours) + "] LT"
+		},
+		"lastWeek": func(hours int, day int) string {
+			return "[el] dddd [pasado a " + getEsCalendarPronoun(hours) + "] LT"
+		},
+		"sameElse": func(hours int, day int) string {
+			return "L"
+		},
 	},
 )

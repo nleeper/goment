@@ -41,4 +41,40 @@ var EnLocale = NewLocale(
 		"LLL":  "MMMM D, YYYY h:mm A",
 		"LLLL": "dddd, MMMM D, YYYY h:mm A",
 	},
+	relativeTimeFormats{
+		"future": "in %s",
+		"past":   "%s ago",
+		"s":      "a few seconds",
+		"ss":     "%d seconds",
+		"m":      "a minute",
+		"mm":     "%d minutes",
+		"h":      "an hour",
+		"hh":     "%d hours",
+		"d":      "a day",
+		"dd":     "%d days",
+		"M":      "a month",
+		"MM":     "%d months",
+		"y":      "a year",
+		"yy":     "%d years",
+	},
+	calendarFunctions{
+		"sameDay": func(hours int, day int) string {
+			return "[Today at] LT"
+		},
+		"nextDay": func(hours int, day int) string {
+			return "[Tomorrow at] LT"
+		},
+		"nextWeek": func(hours int, day int) string {
+			return "dddd [at] LT"
+		},
+		"lastDay": func(hours int, day int) string {
+			return "[Yesterday at] LT"
+		},
+		"lastWeek": func(hours int, day int) string {
+			return "[Last] dddd [at] LT"
+		},
+		"sameElse": func(hours int, day int) string {
+			return "L"
+		},
+	},
 )
