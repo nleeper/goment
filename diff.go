@@ -5,52 +5,51 @@ import (
 	"time"
 )
 
-// Diff holds a start and end Goment.
-type Diff struct {
+type diff struct {
 	Start *Goment
 	End   *Goment
 }
 
 // InYears returns the duration in number of years.
-func (d Diff) InYears() int {
+func (d diff) InYears() int {
 	return d.monthDiff() / 12
 }
 
 // InMonths returns the duration in number of months.
-func (d Diff) InMonths() int {
+func (d diff) InMonths() int {
 	return d.monthDiff()
 }
 
 // InWeeks returns the duration in number of weeks.
-func (d Diff) InWeeks() int {
+func (d diff) InWeeks() int {
 	return absFloor(math.Floor(float64(d.InDays() / 7)))
 }
 
 // InDays returns the duration in number of days.
-func (d Diff) InDays() int {
+func (d diff) InDays() int {
 	return absFloor(math.Floor(float64(d.InHours()) / 24))
 }
 
 // InHours returns the duration in number of hours.
-func (d Diff) InHours() int {
+func (d diff) InHours() int {
 	return absFloor(d.subtract().Hours())
 }
 
 // InMinutes returns the duration in number of minutes.
-func (d Diff) InMinutes() int {
+func (d diff) InMinutes() int {
 	return absFloor(d.subtract().Minutes())
 }
 
 // InSeconds returns the duration in number of seconds.
-func (d Diff) InSeconds() int {
+func (d diff) InSeconds() int {
 	return absFloor(d.subtract().Seconds())
 }
 
-func (d Diff) subtract() time.Duration {
+func (d diff) subtract() time.Duration {
 	return d.Start.ToTime().Sub(d.End.ToTime())
 }
 
-func (d Diff) monthDiff() int {
+func (d diff) monthDiff() int {
 	startYear, startMonth := d.Start.Year(), d.Start.Month()
 	endYear, endMonth := d.End.Year(), d.End.Month()
 

@@ -3,8 +3,8 @@ package goment
 import "time"
 
 type testParseable struct {
-	DateTime   string
-	ParsedTime time.Time
+	dateTime   string
+	parsedTime time.Time
 }
 
 func chicagoLocation() *time.Location {

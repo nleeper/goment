@@ -32,6 +32,8 @@ Creates a Goment object by parsing the string using the supplied format. The tim
 
 The parsing tokens are similar to the formatting tokens used in [Goment#Format](#format).
 
+Goment's parser is strict, and defaults to being accurate over forgiving.
+
 ##### Supported tokens
 |   | Token | Output |
 | - | ----- | ------ |
@@ -65,6 +67,26 @@ The parsing tokens are similar to the formatting tokens used in [Goment#Format](
 | Unix Timestamp | X | 1360013296 |
 ```
 goment.New("12-25-1995", "MM-DD-YYYY")
+```
+
+#### From string + format + locale
+As of Goment 1.2.0, a locale can now be supplied to parse locale-specific dates and times.
+
+##### Locale-aware formats
+|   | Token | Output |
+| - | ----- | ------ |
+| Time | LT | 8:30 PM |
+| Time with seconds	| LTS | 8:30:25 PM |
+| Month numeral, day of month, year	| L	| 09/04/1986 |
+| | l | 9/4/1986 |
+| Month name, day of month, year | LL | September 4, 1986 |
+| | ll | Sep 4, 1986 |
+| Month name, day of month, year, time | LLL | September 4, 1986 8:30 PM |
+| | lll	| Sep 4, 1986 8:30 PM |
+| Month name, day of month, day of week, year, time	| LLLL |	Thursday, September 4, 1986 8:30 PM |
+| | llll | Thu, Sep 4, 1986 8:30 PM |
+```
+goment.New("2 de septiembre de 1999 12:30", "LLL", "es")
 ```
 
 #### From Unix nanoseconds

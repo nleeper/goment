@@ -6,19 +6,20 @@ import (
 	"strings"
 	"time"
 
+	"github.com/nleeper/goment/locales"
 	"github.com/nleeper/goment/regexps"
 	"github.com/tkuchiki/go-timezone"
 )
 
-type formatReplacement func(*Goment) string
+type formatReplacementFunc func(*Goment) string
 
 type formatPadding struct {
-	Token        string
-	TargetLength int
-	ForceSign    bool
+	token        string
+	targetLength int
+	forceSign    bool
 }
 
-var formatReplacementFuncs = map[string]formatReplacement{}
+var formatReplacements = map[string]formatReplacementFunc{}
 
 // Format takes a string of tokens and replaces them with their corresponding values to display the Goment.
 func (g *Goment) Format(args ...interface{}) string {
@@ -31,81 +32,87 @@ func (g *Goment) Format(args ...interface{}) string {
 		format = args[0].(string)
 	}
 
-	loadReplacementFunctions()
-
 	return convertFormat(g, format)
 }
 
-func loadReplacementFunctions() {
-	if len(formatReplacementFuncs) > 0 {
+func loadFormatReplacements() {
+	if len(formatReplacements) > 0 {
 		return
 	}
 
-	addReplacementFunction("M", padding("MM", 2), "Mo", func(g *Goment) string {
+	addFormatReplacement("M", padding("MM", 2), "Mo", func(g *Goment) string {
 		return strconv.Itoa(g.Month())
 	})
-	addReplacementFunction("MMM", emptyPadding(), "", func(g *Goment) string {
+	addFormatReplacement("MMM", emptyPadding(), "", func(g *Goment) string {
 		return g.locale.MonthsShort[g.Month()-1]
 	})
-	addReplacementFunction("MMMM", emptyPadding(), "", func(g *Goment) string {
+	addFormatReplacement("MMMM", emptyPadding(), "", func(g *Goment) string {
 		return g.locale.Months[g.Month()-1]
 	})
-	addReplacementFunction("D", padding("DD", 2), "Do", func(g *Goment) string {
+
+	addFormatReplacement("D", padding("DD", 2), "Do", func(g *Goment) string {
 		return strconv.Itoa(g.Date())
 	})
-	addReplacementFunction("Y", emptyPadding(), "", func(g *Goment) string {
+	addFormatReplacement("DDD", padding("DDDD", 3), "DDDo", func(g *Goment) string {
+		return strconv.Itoa(g.DayOfYear())
+	})
+
+	addFormatReplacement("Y", emptyPadding(), "", func(g *Goment) string {
 		y := g.Year()
 		if y <= 9999 {
 			return zeroFill(y, 4, false)
 		}
 		return "+" + strconv.Itoa(y)
 	})
-	addReplacementFunction("", padding("YY", 2), "", func(g *Goment) string {
+	addFormatReplacement("", padding("YY", 2), "", func(g *Goment) string {
 		return strconv.Itoa(g.Year() % 100)
 	})
-	addReplacementFunction("", padding("YYYY", 4), "", func(g *Goment) string {
+	addFormatReplacement("", padding("YYYY", 4), "", func(g *Goment) string {
 		return strconv.Itoa(g.Year())
 	})
-	addReplacementFunction("", padding("YYYYY", 5), "", func(g *Goment) string {
+	addFormatReplacement("", padding("YYYYY", 5), "", func(g *Goment) string {
 		return strconv.Itoa(g.Year())
 	})
-	addReplacementFunction("", padding("YYYYYY", 6, true), "", func(g *Goment) string {
+	addFormatReplacement("", padding("YYYYYY", 6, true), "", func(g *Goment) string {
 		return strconv.Itoa(g.Year())
 	})
-	addReplacementFunction("d", emptyPadding(), "do", func(g *Goment) string {
+
+	addFormatReplacement("d", emptyPadding(), "do", func(g *Goment) string {
 		return strconv.Itoa(g.Day())
 	})
-	addReplacementFunction("dd", emptyPadding(), "", func(g *Goment) string {
+	addFormatReplacement("dd", emptyPadding(), "", func(g *Goment) string {
 		return g.locale.WeekdaysMin[g.Day()]
 	})
-	addReplacementFunction("ddd", emptyPadding(), "", func(g *Goment) string {
+	addFormatReplacement("ddd", emptyPadding(), "", func(g *Goment) string {
 		return g.locale.WeekdaysShort[g.Day()]
 	})
-	addReplacementFunction("dddd", emptyPadding(), "", func(g *Goment) string {
+	addFormatReplacement("dddd", emptyPadding(), "", func(g *Goment) string {
 		return g.locale.Weekdays[g.Day()]
 	})
-	addReplacementFunction("DDD", padding("DDDD", 3), "DDDo", func(g *Goment) string {
-		return strconv.Itoa(g.DayOfYear())
-	})
-	addReplacementFunction("e", emptyPadding(), "", func(g *Goment) string {
+
+	addFormatReplacement("e", emptyPadding(), "", func(g *Goment) string {
 		return strconv.Itoa(g.Weekday())
 	})
-	addReplacementFunction("E", emptyPadding(), "", func(g *Goment) string {
+	addFormatReplacement("E", emptyPadding(), "", func(g *Goment) string {
 		return strconv.Itoa(g.ISOWeekday())
 	})
-	addReplacementFunction("w", padding("ww", 2), "wo", func(g *Goment) string {
+
+	addFormatReplacement("w", padding("ww", 2), "wo", func(g *Goment) string {
 		return strconv.Itoa(g.Week())
 	})
-	addReplacementFunction("W", padding("WW", 2), "Wo", func(g *Goment) string {
+	addFormatReplacement("W", padding("WW", 2), "Wo", func(g *Goment) string {
 		return strconv.Itoa(g.ISOWeek())
 	})
-	addReplacementFunction("Q", emptyPadding(), "Qo", func(g *Goment) string {
+
+	addFormatReplacement("Q", emptyPadding(), "Qo", func(g *Goment) string {
 		return strconv.Itoa(g.Quarter())
 	})
-	addReplacementFunction("H", padding("HH", 2), "", func(g *Goment) string {
+
+	addFormatReplacement("H", padding("HH", 2), "", func(g *Goment) string {
 		return strconv.Itoa(g.Hour())
 	})
-	addReplacementFunction("h", padding("hh", 2), "", func(g *Goment) string {
+
+	addFormatReplacement("h", padding("hh", 2), "", func(g *Goment) string {
 		val := 0
 		mod := g.Hour() % 12
 		if mod == 0 {
@@ -115,42 +122,71 @@ func loadReplacementFunctions() {
 		}
 		return strconv.Itoa(val)
 	})
-	addReplacementFunction("k", padding("kk", 2), "", func(g *Goment) string {
+
+	addFormatReplacement("k", padding("kk", 2), "", func(g *Goment) string {
 		return strconv.Itoa(g.Hour() + 1)
 	})
-	addReplacementFunction("a", emptyPadding(), "", func(g *Goment) string {
+
+	addFormatReplacement("a", emptyPadding(), "", func(g *Goment) string {
 		return g.locale.MeridiemFunc(g.Hour(), g.Minute(), true)
 	})
-	addReplacementFunction("A", emptyPadding(), "", func(g *Goment) string {
+	addFormatReplacement("A", emptyPadding(), "", func(g *Goment) string {
 		return g.locale.MeridiemFunc(g.Hour(), g.Minute(), false)
 	})
-	addReplacementFunction("m", padding("mm", 2), "", func(g *Goment) string {
+
+	addFormatReplacement("m", padding("mm", 2), "", func(g *Goment) string {
 		return strconv.Itoa(g.Minute())
 	})
-	addReplacementFunction("s", padding("ss", 2), "", func(g *Goment) string {
+
+	addFormatReplacement("s", padding("ss", 2), "", func(g *Goment) string {
 		return strconv.Itoa(g.Second())
 	})
-	addReplacementFunction("X", emptyPadding(), "", func(g *Goment) string {
+
+	addFormatReplacement("X", emptyPadding(), "", func(g *Goment) string {
 		return fmt.Sprintf("%d", g.ToUnix())
 	})
-	addReplacementFunction("x", emptyPadding(), "", func(g *Goment) string {
+	addFormatReplacement("x", emptyPadding(), "", func(g *Goment) string {
 		return fmt.Sprintf("%d", g.ToTime().UnixNano()/int64(time.Millisecond))
 	})
-	addReplacementFunction("Z", emptyPadding(), "", func(g *Goment) string {
+
+	addFormatReplacement("Z", emptyPadding(), "", func(g *Goment) string {
 		return offset(g, ":")
 	})
-	addReplacementFunction("ZZ", emptyPadding(), "", func(g *Goment) string {
+	addFormatReplacement("ZZ", emptyPadding(), "", func(g *Goment) string {
 		return offset(g, "")
 	})
-	addReplacementFunction("z", emptyPadding(), "", func(g *Goment) string {
+	addFormatReplacement("z", emptyPadding(), "", func(g *Goment) string {
 		return timezoneAbbr(g)
 	})
-	addReplacementFunction("zz", emptyPadding(), "", func(g *Goment) string {
+	addFormatReplacement("zz", emptyPadding(), "", func(g *Goment) string {
 		return timezoneAbbr(g)
 	})
-	addReplacementFunction("zzzz", emptyPadding(), "", func(g *Goment) string {
+	addFormatReplacement("zzzz", emptyPadding(), "", func(g *Goment) string {
 		return timezoneFullName(g)
 	})
+}
+
+func addFormatReplacement(token string, padding formatPadding, ordinal string, f formatReplacementFunc) {
+	if token != "" {
+		formatReplacements[token] = f
+	}
+
+	if padding.token != "" {
+		formatReplacements[padding.token] = func(g *Goment) string {
+			var val = f(g)
+			i, _ := strconv.Atoi(val)
+
+			return zeroFill(i, padding.targetLength, padding.forceSign)
+		}
+	}
+
+	if ordinal != "" {
+		formatReplacements[ordinal] = func(g *Goment) string {
+			var val = f(g)
+			i, _ := strconv.Atoi(val)
+			return g.locale.OrdinalFunc(i, token)
+		}
+	}
 }
 
 func padding(token string, length int, forceSign ...bool) formatPadding {
@@ -160,9 +196,9 @@ func padding(token string, length int, forceSign ...bool) formatPadding {
 	}
 
 	return formatPadding{
-		Token:        token,
-		TargetLength: length,
-		ForceSign:    sign,
+		token:        token,
+		targetLength: length,
+		forceSign:    sign,
 	}
 }
 
@@ -170,36 +206,19 @@ func emptyPadding() formatPadding {
 	return formatPadding{}
 }
 
-func addReplacementFunction(token string, padding formatPadding, ordinal string, cb formatReplacement) {
-	if token != "" {
-		formatReplacementFuncs[token] = cb
-	}
-	if padding.Token != "" {
-		formatReplacementFuncs[padding.Token] = func(g *Goment) string {
-			var val = cb(g)
-			i, _ := strconv.Atoi(val)
-
-			return zeroFill(i, padding.TargetLength, padding.ForceSign)
-		}
-	}
-	if ordinal != "" {
-		formatReplacementFuncs[ordinal] = func(g *Goment) string {
-			var val = cb(g)
-			i, _ := strconv.Atoi(val)
-			return g.locale.OrdinalFunc(i, token)
-		}
-	}
+func expandLocaleFormats(layout string, locale locales.LocaleDetails) string {
+	return replaceFormatTokens(
+		layout,
+		regexps.LocaleRegex.FindAllStringIndex(layout, -1),
+		func(text string) (string, bool) {
+			return locale.LongDateFormat(text)
+		},
+	)
 }
 
 func convertFormat(g *Goment, layout string) string {
 	// Replace any Goment locale specific format tokens (LTS, L, LL, etc).
-	layout = replaceFormatTokens(
-		layout,
-		regexps.LocaleRegex.FindAllStringIndex(layout, -1),
-		func(text string) (string, bool) {
-			return g.locale.LongDateFormat(text)
-		},
-	)
+	layout = expandLocaleFormats(layout, g.locale)
 
 	// Replace any bracketed text in layout.
 	bracketMatch := regexps.BracketRegex.FindAllString(layout, -1)
@@ -217,7 +236,7 @@ func convertFormat(g *Goment, layout string) string {
 		layout,
 		regexps.TokenRegex.FindAllStringIndex(layout, -1),
 		func(text string) (string, bool) {
-			match, ok := formatReplacementFuncs[text]
+			match, ok := formatReplacements[text]
 			if ok {
 				return match(g), ok
 			}

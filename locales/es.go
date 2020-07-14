@@ -13,7 +13,7 @@ func getEsCalendarPronoun(hours int) string {
 }
 
 // EsLocale is the Spanish language locale.
-var EsLocale = NewLocale(
+var EsLocale = newLocale(
 	"es",
 	strings.Split("domingo_lunes_martes_miércoles_jueves_viernes_sábado", "_"),
 	strings.Split("dom._lun._mar._mié._jue._vie._sáb.", "_"),
@@ -69,4 +69,9 @@ var EsLocale = NewLocale(
 			return "L"
 		},
 	},
+	`(?i)(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)`,
+	`(?i)(ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)`,
+	`(?i)(domingo|lunes|martes|miércoles|jueves|viernes|sábado)`,
+	`(?i)(dom\.?|lun\.?|mar\.?|mié\.?|jue\.?|vie\.?|sáb\.?)`,
+	`\d{1,2}º`,
 )

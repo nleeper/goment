@@ -6,7 +6,7 @@ import (
 )
 
 // EnLocale is the US English language locale.
-var EnLocale = NewLocale(
+var EnLocale = newLocale(
 	"en",
 	strings.Split("Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday", "_"),
 	strings.Split("Sun_Mon_Tue_Wed_Thu_Fri_Sat", "_"),
@@ -77,4 +77,9 @@ var EnLocale = NewLocale(
 			return "L"
 		},
 	},
+	`(?i)(January|February|March|April|May|June|July|August|September|October|November|December)`,
+	`(?i)(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)`,
+	`(?i)(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)`,
+	`(?i)(Sun|Mon|Tue|Wed|Thu|Fri|Sat)`,
+	`\d{1,2}(th|st|nd|rd)`,
 )
