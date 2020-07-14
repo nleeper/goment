@@ -27,7 +27,7 @@ func TestFormats(t *testing.T) {
 		"m mm":                         "25 25",
 		"s ss":                         "50 50",
 		"a A":                          "pm PM",
-		"z zz":                         "CST CST",
+		"z zz zzzz":                    "CST CST Central Standard Time",
 		"Z ZZ":                         "-06:00 -0600",
 		"[the] DDDo [day of the year]": "the 45th day of the year",
 		"[the] DDDo [day of the year after January]": "the 45th day of the year after January",
