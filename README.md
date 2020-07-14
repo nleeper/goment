@@ -403,6 +403,7 @@ Format takes a string of tokens and replaces them with their corresponding value
 | Second | s | 0 1 ... 58 59 |
 | | ss | 00 01 ... 58 59 |
 | Time Zone	| z or zz | EST CST ... MST PST |
+| | zzzz | Eastern Standard Time |
 | | Z | -07:00 -06:00 ... +06:00 +07:00 |
 | | ZZ | -0700 -0600 ... +0600 +0700 |
 | Unix Timestamp | X | 1360013296 |

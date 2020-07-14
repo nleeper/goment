@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.1.1] - 2020-07-14
+### Added
+- Support for `zzzz` formatting token to display timezone name, e.g. `Central Standard Time`.
+
 ## [1.1.0] - 2020-07-13
 ### Added
 - Support for internationalization using locales when displaying Goment datetimes. Locales are currently only supported for the `Format`, `From`, `To`, `FromNow`, `ToNow` & `Calendar` methods.

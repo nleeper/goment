@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/nleeper/goment/regexps"
+	"github.com/tkuchiki/go-timezone"
 )
 
 type formatReplacement func(*Goment) string
@@ -142,10 +143,13 @@ func loadReplacementFunctions() {
 		return offset(g, "")
 	})
 	addReplacementFunction("z", emptyPadding(), "", func(g *Goment) string {
-		return timezoneName(g)
+		return timezoneAbbr(g)
 	})
 	addReplacementFunction("zz", emptyPadding(), "", func(g *Goment) string {
-		return timezoneName(g)
+		return timezoneAbbr(g)
+	})
+	addReplacementFunction("zzzz", emptyPadding(), "", func(g *Goment) string {
+		return timezoneFullName(g)
 	})
 }
 
@@ -268,9 +272,15 @@ func offset(g *Goment, sep string) string {
 	return sign + zeroFill(os/60, 2, false) + sep + zeroFill(os%60, 2, false)
 }
 
-func timezoneName(g *Goment) string {
+func timezoneAbbr(g *Goment) string {
 	tz, _ := g.ToTime().Zone()
 	return tz
+}
+
+func timezoneFullName(g *Goment) string {
+	tz := timezone.New()
+	tzAbbrInfos, _ := tz.GetTzAbbreviationInfo(timezoneAbbr(g))
+	return tzAbbrInfos[0].Name()
 }
 
 func zeroFill(val int, length int, forceSign bool) string {
