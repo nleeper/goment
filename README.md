@@ -1,7 +1,7 @@
 ![Go](https://github.com/nleeper/goment/workflows/Go/badge.svg)
 
 # Goment
-###### Current Version: 1.1.1
+###### Current Version: 1.2.0
 ###### [Changelog](CHANGELOG.md)
 
 Goment is a port of the popular Javascript datetime library [Moment.js](https://momentjs.com/). It follows the Moment.js API closely, with some changes to make it more Go-like (e.g. using nanoseconds instead of milliseconds). 
