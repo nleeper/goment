@@ -21,26 +21,26 @@ func (g *Goment) Diff(args ...interface{}) int {
 			}
 		}
 
-		diff := Diff{
+		d := diff{
 			Start: g,
 			End:   input,
 		}
 
 		switch units {
 		case "y", "year", "years":
-			return diff.InYears()
+			return d.InYears()
 		case "M", "month", "months":
-			return diff.InMonths()
+			return d.InMonths()
 		case "w", "week", "weeks":
-			return diff.InWeeks()
+			return d.InWeeks()
 		case "d", "day", "days":
-			return diff.InDays()
+			return d.InDays()
 		case "h", "hour", "hours":
-			return diff.InHours()
+			return d.InHours()
 		case "m", "minute", "minutes":
-			return diff.InMinutes()
+			return d.InMinutes()
 		default:
-			return diff.InSeconds()
+			return d.InSeconds()
 		}
 	}
 	return 0

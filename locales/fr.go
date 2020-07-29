@@ -6,7 +6,7 @@ import (
 )
 
 // FrLocale is the French language locale.
-var FrLocale = NewLocale(
+var FrLocale = newLocale(
 	"fr",
 	strings.Split("dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi", "_"),
 	strings.Split("dim._lun._mar._mer._jeu._ven._sam.", "_"),
@@ -85,4 +85,9 @@ var FrLocale = NewLocale(
 			return "L"
 		},
 	},
+	`(?i)(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)`,
+	`(?i)(janv\.?|févr\.?|mars|avr\.?|mai|juin|juil\.?|août|sept\.?|oct\.?|nov\.?|déc\.?)`,
+	`(?i)(dimanche|lundi|mardi|mercredi|jeudi|vendredi|samedi)`,
+	`(?i)(dim\.?|lun\.?|mar\.?|mer\.?|jeu\.?|ven\.?|sam\.?)`,
+	`\d{1,2}(er|)`,
 )

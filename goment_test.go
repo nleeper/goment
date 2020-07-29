@@ -44,6 +44,32 @@ func TestNewFromFormat(t *testing.T) {
 	}
 }
 
+func TestNewFromFormatUsesGlobalLocale(t *testing.T) {
+	date := "05-13-2011"
+	testTime := time.Date(2011, 5, 13, 0, 0, 0, 0, time.Local)
+
+	SetLocale("es")
+
+	lib, err := New(date, "MM-DD-YYYY")
+	if assert.NoError(t, err) {
+		assert.True(t, testTime.Equal(lib.ToTime()))
+		assert.Equal(t, "es", lib.Locale())
+	}
+
+	SetLocale("en")
+}
+
+func TestNewFromFormatWithLocale(t *testing.T) {
+	date := "05-13-2011"
+	testTime := time.Date(2011, 5, 13, 0, 0, 0, 0, time.Local)
+
+	lib, err := New(date, "MM-DD-YYYY", "fr")
+	if assert.NoError(t, err) {
+		assert.True(t, testTime.Equal(lib.ToTime()))
+		assert.Equal(t, "fr", lib.Locale())
+	}
+}
+
 func TestNewFromTime(t *testing.T) {
 	testTime := time.Date(2015, 11, 10, 5, 30, 0, 0, time.UTC)
 
@@ -107,7 +133,7 @@ func TestNewThrowErrorFromInvalidISOString(t *testing.T) {
 }
 
 func TestNewThrowErrorIfTooManyArgs(t *testing.T) {
-	_, err := New("2018-01-01", "YYYY-MM-DD", "third")
+	_, err := New("2018-01-01", "YYYY-MM-DD", "fr", "stuff")
 	assert.EqualError(t, err, "Invalid number of arguments")
 }
 

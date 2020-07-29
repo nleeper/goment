@@ -29,6 +29,9 @@ type DateTime struct {
 
 // New creates an instance of the Goment library.
 func New(args ...interface{}) (*Goment, error) {
+	loadParseReplacements()
+	loadFormatReplacements()
+
 	switch len(args) {
 	case 0:
 		return fromNow()
@@ -50,7 +53,22 @@ func New(args ...interface{}) (*Goment, error) {
 	case 2:
 		if date, ok := args[0].(string); ok {
 			if format, ok := args[1].(string); ok {
-				return fromStringWithFormat(date, format)
+				return fromStringWithFormat(date, format, getGlobalLocaleDetails())
+			}
+			return &Goment{}, errors.New("Second argument must be a format string")
+		}
+		return &Goment{}, errors.New("First argument must be a datetime string")
+	case 3:
+		// TODO - cleanup argument parsing.
+		if date, ok := args[0].(string); ok {
+			if format, ok := args[1].(string); ok {
+				if localeCode, ok := args[2].(string); ok {
+					locale, err := loadLocale(localeCode)
+					if err != nil {
+						return &Goment{}, errors.New("Invalid locale code")
+					}
+					return fromStringWithFormat(date, format, locale)
+				}
 			}
 			return &Goment{}, errors.New("Second argument must be a format string")
 		}
@@ -102,13 +120,13 @@ func fromExistingTime(t time.Time) (*Goment, error) {
 	return createGoment(t)
 }
 
-func fromStringWithFormat(date string, format string) (*Goment, error) {
-	parsed, err := parseFromFormat(date, format)
+func fromStringWithFormat(date string, format string, locale locales.LocaleDetails) (*Goment, error) {
+	parsed, err := parseFromFormat(date, format, locale)
 	if err != nil {
 		return &Goment{}, err
 	}
 
-	return createGoment(parsed)
+	return createGomentWithLocale(parsed, locale)
 }
 
 func fromISOString(date string) (*Goment, error) {
@@ -121,5 +139,9 @@ func fromISOString(date string) (*Goment, error) {
 }
 
 func createGoment(t time.Time) (*Goment, error) {
-	return &Goment{t, getGlobalLocaleDetails()}, nil
+	return createGomentWithLocale(t, getGlobalLocaleDetails())
+}
+
+func createGomentWithLocale(t time.Time, ld locales.LocaleDetails) (*Goment, error) {
+	return &Goment{t, ld}, nil
 }

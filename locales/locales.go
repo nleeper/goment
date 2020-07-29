@@ -1,6 +1,7 @@
 package locales
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -21,18 +22,23 @@ type calendarFunctions map[string]calendarFunction
 
 // LocaleDetails contains the details of the loaded locale.
 type LocaleDetails struct {
-	Code            string
-	Weekdays        []string
-	WeekdaysMin     []string
-	WeekdaysShort   []string
-	Months          []string
-	MonthsShort     []string
-	OrdinalFunc     ordinalFunction
-	MeridiemFunc    meridiemFunction
-	FirstDayOfWeek  int
-	LongDateFormats longDateFormats
-	RelativeTimes   relativeTimeFormats
-	Calendar        calendarFunctions
+	Code                   string
+	Weekdays               []string
+	WeekdaysMin            []string
+	WeekdaysShort          []string
+	Months                 []string
+	MonthsShort            []string
+	OrdinalFunc            ordinalFunction
+	MeridiemFunc           meridiemFunction
+	FirstDayOfWeek         int
+	LongDateFormats        longDateFormats
+	RelativeTimes          relativeTimeFormats
+	Calendar               calendarFunctions
+	MonthsRegex            *regexp.Regexp
+	MonthsShortRegex       *regexp.Regexp
+	WeekdaysRegex          *regexp.Regexp
+	WeekdaysShortRegex     *regexp.Regexp
+	DayOfMonthOrdinalRegex *regexp.Regexp
 }
 
 // RelativeTime returns the relative time for the period.
@@ -65,7 +71,7 @@ func (ld *LocaleDetails) LongDateFormat(key string) (string, bool) {
 		return format, true
 	}
 
-	ld.LongDateFormats[key] = strings.Join(Map(regexps.TokenRegex.FindAllString(formatUpper, -1), func(token string) string {
+	ld.LongDateFormats[key] = strings.Join(mapString(regexps.TokenRegex.FindAllString(formatUpper, -1), func(token string) string {
 		switch token {
 		case "MMMM", "MM", "DD", "dddd":
 			return token[1:]
@@ -77,8 +83,55 @@ func (ld *LocaleDetails) LongDateFormat(key string) (string, bool) {
 	return ld.LongDateFormats[key], true
 }
 
-// Map will iterate over string slice and call function on each item.
-func Map(vs []string, f func(string) string) []string {
+// GetMonthNumber returns the number for the month name.
+func (ld *LocaleDetails) GetMonthNumber(month string) int {
+	var idx = 1
+	for _, s := range ld.Months {
+		if strings.ToLower(month) == strings.ToLower(s) {
+			return idx
+		}
+		idx = idx + 1
+	}
+	return -1
+}
+
+// GetMonthShortNumber returns the number for the short month name.
+func (ld *LocaleDetails) GetMonthShortNumber(month string) int {
+	var idx = 1
+	for _, s := range ld.MonthsShort {
+		if strings.ToLower(month) == strings.ToLower(s) {
+			return idx
+		}
+		idx = idx + 1
+	}
+	return -1
+}
+
+// GetWeekdayNumber returns the number for the weekday name.
+func (ld *LocaleDetails) GetWeekdayNumber(month string) int {
+	var idx = 1
+	for _, s := range ld.Weekdays {
+		if strings.ToLower(month) == strings.ToLower(s) {
+			return idx
+		}
+		idx = idx + 1
+	}
+	return -1
+}
+
+// GetWeekdayShortNumber returns the number for the short weekday name.
+func (ld *LocaleDetails) GetWeekdayShortNumber(month string) int {
+	var idx = 1
+	for _, s := range ld.WeekdaysShort {
+		if strings.ToLower(month) == strings.ToLower(s) {
+			return idx
+		}
+		idx = idx + 1
+	}
+	return -1
+}
+
+func mapString(vs []string, f func(string) string) []string {
 	vsm := make([]string, len(vs))
 	for i, v := range vs {
 		vsm[i] = f(v)
@@ -86,8 +139,9 @@ func Map(vs []string, f func(string) string) []string {
 	return vsm
 }
 
-// NewLocale loads new LocaleDetails.
-func NewLocale(code string, wd []string, wds []string, wdm []string, m []string, ms []string, of ordinalFunction, mf meridiemFunction, dow int, ld longDateFormats, rt relativeTimeFormats, cal calendarFunctions) LocaleDetails {
+func newLocale(code string, wd []string, wds []string, wdm []string, m []string, ms []string, of ordinalFunction,
+	mf meridiemFunction, dow int, ld longDateFormats, rt relativeTimeFormats, cal calendarFunctions,
+	monthsRegex string, monthsShortRegex string, weekdaysRegex string, weekdaysShortRegex string, domOrdinalRegex string) LocaleDetails {
 	if mf == nil {
 		mf = func(hours int, minutes int, isLower bool) string {
 			m := ""
@@ -104,17 +158,22 @@ func NewLocale(code string, wd []string, wds []string, wdm []string, m []string,
 	}
 
 	return LocaleDetails{
-		Code:            code,
-		Weekdays:        wd,
-		WeekdaysShort:   wds,
-		WeekdaysMin:     wdm,
-		Months:          m,
-		MonthsShort:     ms,
-		OrdinalFunc:     of,
-		MeridiemFunc:    mf,
-		FirstDayOfWeek:  dow,
-		LongDateFormats: ld,
-		RelativeTimes:   rt,
-		Calendar:        cal,
+		Code:                   code,
+		Weekdays:               wd,
+		WeekdaysShort:          wds,
+		WeekdaysMin:            wdm,
+		Months:                 m,
+		MonthsShort:            ms,
+		OrdinalFunc:            of,
+		MeridiemFunc:           mf,
+		FirstDayOfWeek:         dow,
+		LongDateFormats:        ld,
+		RelativeTimes:          rt,
+		Calendar:               cal,
+		MonthsRegex:            regexp.MustCompile(monthsRegex),
+		MonthsShortRegex:       regexp.MustCompile(monthsShortRegex),
+		WeekdaysRegex:          regexp.MustCompile(weekdaysRegex),
+		WeekdaysShortRegex:     regexp.MustCompile(weekdaysShortRegex),
+		DayOfMonthOrdinalRegex: regexp.MustCompile(domOrdinalRegex),
 	}
 }

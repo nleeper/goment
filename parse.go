@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nleeper/goment/constants"
+	"github.com/nleeper/goment/locales"
 	"github.com/nleeper/goment/regexps"
 )
 
@@ -68,109 +68,189 @@ var isoTimes = []isoTimeFormat{
 //     ['HH', /\d\d/]
 // ]
 
-var parseReplacements = map[string]parseReplacement{
-	"M":    createParseReplacement("M", "month", regexps.MatchOneToTwo, monthIdx),
-	"MM":   createParseReplacement("MM", "month", regexps.MatchOneToTwo, monthIdx),
-	"MMM":  createParseReplacement("MMM", "month", regexps.MonthsRegex, parseShortMonth),
-	"MMMM": createParseReplacement("MMMM", "month", regexps.MonthsRegex, parseLongMonth),
-	"D":    createParseReplacement("D", "day", regexps.MatchOneToTwo, dateIdx),
-	"Do":   createParseReplacement("Do", "day", regexps.DayOfMonthOrdinal, parseOrdinalDate),
-	"DD":   createParseReplacement("DD", "day", regexps.MatchOneToTwo, dateIdx),
-	"DDD":  createParseReplacement("DDD", "dayOfYear", regexps.MatchOneToThree, parseDayOfYear),
-	"DDDD": createParseReplacement("DDDD", "dayOfYear", regexps.MatchThree, parseDayOfYear),
-	"Y":    createParseReplacement("Y", "year", regexps.MatchSigned, parseSingleDigitYear),
-	"YY":   createParseReplacement("YY", "year", regexps.MatchOneToTwo, parseTwoDigitYear),
-	"YYYY": createParseReplacement("YYYY", "year", regexps.MatchOneToFour, yearIdx),
-	"Q":    createParseReplacement("Q", "quarter", regexps.MatchOne, parseQuarter),
-	"X":    createParseReplacement("X", "unix", regexps.MatchTimestamp, parseTimestamp),
-	// // "gggg": createParseReplacement("gggg", "isoWeekYear", regexps.MatchOneToFour, nil),
-	// // "gg":   createParseReplacement("gg", "isoWeekYear", regexps.MatchOneToTwo, nil),
-	// // "w":  createParseReplacement("w", "weekOfYear", regexps.MatchOneToTwo, nil),
-	// // "ww": createParseReplacement("ww", "weekOfYear", regexps.MatchOneToTwo, nil),
-	// // "e":    createParseReplacement("e", "dayOfWeek", regexps.MatchOneToTwo, nil),
-	// "ddd":  createParseReplacement("ddd", "weekday", regexps.WeekdaysRegex, parseShortDayName),
-	// "dddd": createParseReplacement("dddd", "weekday", regexps.WeekdaysRegex, parseLongDayName),
-	// // "GGGG": createParseReplacement("GGGG", "isoWeekyear", regexps.MatchOneToFour, nil),
-	// // "GG":   createParseReplacement("GG", "isoWeekYear", regexps.MatchOneToTwo, nil),
-	// // "W": createParseReplacement("W", "isoWeekOfYear", regexps.MatchOneToTwo, nil),
-	// // "WW": createParseReplacement("WW", "isoWeekOfYear", regexps.MatchOneToTwo, nil),
-	// "E":  createParseReplacement("E", "isoWeekday", regexps.MatchOneToTwo, nil),
-	"H":  createParseReplacement("H", "hour", regexps.MatchOneToTwo, hourIdx),
-	"HH": createParseReplacement("HH", "hour", regexps.MatchOneToTwo, hourIdx),
-	"h":  createParseReplacement("h", "hour", regexps.MatchOneToTwo, hourIdx),
-	"hh": createParseReplacement("hh", "hour", regexps.MatchOneToTwo, hourIdx),
-	"k":  createParseReplacement("k", "hour", regexps.MatchOneToTwo, parseOneToTwentyFourTime),
-	"kk": createParseReplacement("kk", "hour", regexps.MatchOneToTwo, parseOneToTwentyFourTime),
-	"a":  createParseReplacement("a", "meridiem", regexps.MatchMeridiem, parseMeridiem),
-	"A":  createParseReplacement("A", "meridiem", regexps.MatchMeridiem, parseMeridiem),
-	"m":  createParseReplacement("m", "minute", regexps.MatchOneToTwo, minuteIdx),
-	"mm": createParseReplacement("mm", "minute", regexps.MatchOneToTwo, minuteIdx),
-	"s":  createParseReplacement("s", "second", regexps.MatchOneToTwo, secondIdx),
-	"ss": createParseReplacement("ss", "second", regexps.MatchOneToTwo, secondIdx),
-	// // "S":    createParseReplacement("S", "frac_second", nil, nil),
-	// // "SS":   createParseReplacement("SS", "frac_second", nil, nil),
-	// // "SSS":  createParseReplacement("SSS", "frac_second", nil, nil),
-	"Z":  createParseReplacement("Z", "utcOffset", regexps.MatchShortOffset, parseOffset),
-	"ZZ": createParseReplacement("ZZ", "utcOffset", regexps.MatchShortOffset, parseOffset),
-}
+type configFunc func(string, *parseConfig, locales.LocaleDetails)
+type findTokenFunc func(string, locales.LocaleDetails) (string, string)
 
 type isoTimeFormat struct {
-	Format string
-	Regex  *regexp.Regexp
+	format string
+	regex  *regexp.Regexp
 }
 
 type isoDateFormat struct {
-	Format    string
-	Regex     *regexp.Regexp
-	AllowTime bool
+	format    string
+	regex     *regexp.Regexp
+	allowTime bool
 }
 
 type parseConfig struct {
-	IsUTC             bool
-	TzMinutes         int
-	DayOfYear         int
-	OverflowDayOfYear bool
-	Meridiem          string
-	Week              map[string]int
-	ParsedArray       map[int]int
-	Date              *Goment
+	isUTC             bool
+	tzMinutes         int
+	dayOfYear         int
+	overflowDayOfYear bool
+	meridiem          string
+	week              map[string]int
+	parsedArray       map[int]int
+	date              *Goment
 }
 
 type parseReplacement struct {
-	Match         string
-	Type          string
-	Regex         *regexp.Regexp
-	ParseFunction func(string, *parseConfig)
+	configFunction    configFunc
+	findTokenFunction findTokenFunc
 }
 
-func createParseReplacement(args ...interface{}) parseReplacement {
-	if len(args) == 4 {
-		match := args[0].(string)
-		replaceType := args[1].(string)
-		regex := args[2].(*regexp.Regexp)
+var parseReplacements = map[string]parseReplacement{}
 
-		switch v := args[3].(type) {
-		case func(string, *parseConfig):
-			return parseReplacement{
-				match,
-				replaceType,
-				regex,
+func loadParseReplacements() {
+	if len(parseReplacements) > 0 {
+		return
+	}
+
+	// 	// // "gggg": createParseReplacement("gggg", "isoWeekYear", regexps.MatchOneToFour, nil),
+	// 	// // "gg":   createParseReplacement("gg", "isoWeekYear", regexps.MatchOneToTwo, nil),
+	// 	// // "w":  createParseReplacement("w", "weekOfYear", regexps.MatchOneToTwo, nil),
+	// 	// // "ww": createParseReplacement("ww", "weekOfYear", regexps.MatchOneToTwo, nil),
+	// 	// // "e":    createParseReplacement("e", "dayOfWeek", regexps.MatchOneToTwo, nil),
+	// 	// // "GGGG": createParseReplacement("GGGG", "isoWeekyear", regexps.MatchOneToFour, nil),
+	// 	// // "GG":   createParseReplacement("GG", "isoWeekYear", regexps.MatchOneToTwo, nil),
+	// 	// // "W": createParseReplacement("W", "isoWeekOfYear", regexps.MatchOneToTwo, nil),
+	// 	// // "WW": createParseReplacement("WW", "isoWeekOfYear", regexps.MatchOneToTwo, nil),
+	// 	// "E":  createParseReplacement("E", "isoWeekday", regexps.MatchOneToTwo, nil),
+	// 	// // "S":    createParseReplacement("S", "frac_second", nil, nil),
+	// 	// // "SS":   createParseReplacement("SS", "frac_second", nil, nil),
+	// 	// // "SSS":  createParseReplacement("SSS", "frac_second", nil, nil),
+
+	addParseReplacement("D", dateIdx, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToTwo)
+	})
+	addParseReplacement("Do", parseOrdinalDate, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, locale.DayOfMonthOrdinalRegex)
+	})
+	addParseReplacement("DD", dateIdx, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToTwo)
+	})
+	addParseReplacement("DDD", parseDayOfYear, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToThree)
+	})
+	addParseReplacement("DDDD", parseDayOfYear, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchThree)
+	})
+	addParseReplacement("ddd", parseShortDayName, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, locale.WeekdaysShortRegex)
+	})
+	addParseReplacement("dddd", parseLongDayName, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, locale.WeekdaysRegex)
+	})
+
+	addParseReplacement("M", monthIdx, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToTwo)
+	})
+	addParseReplacement("MM", monthIdx, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToTwo)
+	})
+	addParseReplacement("MMM", parseShortMonth, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, locale.MonthsShortRegex)
+	})
+	addParseReplacement("MMMM", parseLongMonth, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, locale.MonthsRegex)
+	})
+
+	addParseReplacement("Y", parseSingleDigitYear, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchSigned)
+	})
+	addParseReplacement("YY", parseTwoDigitYear, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToTwo)
+	})
+	addParseReplacement("YYYY", yearIdx, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToFour)
+	})
+	// addParseReplacement("YYYYY", func(input string, locale locales.LocaleDetails) (string, string) {
+	// 	return findRegexString(input, regexps.MatchOneToFour)
+	// })
+	// addParseReplacement("YYYYYY", func(input string, locale locales.LocaleDetails) (string, string) {
+	// 	return findRegexString(input, regexps.MatchOneToFour)
+	// })
+
+	addParseReplacement("Q", parseQuarter, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOne)
+	})
+
+	addParseReplacement("X", parseTimestamp, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchTimestamp)
+	})
+
+	addParseReplacement("H", hourIdx, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToTwo)
+	})
+	addParseReplacement("HH", hourIdx, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToTwo)
+	})
+	addParseReplacement("h", hourIdx, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToTwo)
+	})
+	addParseReplacement("hh", hourIdx, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToTwo)
+	})
+	addParseReplacement("k", parseOneToTwentyFourTime, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToTwo)
+	})
+	addParseReplacement("kk", parseOneToTwentyFourTime, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToTwo)
+	})
+	addParseReplacement("a", parseMeridiem, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchMeridiem)
+	})
+	addParseReplacement("A", parseMeridiem, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchMeridiem)
+	})
+	addParseReplacement("m", minuteIdx, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToTwo)
+	})
+	addParseReplacement("mm", minuteIdx, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToTwo)
+	})
+	addParseReplacement("s", secondIdx, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToTwo)
+	})
+	addParseReplacement("ss", secondIdx, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchOneToTwo)
+	})
+
+	addParseReplacement("Z", parseOffset, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchShortOffset)
+	})
+	addParseReplacement("ZZ", parseOffset, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, regexps.MatchShortOffset)
+	})
+}
+
+func findRegexString(input string, rx *regexp.Regexp) (string, string) {
+	found := rx.FindStringIndex(input)
+	if found != nil {
+		return input[found[0]:found[1]], input[found[1]:len(input)]
+	}
+
+	return "", input
+}
+
+func addParseReplacement(args ...interface{}) {
+	if len(args) == 3 {
+		match := args[0].(string)
+		tf := args[2].(func(string, locales.LocaleDetails) (string, string))
+
+		switch v := args[1].(type) {
+		case func(string, *parseConfig, locales.LocaleDetails):
+			parseReplacements[match] = parseReplacement{
 				v,
+				tf,
 			}
 		case int:
-			return parseReplacement{
-				match,
-				replaceType,
-				regex,
-				func(input string, config *parseConfig) {
-					config.ParsedArray[v] = parseNumber(input)
+			parseReplacements[match] = parseReplacement{
+				func(input string, config *parseConfig, locale locales.LocaleDetails) {
+					config.parsedArray[v] = parseNumber(input)
 				},
+				tf,
 			}
-		default:
-			return parseReplacement{}
 		}
-	} else {
-		return parseReplacement{}
 	}
 }
 
@@ -194,8 +274,8 @@ func createISODateFormat(format, regex string, allowTime ...bool) isoDateFormat 
 	}
 }
 
-func parseFromFormat(date string, format string) (time.Time, error) {
-	parsedDate, err := parseToGoment(date, format)
+func parseFromFormat(date string, format string, locale locales.LocaleDetails) (time.Time, error) {
+	parsedDate, err := parseToGoment(date, format, locale)
 	if err != nil {
 		return time.Time{}, err
 	}
@@ -220,9 +300,9 @@ func parseISOString(date string) (time.Time, error) {
 		// match[4] = timezone
 
 		for _, i := range isoDates {
-			if i.Regex.MatchString(match[1]) {
-				dateFormat = i.Format
-				allowTime = i.AllowTime
+			if i.regex.MatchString(match[1]) {
+				dateFormat = i.format
+				allowTime = i.allowTime
 				break
 			}
 		}
@@ -233,13 +313,13 @@ func parseISOString(date string) (time.Time, error) {
 
 		if match[3] != "" {
 			for _, i := range isoTimes {
-				if i.Regex.MatchString(match[3]) {
+				if i.regex.MatchString(match[3]) {
 					separator := match[2]
 					if separator == "" {
 						separator = " "
 					}
 
-					timeFormat = separator + i.Format
+					timeFormat = separator + i.format
 					break
 				}
 			}
@@ -268,7 +348,9 @@ func parseISOString(date string) (time.Time, error) {
 	return time.Time{}, errors.New("Not a matching ISO-8601 date")
 }
 
-func parseToGoment(date, format string) (*Goment, error) {
+func parseToGoment(date, format string, locale locales.LocaleDetails) (*Goment, error) {
+	format = expandLocaleFormats(format, locale)
+
 	bracketMatch := regexps.BracketRegex.FindAllStringIndex(format, -1)
 	bracketsFound := len(bracketMatch) > 0
 
@@ -295,28 +377,25 @@ func parseToGoment(date, format string) (*Goment, error) {
 		nil,
 	}
 
-	var parseString = date
+	var found = ""
+	var remaining = date
 
 	for i := range match {
 		token := match[i][0]
-		input := ""
 
 		if rep, ok := parseReplacements[token]; ok {
 			// Find the input value matching the token.
-			found := rep.Regex.FindStringIndex(parseString)
-			if found != nil {
-				input = parseString[found[0]:found[1]]
-				parseString = parseString[found[1]:len(parseString)]
-			}
+			found, remaining = rep.findTokenFunction(remaining, locale)
 
-			// Parse the input value.
-			rep.ParseFunction(input, config)
+			if found != "" {
+				rep.configFunction(found, config, locale)
+			}
 		}
 	}
 
 	// If we were able to build a complete date from the format (X), return now.
-	if config.Date != nil {
-		return config.Date, nil
+	if config.date != nil {
+		return config.date, nil
 	}
 
 	// Update the config values based on the meridiem.
@@ -326,16 +405,16 @@ func parseToGoment(date, format string) (*Goment, error) {
 	currentDate := currentDateArray(config)
 
 	// If the date hasn't been set by a parsing function, update config values if needed.
-	if config.DayOfYear > -1 {
-		yearToUse := defaults(config.ParsedArray, currentDate, yearIdx)
+	if config.dayOfYear > -1 {
+		yearToUse := defaults(config.parsedArray, currentDate, yearIdx)
 
-		if config.DayOfYear > daysInYear(yearToUse) || config.DayOfYear == 0 {
-			config.OverflowDayOfYear = true
+		if config.dayOfYear > daysInYear(yearToUse) || config.dayOfYear == 0 {
+			config.overflowDayOfYear = true
 		}
 
-		date := time.Date(yearToUse, 1, config.DayOfYear, 0, 0, 0, 0, time.UTC)
-		config.ParsedArray[monthIdx] = int(date.Month())
-		config.ParsedArray[dateIdx] = date.Day()
+		date := time.Date(yearToUse, 1, config.dayOfYear, 0, 0, 0, 0, time.UTC)
+		config.parsedArray[monthIdx] = int(date.Month())
+		config.parsedArray[dateIdx] = date.Day()
 	}
 
 	// Default to current date.
@@ -343,9 +422,9 @@ func parseToGoment(date, format string) (*Goment, error) {
 	// If day of month is given, default month and year.
 	// If month is given, default only year.
 	// If year is given, don't default anything.
-	for i := 0; i < 3 && !keyExists(i, config.ParsedArray); i++ {
-		if _, exist := config.ParsedArray[i]; !exist {
-			config.ParsedArray[i] = currentDate[i]
+	for i := 0; i < 3 && !keyExists(i, config.parsedArray); i++ {
+		if _, exist := config.parsedArray[i]; !exist {
+			config.parsedArray[i] = currentDate[i]
 		}
 	}
 
@@ -353,26 +432,26 @@ func parseToGoment(date, format string) (*Goment, error) {
 	// If its month or day, set the value to 1.
 	for i := 0; i < 7; i++ {
 		defaultVal := 0
-		if !keyExists(i, config.ParsedArray) {
+		if !keyExists(i, config.parsedArray) {
 			if i == 1 || i == 2 {
 				defaultVal = 1
 			}
-			config.ParsedArray[i] = defaultVal
+			config.parsedArray[i] = defaultVal
 		}
 	}
 
 	createDateFromConfig(config)
 
-	return config.Date, nil
+	return config.date, nil
 }
 
 func fixForMeridiem(config *parseConfig) {
-	if config.Meridiem == "" {
+	if config.meridiem == "" {
 		return
 	}
 
-	hour := config.ParsedArray[hourIdx]
-	isPM := strings.ToLower(config.Meridiem)[0] == 'p'
+	hour := config.parsedArray[hourIdx]
+	isPM := strings.ToLower(config.meridiem)[0] == 'p'
 
 	if isPM && hour < 12 {
 		hour += 12
@@ -381,7 +460,7 @@ func fixForMeridiem(config *parseConfig) {
 		hour = 0
 	}
 
-	config.ParsedArray[hourIdx] = hour
+	config.parsedArray[hourIdx] = hour
 }
 
 func skeyExists(key string, m map[string]int) bool {
@@ -395,36 +474,36 @@ func keyExists(key int, m map[int]int) bool {
 
 func createDateFromConfig(config *parseConfig) {
 	loc := time.Local
-	if config.IsUTC {
+	if config.isUTC {
 		loc = time.UTC
 	}
 
 	datetime := DateTime{
-		config.ParsedArray[yearIdx],
-		config.ParsedArray[monthIdx],
-		config.ParsedArray[dateIdx],
-		config.ParsedArray[hourIdx],
-		config.ParsedArray[minuteIdx],
-		config.ParsedArray[secondIdx],
-		config.ParsedArray[nanosecondIdx],
+		config.parsedArray[yearIdx],
+		config.parsedArray[monthIdx],
+		config.parsedArray[dateIdx],
+		config.parsedArray[hourIdx],
+		config.parsedArray[minuteIdx],
+		config.parsedArray[secondIdx],
+		config.parsedArray[nanosecondIdx],
 		loc,
 	}
 
 	d, _ := New(datetime)
-	if config.TzMinutes != -99999 {
+	if config.tzMinutes != -99999 {
 		// Call this method rather than SetMinute, since it checks that minute is between 0-59.
-		d.subtractMinutes(config.TzMinutes)
+		d.subtractMinutes(config.tzMinutes)
 
 		// Set the offset.
-		d.SetUTCOffset(config.TzMinutes)
+		d.SetUTCOffset(config.tzMinutes)
 	}
 
-	config.Date = d
+	config.date = d
 }
 
 func currentDateArray(config *parseConfig) map[int]int {
 	newDate, _ := New()
-	if config.IsUTC {
+	if config.isUTC {
 		newDate.UTC()
 	}
 	return map[int]int{0: newDate.Year(), 1: newDate.Month(), 2: newDate.Date()}
@@ -440,24 +519,12 @@ func defaults(parsed, current map[int]int, idx int) int {
 	return 0
 }
 
-func parseMonth(input string, config *parseConfig) {
-	config.ParsedArray[monthIdx] = parseNumber(input)
-}
-
-func parseLongMonth(input string, config *parseConfig) {
-	config.ParsedArray[monthIdx] = constants.LongMonthNames[strings.ToLower(input)]
-}
-
-func parseShortMonth(input string, config *parseConfig) {
-	config.ParsedArray[monthIdx] = constants.ShortMonthNames[strings.ToLower(input)]
-}
-
-func parseSingleDigitYear(input string, config *parseConfig) {
+func parseSingleDigitYear(input string, config *parseConfig, locale locales.LocaleDetails) {
 	y, _ := strconv.Atoi(input)
-	config.ParsedArray[yearIdx] = y
+	config.parsedArray[yearIdx] = y
 }
 
-func parseTwoDigitYear(input string, config *parseConfig) {
+func parseTwoDigitYear(input string, config *parseConfig, locale locales.LocaleDetails) {
 	baseYear := 0
 	year := parseNumber(input)
 
@@ -467,38 +534,38 @@ func parseTwoDigitYear(input string, config *parseConfig) {
 		baseYear = 2000
 	}
 
-	config.ParsedArray[yearIdx] = year + baseYear
+	config.parsedArray[yearIdx] = year + baseYear
 }
 
-func parseOrdinalDate(input string, config *parseConfig) {
-	config.ParsedArray[dateIdx] = parseNumber(regexps.MatchOneToTwo.FindAllString(input, -1)[0])
+func parseOrdinalDate(input string, config *parseConfig, locale locales.LocaleDetails) {
+	config.parsedArray[dateIdx] = parseNumber(regexps.MatchOneToTwo.FindAllString(input, -1)[0])
 }
 
-func parseDayOfYear(input string, config *parseConfig) {
-	config.DayOfYear = parseNumber(strings.TrimLeft(input, "0"))
+func parseDayOfYear(input string, config *parseConfig, locale locales.LocaleDetails) {
+	config.dayOfYear = parseNumber(strings.TrimLeft(input, "0"))
 }
 
-func parseQuarter(input string, config *parseConfig) {
-	config.ParsedArray[monthIdx] = parseNumber(input) * 3
+func parseQuarter(input string, config *parseConfig, locale locales.LocaleDetails) {
+	config.parsedArray[monthIdx] = parseNumber(input) * 3
 }
 
-func parseTimestamp(input string, config *parseConfig) {
+func parseTimestamp(input string, config *parseConfig, locale locales.LocaleDetails) {
 	ts, _ := strconv.ParseInt(input, 10, 64)
 	g, _ := Unix(ts)
 
-	config.Date = g
+	config.date = g
 }
 
-func parseOneToTwentyFourTime(input string, config *parseConfig) {
-	config.ParsedArray[hourIdx] = parseNumber(input) - 1
+func parseOneToTwentyFourTime(input string, config *parseConfig, locale locales.LocaleDetails) {
+	config.parsedArray[hourIdx] = parseNumber(input) - 1
 }
 
-func parseMeridiem(input string, config *parseConfig) {
-	config.Meridiem = input
+func parseMeridiem(input string, config *parseConfig, locale locales.LocaleDetails) {
+	config.meridiem = input
 }
 
-func parseOffset(input string, config *parseConfig) {
-	config.IsUTC = true
+func parseOffset(input string, config *parseConfig, locale locales.LocaleDetails) {
+	config.isUTC = true
 
 	match := regexps.MatchShortOffset.FindAllString(input, -1)
 	if match != nil {
@@ -512,29 +579,41 @@ func parseOffset(input string, config *parseConfig) {
 			}
 		}
 
-		config.TzMinutes = minutes
+		config.tzMinutes = minutes
 	}
 }
 
-func parseLongDayName(input string, config *parseConfig) {
-	longDayName := strings.ToLower(input)
-	if val, ok := constants.LongDayNames[longDayName]; ok {
+func parseMonth(input string, config *parseConfig, locale locales.LocaleDetails) {
+	config.parsedArray[monthIdx] = parseNumber(input)
+}
+
+func parseLongMonth(input string, config *parseConfig, locale locales.LocaleDetails) {
+	config.parsedArray[monthIdx] = locale.GetMonthNumber(input)
+}
+
+func parseShortMonth(input string, config *parseConfig, locale locales.LocaleDetails) {
+	config.parsedArray[monthIdx] = locale.GetMonthShortNumber(input)
+}
+
+func parseLongDayName(input string, config *parseConfig, locale locales.LocaleDetails) {
+	val := locale.GetWeekdayNumber(input)
+	if val != -1 {
 		createWeekConfig(config)
-		config.Week["day"] = val
+		config.week["day"] = val
 	}
 }
 
-func parseShortDayName(input string, config *parseConfig) {
-	shortDayName := strings.ToLower(input)
-	if val, ok := constants.ShortDayNames[shortDayName]; ok {
+func parseShortDayName(input string, config *parseConfig, locale locales.LocaleDetails) {
+	val := locale.GetWeekdayShortNumber(input)
+	if val != -1 {
 		createWeekConfig(config)
-		config.Week["day"] = val
+		config.week["day"] = val
 	}
 }
 
 func createWeekConfig(config *parseConfig) {
-	if config.Week == nil {
-		config.Week = map[string]int{}
+	if config.week == nil {
+		config.week = map[string]int{}
 	}
 }
 

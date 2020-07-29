@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.2.0] - 2020-07-29
+### Added
+- Support for locales when parsing Goment datetimes. Locales now can be passed in to the `New` function like `goment.New("sábado abr 11 22:52:51 2009", "dddd MMM DD HH:mm:ss YYYY", "es")`. Refer to the `Parsing` section in the `README.md` for more information.
+
 ## [1.1.1] - 2020-07-14
 ### Added
 - Support for `zzzz` formatting token to display timezone name, e.g. `Central Standard Time`.
