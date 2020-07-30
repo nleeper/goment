@@ -1,7 +1,7 @@
 ![Go](https://github.com/nleeper/goment/workflows/Go/badge.svg)
 
 # Goment
-###### Current Version: 1.2.0
+###### Current Version: 1.3.0
 ###### [Changelog](CHANGELOG.md)
 
 Goment is a port of the popular Javascript datetime library [Moment.js](https://momentjs.com/). It follows the Moment.js API closely, with some changes to make it more Go-like (e.g. using nanoseconds instead of milliseconds). 
@@ -34,7 +34,7 @@ The parsing tokens are similar to the formatting tokens used in [Goment#Format](
 
 Goment's parser is strict, and defaults to being accurate over forgiving.
 
-##### Supported tokens
+##### Year, month, and day tokens
 |   | Token | Output |
 | - | ----- | ------ |
 | Month | M | 1 2 ... 11 12 |
@@ -50,6 +50,15 @@ Goment's parser is strict, and defaults to being accurate over forgiving.
 | | YYYY | 1970 1971 ... 2029 2030 |
 | | Y | -25 |
 | Quarter | Q | 1 2 3 4 |
+| Unix Timestamp | X | 1360013296 |
+| | | |
+```
+goment.New("12-25-1995", "MM-DD-YYYY")
+```
+
+##### Hour, minute, second, and offset tokens
+|   | Token | Output |
+| - | ----- | ------ |
 | AM/PM	| A | AM PM |
 | | a |	am pm |
 | Hour| H | 0 1 ... 22 23 |
@@ -64,10 +73,23 @@ Goment's parser is strict, and defaults to being accurate over forgiving.
 | | ss | 00 01 ... 58 59 |
 | Time Zone	| Z | -07:00 -06:00 ... +06:00 +07:00 |
 | | ZZ | -0700 -0600 ... +0600 +0700 |
-| Unix Timestamp | X | 1360013296 |
-```
-goment.New("12-25-1995", "MM-DD-YYYY")
-```
+| | | |
+
+##### Week year, week, and weekday tokens
+For these, the lowercase tokens use the locale aware week start days, and the uppercase tokens use the ISO week date start days.
+
+|   | Token | Output |
+| - | ----- | ------ |
+| Locale 4 digit week year | gggg | 2014 |
+| Locale 2 digit week year | gg | 14 |
+| Locale week of year | w ww | 1..53 |
+| Locale day of week | e | 0..6 |
+| Day name in locale set by Goment.SetLocale() | dd ddd dddd | Mo..Mon..Sunday |
+| ISO 4 digit week year | GGGG | 2014 |
+| ISO 2 digit week year | GG | 14 |
+| ISO week of year | W WW | 1..53 |
+| ISO day of week | E | 1..7 |
+| | | |
 
 #### From string + format + locale
 As of Goment 1.2.0, a locale can now be supplied to parse locale-specific dates and times.
@@ -85,6 +107,7 @@ As of Goment 1.2.0, a locale can now be supplied to parse locale-specific dates 
 | | lll	| Sep 4, 1986 8:30 PM |
 | Month name, day of month, day of week, year, time	| LLLL |	Thursday, September 4, 1986 8:30 PM |
 | | llll | Thu, Sep 4, 1986 8:30 PM |
+| | | |
 ```
 goment.New("2 de septiembre de 1999 12:30", "LLL", "es")
 ```
@@ -138,51 +161,69 @@ Get is a string getter using the supplied units.
 g.Get('hours') // 22
 ```
 #### Nanosecond
-Get the nanoseconds of the Goment object.
+Gets the nanoseconds of the Goment object.
 ```
 g.Nanosecond() // 600
 ```
 #### Millisecond
-Get the milliseconds of the Goment object.
+Gets the milliseconds of the Goment object.
 ```
 g.Millisecond() // 330
 ```
 #### Second
-Get the seconds of the Goment object.
+Gets the seconds of the Goment object.
 ```
 g.Second() // 33
 ```
 #### Minute
-Get the minutes of the Goment object.
+Gets the minutes of the Goment object.
 ```
 g.Minute() // 45
 ```
 #### Hour
-Get the hours of the Goment object.
+Gets the hours of the Goment object.
 ```
 g.Hour() // 22
 ```
-#### Date
-Get the day of the month of the Goment object.
+#### Day of Month
+Gets the day of the month of the Goment object.
 ```
 g.Date() // 19
 ```
-#### Day
-Get the day of the week (Sunday = 0...) of the Goment object.
+#### Day of Week
+Gets the day of the week (Sunday = 0...) of the Goment object.
 ```
 g.Day() // 2
 ```
-#### ISOWeekday
+#### Day of Week (Locale Aware)
+Gets the day of the week according to the locale of the Goment object.
+```
+g.Weekday() // 3
+```
+#### ISO Day of Week
 Gets the Goment object ISO day of the week with 1 being Monday and 7 being Sunday.
 ```
 g.ISOWeekday() // 4
 ```
-#### DayOfYear
+#### Day of Year
 Gets the day of the year of the Goment object.
 ```
 g.DayOfYear() // 100
 ```
-#### ISOWeek
+#### Week of Year
+Gets the localized week of the year for the Goment object.
+
+The week of the year varies depending on which day is the first day of the week (Sunday, Monday, etc), and which week is the first week of the year.
+
+For example, in the United States, Sunday is the first day of the week. The week with January 1st in it is the first week of the year.
+
+In France, Monday is the first day of the week, and the week with January 4th is the first week of the year.
+
+The output of `g.Week()` will depend on the locale for the Goment object.
+```
+g.Week() // 52
+```
+#### Week of Year (ISO)
 Gets the ISO week of the year of the Goment object.
 ```
 g.ISOWeek() // 6
@@ -202,10 +243,29 @@ Gets the year of the Goment object.
 ```
 g.Year() // 2013
 ```
-#### ISOWeekYear
+#### Week Year
+Gets the week-year according to the Goment object's locale.
+
+Because the first day of the first week does not always fall on the first day of the year, sometimes the week-year will differ from the month year.
+
+For example, in the US, the week that contains Jan 1 is always the first week. In the US, weeks also start on Sunday. If Jan 1 was a Monday, Dec 31 would belong to the same week as Jan 1, and thus the same week-year as Jan 1. Dec 30 would have a different week-year than Dec 31.
+```
+g.WeekYear() // 2012
+```
+#### Week Year (ISO)
 Gets the ISO week-year of the Goment object.
 ```
 g.ISOWeekYear() // 2013
+```
+#### Weeks In Year
+Gets the number of weeks according to locale in the current Goment's year.
+```
+g.WeekYear() // 53
+```
+#### Weeks In Year (ISO)
+Gets the number of weeks in the current Goment's year, according to ISO weeks.
+```
+g.ISOWeeksInYear() // 52
 ```
 #### Set
 Set is a generic setter, accepting units as the first argument, and value as the second.
@@ -223,65 +283,98 @@ Set is a generic setter, accepting units as the first argument, and value as the
 ```
 g.Set(6, 'hour')
 ```
-#### SetNanosecond
-Set the nanoseconds for the Goment object.
+#### Set Nanosecond
+Sets the nanoseconds for the Goment object.
 ```
 g.SetNanosecond(60000)
 ```
-#### SetMillisecond
-Set the milliseconds for the Goment object.
+#### Set Millisecond
+Sets the milliseconds for the Goment object.
 ```
 g.SetMillisecond(5000)
 ```
-#### SetSecond
-Set the seconds for the Goment object.
+#### Set Second
+Sets the seconds for the Goment object.
 ```
 g.SetSecond(55)
 ```
-#### SetMinute
-Set the minutes for the Goment object.
+#### Set Minute
+Sets the minutes for the Goment object.
 ```
 g.SetMinute(15)
 ```
-#### SetHour
-Set the hours for the Goment object.
+#### Set Hour
+Sets the hours for the Goment object.
 ```
 g.SetHour(5)
 ```
-#### SetDate
-Set the day of the month for the Goment object. If the date passed in is greater than the number of days in the month, then the day is set to the last day of the month.
+#### Set Day of Month
+Sets the day of the month for the Goment object. If the date passed in is greater than the number of days in the month, then the day is set to the last day of the month.
 ```
 g.SetDate(21)
 ```
-#### SetDay
-Set the day of the week (Sunday = 0...) for the Goment object.
+#### Set Day of Week
+Sets the day of the week (Sunday = 0...) for the Goment object.
 ```
 g.SetDay(1)
 ```
-#### SetISOWeekday
+As of 1.3.0, a day name is also supported. This is parsed in the Goment object's locale.
+```
+g.SetDay("lunes")
+```
+#### Set Day of Week (Locale Aware)
+Sets the day of the week according to the locale of the Goment object.
+
+If the locale assigns Monday as the first day of the week, `g.SetWeekday(0)` will be Monday. If Sunday is the first day of the week, `g.SetWeekday(0)` will be Sunday.
+```
+g.SetWeekday(0)
+```
+#### Set Day of Week (ISO)
 Sets the Goment object ISO day of the week with 1 being Monday and 7 being Sunday.
 ```
 g.SetISOWeekday(2)
 ```
-#### SetDayOfYear
+#### Set Day of Year
 Sets the day of the year for the Goment object. For non-leap years, 366 is treated as 365.
 ```
 g.SetDayOfYear(100)
 ```
-#### SetMonth
+#### Set Week of Year
+Sets the localized week of the year for the Goment object. When setting the week of the year, the day of the week is retained.
+```
+get.SetWeek(50)
+```
+#### Set Week of Year (ISO)
+Sets the ISO week of the year for the Goment object.
+
+When setting the week of the year, the day of the week is retained.
+```
+g.SetISOWeek(52)
+```
+#### Set Month
 Sets the month (January = 1...) of the Goment object. If new month has less days than current month, the date is pinned to the end of the target month.
 ```
 g.SetMonth(3)
 ```
-#### SetQuarter
+#### Set Quarter
 Sets the quarter (1 to 4) for the Goment object.
 ```
 g.SetQuarter(2)
 ```
-#### SetYear
+#### Set Year
 Sets the year for the Goment object.
 ```
 g.SetYear(2010)
+```
+#### Set Week Year
+Sets the week-year according to the Goment object's locale.
+```
+g.SetWeekYear(2014)
+```
+#### Set Week Year (ISO)
+Sets the ISO week-year of the Goment object.
+```
+g.SetISOWeekYear(2018)
 ```
 
 ### Manipulate
@@ -387,6 +480,7 @@ Format takes a string of tokens and replaces them with their corresponding value
 | | MM | 01 01 ... 11 12 |
 | | MMM | Jan Feb ... Nov Dec |
 | | MMMM | January February ... November December |
+| Quarter | Q | 1 2 3 4 |
 | Day of Month | D | 1 2 ... 30 31 |
 | | Do | 1st 2nd ... 30th 31st |
 | | DD | 01 02 ... 30 31 |
@@ -411,7 +505,10 @@ Format takes a string of tokens and replaces them with their corresponding value
 | | YYYYY | 01970 01971 ... 02010 02100 |
 | | YYYY | 1970 1971 ... 2029 2030 |
 | | Y | 1970 1971 ... 9999 +10000 +10001 |
-| Quarter | Q | 1 2 3 4 |
+| Week Year | gg | 70 71 ... 29 30 |
+| | gggg | 1970 1971 ... 2029 2030 |
+| Week Year (ISO) |	GG | 70 71 ... 29 30 
+| | GGGG | 1970 1971 ... 2029 2030 |
 | AM/PM	| A | AM PM |
 | | a |	am pm |
 | Hour| H | 0 1 ... 22 23 |

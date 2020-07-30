@@ -24,7 +24,7 @@ var EsLocale = newLocale(
 		return fmt.Sprintf("%dº", num)
 	},
 	nil,
-	1,
+	week{Dow: 1, Doy: 4},
 	longDateFormats{
 		"LTS":  "H:mm:ss",
 		"LT":   "H:mm",
@@ -73,5 +73,6 @@ var EsLocale = newLocale(
 	`(?i)(ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)`,
 	`(?i)(domingo|lunes|martes|miércoles|jueves|viernes|sábado)`,
 	`(?i)(dom\.?|lun\.?|mar\.?|mié\.?|jue\.?|vie\.?|sáb\.?)`,
+	`(?i)(do|lu|ma|mi|ju|vi|sá)`,
 	`\d{1,2}º`,
 )

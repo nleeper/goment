@@ -5,6 +5,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.3.0] - 2020-08-20
+### Added
+- Implemented Weekday & SetWeekday methods, both are locale aware.
+- Implemented Week & SetWeek methods, both are locale aware.
+- Implemented WeekYear & SetWeekYear methods, both are locale aware.
+- Implemented WeeksInYear method, which is locale aware.
+- Implemented ISOWeeksInYear method.
+- Implemented SetISOWeek method.
+- Implemented SetISOWeekYear method.
+- Added ability to pass day name into SetDay method, day name is locale aware. 
+- Added support for weekday & weekyear tokens in parsing & formatting: e, E, w, ww, W, WW, gg, GG, gggg, GGGG
+- Added support for min weekday name token in parsing: dd
+- Added support for StartOf("week") && EndOf("week"), both are locale aware.
+
+### Changed
+- Updated SetDay to handle values that are outside of 0-6. Values will be treated as overflow to the current value.
+- Updated the constructor that takes a DateTime object to default to the current day's values when not provided for year, month & date. For example, if the constructor is called as `goment.New(DateTime{ Year: 2010 })` and today's date is `2020-08-08`, the created Goment object will be for `2010-08-08 00:00:00`.
+- Updated parsing to return an error if the weekday supplied in the parsing string does not match the weekday parsed from date fields. 
+```
+_, err := New("Wed 08-10-2017", "ddd MM-DD-YYYY") // 8-10-2017 is a Thursday
+assert.EqualError(err, "There is a mismatch between parsed weekday and expected weekday")
+```
+
+### Removed
+
 ## [1.2.0] - 2020-07-29
 ### Added
 - Support for locales when parsing Goment datetimes. Locales now can be passed in to the `New` function like `goment.New("sábado abr 11 22:52:51 2009", "dddd MMM DD HH:mm:ss YYYY", "es")`. Refer to the `Parsing` section in the `README.md` for more information.

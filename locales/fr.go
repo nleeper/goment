@@ -40,7 +40,7 @@ var FrLocale = newLocale(
 		return strconv.Itoa(num) + suffix
 	},
 	nil,
-	1,
+	week{Dow: 1, Doy: 4},
 	longDateFormats{
 		"LTS":  "HH:mm:ss",
 		"LT":   "HH:mm",
@@ -89,5 +89,6 @@ var FrLocale = newLocale(
 	`(?i)(janv\.?|févr\.?|mars|avr\.?|mai|juin|juil\.?|août|sept\.?|oct\.?|nov\.?|déc\.?)`,
 	`(?i)(dimanche|lundi|mardi|mercredi|jeudi|vendredi|samedi)`,
 	`(?i)(dim\.?|lun\.?|mar\.?|mer\.?|jeu\.?|ven\.?|sam\.?)`,
+	`(?i)(di|lu|ma|me|je|ve|sa)`,
 	`\d{1,2}(er|)`,
 )

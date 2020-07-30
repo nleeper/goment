@@ -64,7 +64,7 @@ func (g *Goment) Day() int {
 
 // Weekday gets the day of the week according to the locale.
 func (g *Goment) Weekday() int {
-	return 0
+	return (g.Day() + 7 - g.locale.Week.Dow) % 7
 }
 
 // ISOWeekday gets the ISO day of the week with 1 being Monday and 7 being Sunday.
@@ -83,7 +83,7 @@ func (g *Goment) DayOfYear() int {
 
 // Week gets the week of the year according to the locale.
 func (g *Goment) Week() int {
-	return 0
+	return weekOfYear(g, g.locale.Week.Dow, g.locale.Week.Doy).week
 }
 
 // ISOWeek gets the ISO week of the year.
@@ -109,7 +109,7 @@ func (g *Goment) Year() int {
 
 // WeekYear gets the week-year according to the locale.
 func (g *Goment) WeekYear() int {
-	return 0
+	return weekOfYear(g, g.locale.Week.Dow, g.locale.Week.Doy).year
 }
 
 // ISOWeekYear gets the ISO week-year.
@@ -120,12 +120,12 @@ func (g *Goment) ISOWeekYear() int {
 
 // WeeksInYear gets the number of weeks according to locale in the current Goment's year.
 func (g *Goment) WeeksInYear() int {
-	return 0
+	return weeksInYear(g.Year(), g.locale.Week.Dow, g.locale.Week.Doy)
 }
 
 // ISOWeeksInYear gets the number of weeks in the current Goment's year, according to ISO weeks.
 func (g *Goment) ISOWeeksInYear() int {
-	return 0
+	return weeksInYear(g.Year(), 1, 4)
 }
 
 // Set is a generic setter, accepting units as the first argument, and value as the second.
@@ -205,16 +205,31 @@ func (g *Goment) SetDate(date int) *Goment {
 }
 
 // SetDay sets the day of the week (Sunday = 0...).
-func (g *Goment) SetDay(day int) *Goment {
-	if day >= 0 && day <= 6 {
-		return g.addDays(day - g.Day())
+func (g *Goment) SetDay(args ...interface{}) *Goment {
+	if len(args) != 1 {
+		return g
 	}
+
+	switch v := args[0].(type) {
+	case string:
+		parsed := g.locale.WeekdaysRegex.FindString(v)
+		if parsed != "" {
+			val := g.locale.GetWeekdayNumber(parsed)
+			if val != -1 {
+				return g.addDays(val - g.Day())
+			}
+		}
+	case int:
+		return g.addDays(v - g.Day())
+	}
+
 	return g
 }
 
 // SetWeekday sets the day of the week according to the locale.
 func (g *Goment) SetWeekday(weekday int) *Goment {
-	return g
+	currWeekday := g.Weekday()
+	return g.addDays(weekday - currWeekday)
 }
 
 // SetISOWeekday sets the ISO day of the week with 1 being Monday and 7 being Sunday.
@@ -241,12 +256,13 @@ func (g *Goment) SetDayOfYear(doy int) *Goment {
 
 // SetWeek sets the week of the year according to the locale.
 func (g *Goment) SetWeek(week int) *Goment {
-	return g
+	return g.addDays((week - g.Week()) * 7)
 }
 
 // SetISOWeek sets the ISO week of the year.
 func (g *Goment) SetISOWeek(week int) *Goment {
-	return g
+	woy := weekOfYear(g, 1, 4).week
+	return g.addDays((week - woy) * 7)
 }
 
 // SetMonth sets the month (January = 1...). If new month has less days than current month,
@@ -278,10 +294,29 @@ func (g *Goment) SetYear(year int) *Goment {
 
 // SetWeekYear sets the week-year according to the locale.
 func (g *Goment) SetWeekYear(weekYear int) *Goment {
-	return g
+	return setWeekYearHelper(g, weekYear, g.Week(), g.Weekday(), g.locale.Week.Dow, g.locale.Week.Doy)
 }
 
 // SetISOWeekYear sets the ISO week-year.
 func (g *Goment) SetISOWeekYear(weekYear int) *Goment {
+	return setWeekYearHelper(g, weekYear, g.ISOWeek(), g.ISOWeekday(), 1, 4)
+}
+
+func setWeekYearHelper(g *Goment, weekYear int, week int, weekday int, dow int, doy int) *Goment {
+	weeksTarget := weeksInYear(weekYear, dow, doy)
+
+	if week > weeksTarget {
+		week = weeksTarget
+	}
+
+	dayOfYearData := dayOfYearFromWeeks(weekYear, week, weekday, dow, doy)
+
+	d, _ := New(DateTime{Year: dayOfYearData.year, Month: 1, Day: dayOfYearData.dayOfYear})
+	d.UTC()
+
+	g.SetYear(d.Year())
+	g.SetMonth(d.Month())
+	g.SetDate(d.Date())
+
 	return g
 }

@@ -8,67 +8,76 @@ import (
 )
 
 func TestLocalUsesLocalTime(t *testing.T) {
+	assert := assert.New(t)
+
 	testTime := time.Date(2011, 5, 13, 14, 0, 0, 0, time.UTC)
 
-	lib, err := New(testTime)
-	if assert.NoError(t, err) {
-		assert.Equal(t, lib.ToTime().Location(), time.UTC)
-		lib.Local()
-		assert.Equal(t, lib.ToTime().Location(), time.Local)
-	}
+	lib := simpleTime(testTime)
+
+	assert.Equal(time.UTC, lib.ToTime().Location())
+
+	lib.Local()
+	assert.Equal(time.Local, lib.ToTime().Location())
 }
 
 func TestUTCUsesUTCTime(t *testing.T) {
+	assert := assert.New(t)
+
 	testTime := time.Date(2011, 5, 13, 14, 0, 0, 0, chicagoLocation())
 
-	lib, err := New(testTime)
-	if assert.NoError(t, err) {
-		assert.Equal(t, lib.ToTime().Location(), chicagoLocation())
-		lib.UTC()
-		assert.Equal(t, lib.ToTime().Location(), time.UTC)
-	}
+	lib := simpleTime(testTime)
+
+	assert.Equal(chicagoLocation(), lib.ToTime().Location())
+
+	lib.UTC()
+	assert.Equal(time.UTC, lib.ToTime().Location())
 }
 
 func TestUTCOffsetForLocal(t *testing.T) {
 	testTime := time.Date(2011, 5, 13, 14, 0, 0, 0, chicagoLocation())
 
-	lib, err := New(testTime)
-	if assert.NoError(t, err) {
-		_, o := testTime.Zone()
-		assert.Equal(t, lib.UTCOffset(), o/60)
-	}
+	lib := simpleTime(testTime)
+
+	_, o := testTime.Zone()
+	assert.Equal(t, o/60, lib.UTCOffset())
 }
 
 func TestUTCOffsetAfterSet(t *testing.T) {
+	assert := assert.New(t)
+
 	testTime := time.Date(2011, 5, 13, 14, 0, 0, 0, time.UTC)
 
-	lib, err := New(testTime)
-	if assert.NoError(t, err) {
-		assert.Equal(t, lib.ToTime().Location(), time.UTC)
-		lib.SetUTCOffset(-120)
-		assert.Equal(t, lib.Hour(), 12)
-		assert.Equal(t, lib.UTCOffset(), -120)
-	}
+	lib := simpleTime(testTime)
+
+	assert.Equal(time.UTC, lib.ToTime().Location())
+
+	lib.SetUTCOffset(-120)
+	assert.Equal(12, lib.Hour())
+	assert.Equal(-120, lib.UTCOffset())
 }
 
 func TestSetUTCOffsetInHours(t *testing.T) {
+	assert := assert.New(t)
+
 	testTime := time.Date(2011, 5, 13, 14, 0, 0, 0, time.UTC)
 
-	lib, err := New(testTime)
-	if assert.NoError(t, err) {
-		assert.Equal(t, lib.ToTime().Location(), time.UTC)
-		lib.SetUTCOffset(5)
-		assert.Equal(t, lib.Hour(), 19)
-	}
+	lib := simpleTime(testTime)
+
+	assert.Equal(time.UTC, lib.ToTime().Location())
+
+	lib.SetUTCOffset(5)
+	assert.Equal(19, lib.Hour())
 }
 
 func TestSetUTCOffsetInMinutes(t *testing.T) {
+	assert := assert.New(t)
+
 	testTime := time.Date(2011, 5, 13, 14, 0, 0, 0, time.UTC)
 
-	lib, err := New(testTime)
-	if assert.NoError(t, err) {
-		assert.Equal(t, lib.ToTime().Location(), time.UTC)
-		lib.SetUTCOffset(-120)
-		assert.Equal(t, lib.Hour(), 12)
-	}
+	lib := simpleTime(testTime)
+
+	assert.Equal(time.UTC, lib.ToTime().Location())
+
+	lib.SetUTCOffset(-120)
+	assert.Equal(12, lib.Hour())
 }

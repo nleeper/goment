@@ -10,179 +10,169 @@ import (
 func TestStartOfYear(t *testing.T) {
 	start := time.Date(2012, 1, 1, 0, 0, 0, 0, time.UTC)
 
-	lib, err := New("2012-05-09 14:17:12")
-	if assert.NoError(t, err) {
-		lib.StartOf("year")
-		assert.True(t, start.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2012-05-09 14:17:12")
+
+	lib.StartOf("year")
+	assert.Equal(t, simpleTime(start).Format(), lib.Format())
 }
 
 func TestStartOfQuarter(t *testing.T) {
 	start := time.Date(2012, 7, 1, 0, 0, 0, 0, time.UTC)
 
-	lib, err := New("2012-09-15 15:10:55")
-	if assert.NoError(t, err) {
-		lib.StartOf("quarter")
-		assert.True(t, start.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2012-09-15 15:10:55")
+
+	lib.StartOf("quarter")
+	assert.Equal(t, simpleTime(start).Format(), lib.Format())
 }
 
 func TestStartOfMonth(t *testing.T) {
 	start := time.Date(2012, 2, 1, 0, 0, 0, 0, time.UTC)
 
-	lib, err := New("2012-02-28 15:10:55")
-	if assert.NoError(t, err) {
-		lib.StartOf("month")
-		assert.True(t, start.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2012-02-28 15:10:55")
+
+	lib.StartOf("month")
+	assert.Equal(t, simpleTime(start).Format(), lib.Format())
+}
+
+func TestStartOfWeek(t *testing.T) {
+	assert.Equal(t, "Sunday", simpleNow().StartOf("week").Format("dddd"))
 }
 
 func TestStartOfISOWeek(t *testing.T) {
 	start := time.Date(2017, 9, 4, 0, 0, 0, 0, time.UTC)
 
-	lib, err := New("2017-09-07 13:45:12")
-	if assert.NoError(t, err) {
-		lib.StartOf("isoWeek")
-		assert.True(t, start.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2017-09-07 13:45:12")
+
+	lib.StartOf("isoWeek")
+	assert.Equal(t, simpleTime(start).Format(), lib.Format())
 }
 
 func TestStartOfDay(t *testing.T) {
 	start := time.Date(2012, 2, 28, 0, 0, 0, 0, time.UTC)
 
-	lib, err := New("2012-02-28 15:10:55")
-	if assert.NoError(t, err) {
-		lib.StartOf("day")
-		assert.True(t, start.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2012-02-28 15:10:55")
+
+	lib.StartOf("day")
+	assert.Equal(t, simpleTime(start).Format(), lib.Format())
 }
 
 func TestStartOfDate(t *testing.T) {
 	start := time.Date(2012, 2, 15, 0, 0, 0, 0, time.UTC)
 
-	lib, err := New("2012-02-15 15:10:55")
-	if assert.NoError(t, err) {
-		lib.StartOf("date")
-		assert.True(t, start.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2012-02-15 15:10:55")
+
+	lib.StartOf("date")
+	assert.Equal(t, simpleTime(start).Format(), lib.Format())
 }
 
 func TestStartOfHour(t *testing.T) {
 	start := time.Date(2012, 2, 15, 15, 0, 0, 0, time.UTC)
 
-	lib, err := New("2012-02-15 15:10:55.123456")
-	if assert.NoError(t, err) {
-		lib.StartOf("hour")
-		assert.True(t, start.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2012-02-15 15:10:55.123456")
+
+	lib.StartOf("hour")
+	assert.Equal(t, simpleTime(start).Format(), lib.Format())
 }
 
 func TestStartOfMinute(t *testing.T) {
 	start := time.Date(2012, 2, 15, 15, 10, 0, 0, time.UTC)
 
-	lib, err := New("2012-02-15 15:10:55.123456")
-	if assert.NoError(t, err) {
-		lib.StartOf("minute")
-		assert.True(t, start.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2012-02-15 15:10:55.123456")
+
+	lib.StartOf("minute")
+	assert.Equal(t, simpleTime(start).Format(), lib.Format())
 }
 
 func TestStartOfSecond(t *testing.T) {
 	start := time.Date(2012, 2, 15, 15, 10, 55, 0, time.UTC)
 
-	lib, err := New("2012-02-15 15:10:55.123456")
-	if assert.NoError(t, err) {
-		lib.StartOf("second")
-		assert.True(t, start.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2012-02-15 15:10:55.123456")
+
+	lib.StartOf("second")
+	assert.Equal(t, simpleTime(start).Format(), lib.Format())
 }
 
 func TestEndOfYear(t *testing.T) {
 	end := time.Date(2012, 12, 31, 23, 59, 59, 999999999, time.UTC)
 
-	lib, err := New("2012-05-09 14:17:12")
-	if assert.NoError(t, err) {
-		lib.EndOf("year")
-		assert.True(t, end.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2012-05-09 14:17:12")
+
+	lib.EndOf("year")
+	assert.Equal(t, simpleTime(end).Format(), lib.Format())
 }
 
 func TestEndOfQuarter(t *testing.T) {
 	end := time.Date(2012, 9, 30, 23, 59, 59, 999999999, time.UTC)
 
-	lib, err := New("2012-07-15 15:10:55")
-	if assert.NoError(t, err) {
-		lib.EndOf("quarter")
-		assert.True(t, end.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2012-07-15 15:10:55")
+
+	lib.EndOf("quarter")
+	assert.Equal(t, simpleTime(end).Format(), lib.Format())
 }
 
 func TestEndOfMonth(t *testing.T) {
 	end := time.Date(2011, 2, 28, 23, 59, 59, 999999999, time.UTC)
 
-	lib, err := New("2011-02-01 15:10:55")
-	if assert.NoError(t, err) {
-		lib.EndOf("month")
-		assert.True(t, end.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2011-02-01 15:10:55")
+
+	lib.EndOf("month")
+	assert.Equal(t, simpleTime(end).Format(), lib.Format())
+}
+
+func TestEndOfWeek(t *testing.T) {
+	assert.Equal(t, "Saturday", simpleNow().EndOf("week").Format("dddd"))
 }
 
 func TestEndOfISOWeek(t *testing.T) {
 	end := time.Date(2017, 9, 9, 0, 0, 0, 0, time.UTC)
 
-	lib, err := New("2017-09-03 13:45:12")
-	if assert.NoError(t, err) {
-		lib.EndOf("isoWeek")
-		assert.True(t, end.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2017-09-03 13:45:12")
+
+	lib.EndOf("isoWeek")
+	assert.Equal(t, simpleTime(end).Format(), lib.Format())
 }
 
 func TestEndOfDay(t *testing.T) {
 	end := time.Date(2012, 2, 28, 23, 59, 59, 999999999, time.UTC)
 
-	lib, err := New("2012-02-28 15:10:55")
-	if assert.NoError(t, err) {
-		lib.EndOf("day")
-		assert.True(t, end.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2012-02-28 15:10:55")
+
+	lib.EndOf("day")
+	assert.Equal(t, simpleTime(end).Format(), lib.Format())
 }
 
 func TestEndOfDate(t *testing.T) {
 	end := time.Date(2012, 2, 15, 23, 59, 59, 999999999, time.UTC)
 
-	lib, err := New("2012-02-15 15:10:55")
-	if assert.NoError(t, err) {
-		lib.EndOf("date")
-		assert.True(t, end.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2012-02-15 15:10:55")
+
+	lib.EndOf("date")
+	assert.Equal(t, simpleTime(end).Format(), lib.Format())
 }
 
 func TestEndOfHour(t *testing.T) {
 	end := time.Date(2012, 2, 15, 15, 59, 59, 999999999, time.UTC)
 
-	lib, err := New("2012-02-15 15:10:55.123456")
-	if assert.NoError(t, err) {
-		lib.EndOf("hour")
-		assert.True(t, end.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2012-02-15 15:10:55.123456")
+
+	lib.EndOf("hour")
+	assert.Equal(t, simpleTime(end).Format(), lib.Format())
 }
 
 func TestEndOfMinute(t *testing.T) {
-	start := time.Date(2012, 2, 15, 15, 10, 59, 999999999, time.UTC)
+	end := time.Date(2012, 2, 15, 15, 10, 59, 999999999, time.UTC)
 
-	lib, err := New("2012-02-15 15:10:55.123456")
-	if assert.NoError(t, err) {
-		lib.EndOf("minute")
-		assert.True(t, start.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2012-02-15 15:10:55.123456")
+
+	lib.EndOf("minute")
+	assert.Equal(t, simpleTime(end).Format(), lib.Format())
 }
 
 func TestEndOfSecond(t *testing.T) {
 	end := time.Date(2012, 2, 15, 15, 10, 55, 999999999, time.UTC)
 
-	lib, err := New("2012-02-15 15:10:55.123456")
-	if assert.NoError(t, err) {
-		lib.EndOf("second")
-		assert.True(t, end.Equal(lib.ToTime()))
-	}
+	lib := simpleString("2012-02-15 15:10:55.123456")
+
+	lib.EndOf("second")
+	assert.Equal(t, simpleTime(end).Format(), lib.Format())
 }

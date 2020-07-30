@@ -68,7 +68,7 @@ var isoTimes = []isoTimeFormat{
 //     ['HH', /\d\d/]
 // ]
 
-type configFunc func(string, *parseConfig, locales.LocaleDetails)
+type configFunc func(string, *parseConfig, locales.LocaleDetails, string)
 type findTokenFunc func(string, locales.LocaleDetails) (string, string)
 
 type isoTimeFormat struct {
@@ -87,10 +87,13 @@ type parseConfig struct {
 	tzMinutes         int
 	dayOfYear         int
 	overflowDayOfYear bool
+	overflowWeekday   bool
+	overflowWeeks     bool
 	meridiem          string
 	week              map[string]int
 	parsedArray       map[int]int
 	date              *Goment
+	locale            locales.LocaleDetails
 }
 
 type parseReplacement struct {
@@ -105,122 +108,60 @@ func loadParseReplacements() {
 		return
 	}
 
-	// 	// // "gggg": createParseReplacement("gggg", "isoWeekYear", regexps.MatchOneToFour, nil),
-	// 	// // "gg":   createParseReplacement("gg", "isoWeekYear", regexps.MatchOneToTwo, nil),
-	// 	// // "w":  createParseReplacement("w", "weekOfYear", regexps.MatchOneToTwo, nil),
-	// 	// // "ww": createParseReplacement("ww", "weekOfYear", regexps.MatchOneToTwo, nil),
-	// 	// // "e":    createParseReplacement("e", "dayOfWeek", regexps.MatchOneToTwo, nil),
-	// 	// // "GGGG": createParseReplacement("GGGG", "isoWeekyear", regexps.MatchOneToFour, nil),
-	// 	// // "GG":   createParseReplacement("GG", "isoWeekYear", regexps.MatchOneToTwo, nil),
-	// 	// // "W": createParseReplacement("W", "isoWeekOfYear", regexps.MatchOneToTwo, nil),
-	// 	// // "WW": createParseReplacement("WW", "isoWeekOfYear", regexps.MatchOneToTwo, nil),
-	// 	// "E":  createParseReplacement("E", "isoWeekday", regexps.MatchOneToTwo, nil),
 	// 	// // "S":    createParseReplacement("S", "frac_second", nil, nil),
 	// 	// // "SS":   createParseReplacement("SS", "frac_second", nil, nil),
 	// 	// // "SSS":  createParseReplacement("SSS", "frac_second", nil, nil),
 
-	addParseReplacement("D", dateIdx, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToTwo)
-	})
-	addParseReplacement("Do", parseOrdinalDate, func(input string, locale locales.LocaleDetails) (string, string) {
+	addParseReplacement([]string{"D", "DD"}, dateIdx, regexps.MatchOneToTwo)
+	addParseReplacement("Do", handleOrdinalDate, func(input string, locale locales.LocaleDetails) (string, string) {
 		return findRegexString(input, locale.DayOfMonthOrdinalRegex)
 	})
-	addParseReplacement("DD", dateIdx, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToTwo)
-	})
-	addParseReplacement("DDD", parseDayOfYear, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToThree)
-	})
-	addParseReplacement("DDDD", parseDayOfYear, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchThree)
-	})
-	addParseReplacement("ddd", parseShortDayName, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, locale.WeekdaysShortRegex)
-	})
-	addParseReplacement("dddd", parseLongDayName, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, locale.WeekdaysRegex)
-	})
+	addParseReplacement("DDD", handleDayOfYear, regexps.MatchOneToThree)
+	addParseReplacement("DDDD", handleDayOfYear, regexps.MatchThree)
 
-	addParseReplacement("M", monthIdx, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToTwo)
-	})
-	addParseReplacement("MM", monthIdx, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToTwo)
-	})
-	addParseReplacement("MMM", parseShortMonth, func(input string, locale locales.LocaleDetails) (string, string) {
+	addParseReplacement([]string{"M", "MM"}, monthIdx, regexps.MatchOneToTwo)
+	addParseReplacement("MMM", handleShortMonth, func(input string, locale locales.LocaleDetails) (string, string) {
 		return findRegexString(input, locale.MonthsShortRegex)
 	})
-	addParseReplacement("MMMM", parseLongMonth, func(input string, locale locales.LocaleDetails) (string, string) {
+	addParseReplacement("MMMM", handleLongMonth, func(input string, locale locales.LocaleDetails) (string, string) {
 		return findRegexString(input, locale.MonthsRegex)
 	})
 
-	addParseReplacement("Y", parseSingleDigitYear, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchSigned)
-	})
-	addParseReplacement("YY", parseTwoDigitYear, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToTwo)
-	})
-	addParseReplacement("YYYY", yearIdx, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToFour)
-	})
-	// addParseReplacement("YYYYY", func(input string, locale locales.LocaleDetails) (string, string) {
-	// 	return findRegexString(input, regexps.MatchOneToFour)
-	// })
-	// addParseReplacement("YYYYYY", func(input string, locale locales.LocaleDetails) (string, string) {
-	// 	return findRegexString(input, regexps.MatchOneToFour)
-	// })
+	addParseReplacement("Y", handleSingleDigitYear, regexps.MatchSigned)
+	addParseReplacement("YY", handleTwoDigitYear, regexps.MatchOneToTwo)
+	addParseReplacement("YYYY", handleFourDigitYear, regexps.MatchOneToFour)
+	addParseReplacement([]string{"YYYYY", "YYYYYY"}, yearIdx, regexps.MatchOneToSix)
 
-	addParseReplacement("Q", parseQuarter, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOne)
-	})
+	addParseReplacement("Q", handleQuarter, regexps.MatchOne)
 
-	addParseReplacement("X", parseTimestamp, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchTimestamp)
-	})
+	addParseReplacement("X", handleTimestamp, regexps.MatchTimestamp)
 
-	addParseReplacement("H", hourIdx, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToTwo)
+	addParseReplacement([]string{"h", "hh", "H", "HH"}, hourIdx, regexps.MatchOneToTwo)
+	addParseReplacement([]string{"k", "kk"}, handleOneToTwentyFourTime, regexps.MatchOneToTwo)
+	addParseReplacement([]string{"m", "mm"}, minuteIdx, regexps.MatchOneToTwo)
+	addParseReplacement([]string{"s", "ss"}, secondIdx, regexps.MatchOneToTwo)
+	addParseReplacement([]string{"a", "A"}, handleMeridiem, regexps.MatchMeridiem)
+
+	addParseReplacement([]string{"Z", "ZZ"}, handleOffset, regexps.MatchShortOffset)
+
+	// Week & weekday parsing
+	addWeekParseReplacement("dd", handleMinDayName, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, locale.WeekdaysMinRegex)
 	})
-	addParseReplacement("HH", hourIdx, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToTwo)
+	addWeekParseReplacement("ddd", handleShortDayName, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, locale.WeekdaysShortRegex)
 	})
-	addParseReplacement("h", hourIdx, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToTwo)
-	})
-	addParseReplacement("hh", hourIdx, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToTwo)
-	})
-	addParseReplacement("k", parseOneToTwentyFourTime, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToTwo)
-	})
-	addParseReplacement("kk", parseOneToTwentyFourTime, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToTwo)
-	})
-	addParseReplacement("a", parseMeridiem, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchMeridiem)
-	})
-	addParseReplacement("A", parseMeridiem, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchMeridiem)
-	})
-	addParseReplacement("m", minuteIdx, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToTwo)
-	})
-	addParseReplacement("mm", minuteIdx, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToTwo)
-	})
-	addParseReplacement("s", secondIdx, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToTwo)
-	})
-	addParseReplacement("ss", secondIdx, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchOneToTwo)
+	addWeekParseReplacement("dddd", handleLongDayName, func(input string, locale locales.LocaleDetails) (string, string) {
+		return findRegexString(input, locale.WeekdaysRegex)
 	})
 
-	addParseReplacement("Z", parseOffset, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchShortOffset)
-	})
-	addParseReplacement("ZZ", parseOffset, func(input string, locale locales.LocaleDetails) (string, string) {
-		return findRegexString(input, regexps.MatchShortOffset)
-	})
+	addWeekParseReplacement([]string{"d", "e", "E"}, regexps.MatchOneToTwo)
+
+	addWeekParseReplacement([]string{"w", "ww", "W", "WW"}, handleWeekNumber, regexps.MatchOneToTwo)
+
+	addWeekParseReplacement([]string{"gg", "GG"}, handleTwoDigitWeekYear, regexps.MatchOneToTwo)
+	addWeekParseReplacement([]string{"gggg", "GGGG"}, handleWeekYear, regexps.MatchOneToFour)
+	addWeekParseReplacement([]string{"ggggg", "GGGGG"}, handleWeekYear, regexps.MatchOneToSix)
 }
 
 func findRegexString(input string, rx *regexp.Regexp) (string, string) {
@@ -228,27 +169,95 @@ func findRegexString(input string, rx *regexp.Regexp) (string, string) {
 	if found != nil {
 		return input[found[0]:found[1]], input[found[1]:len(input)]
 	}
-
 	return "", input
+}
+
+func buildStringSlice(arg interface{}) []string {
+	switch v := arg.(type) {
+	case string:
+		return []string{v}
+	case []string:
+		return v
+	}
+	return []string{}
+}
+
+func buildFindTokenFunction(arg interface{}) findTokenFunc {
+	switch v := arg.(type) {
+	case func(input string, locale locales.LocaleDetails) (string, string):
+		return v
+	case *regexp.Regexp:
+		return func(input string, locale locales.LocaleDetails) (string, string) {
+			return findRegexString(input, v)
+		}
+	}
+
+	// Return a no-op findTokenFunc if the type doesn't match.
+	return func(input string, locale locales.LocaleDetails) (string, string) {
+		return "", input
+	}
+}
+
+func addWeekParseReplacement(args ...interface{}) {
+	count := len(args)
+
+	if count < 2 {
+		return
+	}
+
+	var cf configFunc
+	var ftf findTokenFunc
+
+	tokens := buildStringSlice(args[0])
+
+	switch count {
+	case 2:
+		tokens = buildStringSlice(args[0])
+		ftf = buildFindTokenFunction(args[1])
+
+		cf = func(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
+			config.week[token] = parseNumber(input)
+		}
+	case 3:
+		tokens = buildStringSlice(args[0])
+		cf = args[1].(func(string, *parseConfig, locales.LocaleDetails, string))
+		ftf = buildFindTokenFunction(args[2])
+	}
+
+	for _, t := range tokens {
+		parseReplacements[t] = parseReplacement{
+			func(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
+				if config.week == nil {
+					config.week = map[string]int{}
+				}
+				cf(input, config, locale, token)
+			},
+			ftf,
+		}
+	}
 }
 
 func addParseReplacement(args ...interface{}) {
 	if len(args) == 3 {
-		match := args[0].(string)
-		tf := args[2].(func(string, locales.LocaleDetails) (string, string))
+		tokens := buildStringSlice(args[0])
+
+		var cf configFunc
 
 		switch v := args[1].(type) {
-		case func(string, *parseConfig, locales.LocaleDetails):
-			parseReplacements[match] = parseReplacement{
-				v,
-				tf,
-			}
+		case func(string, *parseConfig, locales.LocaleDetails, string):
+			cf = v
 		case int:
-			parseReplacements[match] = parseReplacement{
-				func(input string, config *parseConfig, locale locales.LocaleDetails) {
-					config.parsedArray[v] = parseNumber(input)
-				},
-				tf,
+			cf = func(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
+				config.parsedArray[v] = parseNumber(input)
+			}
+		}
+
+		ftf := buildFindTokenFunction(args[2])
+
+		for _, t := range tokens {
+			parseReplacements[t] = parseReplacement{
+				cf,
+				ftf,
 			}
 		}
 	}
@@ -371,10 +380,13 @@ func parseToGoment(date, format string, locale locales.LocaleDetails) (*Goment, 
 		-99999,
 		-1,
 		false,
+		false,
+		false,
 		"",
 		nil,
 		map[int]int{},
 		nil,
+		locale,
 	}
 
 	var found = ""
@@ -388,21 +400,29 @@ func parseToGoment(date, format string, locale locales.LocaleDetails) (*Goment, 
 			found, remaining = rep.findTokenFunction(remaining, locale)
 
 			if found != "" {
-				rep.configFunction(found, config, locale)
+				rep.configFunction(found, config, locale, token)
 			}
 		}
 	}
+
+	return buildFromParseConfig(config)
+}
+
+func buildFromParseConfig(config *parseConfig) (*Goment, error) {
+	// Update the config values based on the meridiem.
+	fixForMeridiem(config)
 
 	// If we were able to build a complete date from the format (X), return now.
 	if config.date != nil {
 		return config.date, nil
 	}
 
-	// Update the config values based on the meridiem.
-	fixForMeridiem(config)
-
 	// Get the current date's values.
 	currentDate := currentDateArray(config)
+
+	if config.week != nil && !keyExists(dateIdx, config.parsedArray) && !keyExists(monthIdx, config.parsedArray) {
+		dayOfYearFromWeekInfo(config)
+	}
 
 	// If the date hasn't been set by a parsing function, update config values if needed.
 	if config.dayOfYear > -1 {
@@ -442,7 +462,96 @@ func parseToGoment(date, format string, locale locales.LocaleDetails) (*Goment, 
 
 	createDateFromConfig(config)
 
+	expectedWeekday := config.date.Day()
+	if config.week != nil && skeyExists("d", config.week) && config.week["d"] != expectedWeekday {
+		return nil, errors.New("There is a mismatch between parsed weekday and expected weekday")
+	}
+
 	return config.date, nil
+}
+
+func dayOfYearFromWeekInfo(config *parseConfig) {
+	var weekday, dow, doy, week, wy int
+	var currWeek weekYear
+
+	weekdayOverflow := false
+
+	local, _ := New()
+
+	w := config.week
+
+	if skeyExists("GG", w) || skeyExists("W", w) || skeyExists("E", w) {
+		dow = 1
+		doy = 4
+
+		currWeek = weekOfYear(local, dow, doy)
+
+		wy = getDefaultWeekYear("GG", config, currWeek)
+
+		week = getDefaultWeek("W", w, 1)
+		weekday = getDefaultWeekday("E", w, 1)
+
+		if weekday < 1 || weekday > 7 {
+			weekdayOverflow = true
+		}
+	} else {
+		dow = config.locale.Week.Dow
+		doy = config.locale.Week.Doy
+
+		currWeek = weekOfYear(local, dow, doy)
+
+		wy = getDefaultWeekYear("gg", config, currWeek)
+
+		week = getDefaultWeek("w", w, currWeek.week)
+
+		if skeyExists("d", w) {
+			weekday = w["d"]
+			if weekday < 0 || weekday > 6 {
+				weekdayOverflow = true
+			}
+		} else if skeyExists("e", w) {
+			weekday = w["e"] + dow
+			if w["e"] < 0 || w["e"] > 6 {
+				weekdayOverflow = true
+			}
+		} else {
+			weekday = dow
+		}
+	}
+
+	if week < 1 || week > weeksInYear(wy, dow, doy) {
+		config.overflowWeeks = true
+	} else if weekdayOverflow {
+		config.overflowWeekday = true
+	} else {
+		temp := dayOfYearFromWeeks(wy, week, weekday, dow, doy)
+		config.parsedArray[yearIdx] = temp.year
+		config.dayOfYear = temp.dayOfYear
+	}
+}
+
+func getDefaultWeekday(token string, week map[string]int, currWeekday int) int {
+	if skeyExists(token, week) {
+		return week[token]
+	}
+	return currWeekday
+}
+
+func getDefaultWeek(token string, week map[string]int, currWeek int) int {
+	if skeyExists(token, week) {
+		return week[token]
+	}
+	return currWeek
+}
+
+func getDefaultWeekYear(token string, config *parseConfig, currWeek weekYear) int {
+	if skeyExists(token, config.week) {
+		return config.week[token]
+	}
+	if keyExists(yearIdx, config.parsedArray) {
+		return config.parsedArray[yearIdx]
+	}
+	return currWeek.year
 }
 
 func fixForMeridiem(config *parseConfig) {
@@ -519,52 +628,39 @@ func defaults(parsed, current map[int]int, idx int) int {
 	return 0
 }
 
-func parseSingleDigitYear(input string, config *parseConfig, locale locales.LocaleDetails) {
+func handleSingleDigitYear(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
 	y, _ := strconv.Atoi(input)
 	config.parsedArray[yearIdx] = y
 }
 
-func parseTwoDigitYear(input string, config *parseConfig, locale locales.LocaleDetails) {
-	baseYear := 0
-	year := parseNumber(input)
-
-	if year > 68 {
-		baseYear = 1900
-	} else {
-		baseYear = 2000
-	}
-
-	config.parsedArray[yearIdx] = year + baseYear
-}
-
-func parseOrdinalDate(input string, config *parseConfig, locale locales.LocaleDetails) {
+func handleOrdinalDate(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
 	config.parsedArray[dateIdx] = parseNumber(regexps.MatchOneToTwo.FindAllString(input, -1)[0])
 }
 
-func parseDayOfYear(input string, config *parseConfig, locale locales.LocaleDetails) {
+func handleDayOfYear(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
 	config.dayOfYear = parseNumber(strings.TrimLeft(input, "0"))
 }
 
-func parseQuarter(input string, config *parseConfig, locale locales.LocaleDetails) {
+func handleQuarter(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
 	config.parsedArray[monthIdx] = parseNumber(input) * 3
 }
 
-func parseTimestamp(input string, config *parseConfig, locale locales.LocaleDetails) {
+func handleTimestamp(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
 	ts, _ := strconv.ParseInt(input, 10, 64)
 	g, _ := Unix(ts)
 
 	config.date = g
 }
 
-func parseOneToTwentyFourTime(input string, config *parseConfig, locale locales.LocaleDetails) {
+func handleOneToTwentyFourTime(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
 	config.parsedArray[hourIdx] = parseNumber(input) - 1
 }
 
-func parseMeridiem(input string, config *parseConfig, locale locales.LocaleDetails) {
+func handleMeridiem(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
 	config.meridiem = input
 }
 
-func parseOffset(input string, config *parseConfig, locale locales.LocaleDetails) {
+func handleOffset(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
 	config.isUTC = true
 
 	match := regexps.MatchShortOffset.FindAllString(input, -1)
@@ -583,38 +679,72 @@ func parseOffset(input string, config *parseConfig, locale locales.LocaleDetails
 	}
 }
 
-func parseMonth(input string, config *parseConfig, locale locales.LocaleDetails) {
-	config.parsedArray[monthIdx] = parseNumber(input)
-}
-
-func parseLongMonth(input string, config *parseConfig, locale locales.LocaleDetails) {
+func handleLongMonth(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
 	config.parsedArray[monthIdx] = locale.GetMonthNumber(input)
 }
 
-func parseShortMonth(input string, config *parseConfig, locale locales.LocaleDetails) {
+func handleShortMonth(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
 	config.parsedArray[monthIdx] = locale.GetMonthShortNumber(input)
 }
 
-func parseLongDayName(input string, config *parseConfig, locale locales.LocaleDetails) {
+func handleLongDayName(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
 	val := locale.GetWeekdayNumber(input)
 	if val != -1 {
-		createWeekConfig(config)
-		config.week["day"] = val
+		config.week["d"] = val
 	}
 }
 
-func parseShortDayName(input string, config *parseConfig, locale locales.LocaleDetails) {
+func handleShortDayName(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
 	val := locale.GetWeekdayShortNumber(input)
 	if val != -1 {
-		createWeekConfig(config)
-		config.week["day"] = val
+		config.week["d"] = val
 	}
 }
 
-func createWeekConfig(config *parseConfig) {
-	if config.week == nil {
-		config.week = map[string]int{}
+func handleMinDayName(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
+	val := locale.GetWeekdayMinNumber(input)
+	if val != -1 {
+		config.week["d"] = val
 	}
+}
+
+func handleWeekNumber(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
+	config.week[token[:1]] = parseNumber(input)
+}
+
+func handleWeekYear(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
+	config.week[token[:2]] = parseNumber(input)
+}
+
+func handleTwoDigitWeekYear(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
+	config.week[token] = parseTwoDigitYear(input)
+}
+
+func handleTwoDigitYear(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
+	config.parsedArray[yearIdx] = parseTwoDigitYear(input)
+}
+
+func handleFourDigitYear(input string, config *parseConfig, locale locales.LocaleDetails, token string) {
+	year := 0
+	if len(input) == 2 {
+		year = parseTwoDigitYear(input)
+	} else {
+		year = parseNumber(input)
+	}
+	config.parsedArray[yearIdx] = year
+}
+
+func parseTwoDigitYear(input string) int {
+	baseYear := 0
+	year := parseNumber(input)
+
+	if year > 68 {
+		baseYear = 1900
+	} else {
+		baseYear = 2000
+	}
+
+	return year + baseYear
 }
 
 func parseNumber(dateText string) int {

@@ -32,7 +32,7 @@ var EnLocale = newLocale(
 		return strconv.Itoa(num) + suffix
 	},
 	nil,
-	0,
+	week{Dow: 0, Doy: 6},
 	longDateFormats{
 		"LTS":  "h:mm:ss A",
 		"LT":   "h:mm A",
@@ -81,5 +81,6 @@ var EnLocale = newLocale(
 	`(?i)(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)`,
 	`(?i)(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)`,
 	`(?i)(Sun|Mon|Tue|Wed|Thu|Fri|Sat)`,
+	`(?i)(Su|Mo|Tu|We|Th|Fr|Sa)`,
 	`\d{1,2}(th|st|nd|rd)`,
 )
