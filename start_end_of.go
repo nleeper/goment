@@ -39,7 +39,7 @@ func (g *Goment) startOfMonth() *Goment {
 }
 
 func (g *Goment) startOfWeek() *Goment {
-	return g
+	return g.SetWeekday(0).startOfDay()
 }
 
 func (g *Goment) startOfISOWeek() *Goment {
@@ -101,7 +101,7 @@ func (g *Goment) endOfMonth() *Goment {
 }
 
 func (g *Goment) endOfWeek() *Goment {
-	return g
+	return g.SetWeekday(6).startOfDay()
 }
 
 func (g *Goment) endOfISOWeek() *Goment {

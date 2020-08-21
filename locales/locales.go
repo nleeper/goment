@@ -20,6 +20,11 @@ type relativeTimeFormats map[string]string
 
 type calendarFunctions map[string]calendarFunction
 
+type week struct {
+	Dow int
+	Doy int
+}
+
 // LocaleDetails contains the details of the loaded locale.
 type LocaleDetails struct {
 	Code                   string
@@ -30,7 +35,7 @@ type LocaleDetails struct {
 	MonthsShort            []string
 	OrdinalFunc            ordinalFunction
 	MeridiemFunc           meridiemFunction
-	FirstDayOfWeek         int
+	Week                   week
 	LongDateFormats        longDateFormats
 	RelativeTimes          relativeTimeFormats
 	Calendar               calendarFunctions
@@ -38,6 +43,7 @@ type LocaleDetails struct {
 	MonthsShortRegex       *regexp.Regexp
 	WeekdaysRegex          *regexp.Regexp
 	WeekdaysShortRegex     *regexp.Regexp
+	WeekdaysMinRegex       *regexp.Regexp
 	DayOfMonthOrdinalRegex *regexp.Regexp
 }
 
@@ -108,10 +114,10 @@ func (ld *LocaleDetails) GetMonthShortNumber(month string) int {
 }
 
 // GetWeekdayNumber returns the number for the weekday name.
-func (ld *LocaleDetails) GetWeekdayNumber(month string) int {
-	var idx = 1
+func (ld *LocaleDetails) GetWeekdayNumber(wd string) int {
+	var idx = 0
 	for _, s := range ld.Weekdays {
-		if strings.ToLower(month) == strings.ToLower(s) {
+		if strings.ToLower(wd) == strings.ToLower(s) {
 			return idx
 		}
 		idx = idx + 1
@@ -120,10 +126,22 @@ func (ld *LocaleDetails) GetWeekdayNumber(month string) int {
 }
 
 // GetWeekdayShortNumber returns the number for the short weekday name.
-func (ld *LocaleDetails) GetWeekdayShortNumber(month string) int {
-	var idx = 1
+func (ld *LocaleDetails) GetWeekdayShortNumber(wd string) int {
+	var idx = 0
 	for _, s := range ld.WeekdaysShort {
-		if strings.ToLower(month) == strings.ToLower(s) {
+		if strings.ToLower(wd) == strings.ToLower(s) {
+			return idx
+		}
+		idx = idx + 1
+	}
+	return -1
+}
+
+// GetWeekdayMinNumber returns the number for the min weekday name.
+func (ld *LocaleDetails) GetWeekdayMinNumber(wd string) int {
+	var idx = 0
+	for _, s := range ld.WeekdaysMin {
+		if strings.ToLower(wd) == strings.ToLower(s) {
 			return idx
 		}
 		idx = idx + 1
@@ -140,8 +158,8 @@ func mapString(vs []string, f func(string) string) []string {
 }
 
 func newLocale(code string, wd []string, wds []string, wdm []string, m []string, ms []string, of ordinalFunction,
-	mf meridiemFunction, dow int, ld longDateFormats, rt relativeTimeFormats, cal calendarFunctions,
-	monthsRegex string, monthsShortRegex string, weekdaysRegex string, weekdaysShortRegex string, domOrdinalRegex string) LocaleDetails {
+	mf meridiemFunction, wk week, ld longDateFormats, rt relativeTimeFormats, cal calendarFunctions,
+	monthsRegex string, monthsShortRegex string, weekdaysRegex string, weekdaysShortRegex string, weekdaysMinRegex string, domOrdinalRegex string) LocaleDetails {
 	if mf == nil {
 		mf = func(hours int, minutes int, isLower bool) string {
 			m := ""
@@ -157,6 +175,7 @@ func newLocale(code string, wd []string, wds []string, wdm []string, m []string,
 		}
 	}
 
+	// TODO - build regexs for weekdays based off arrays of weekday names.
 	return LocaleDetails{
 		Code:                   code,
 		Weekdays:               wd,
@@ -166,7 +185,7 @@ func newLocale(code string, wd []string, wds []string, wdm []string, m []string,
 		MonthsShort:            ms,
 		OrdinalFunc:            of,
 		MeridiemFunc:           mf,
-		FirstDayOfWeek:         dow,
+		Week:                   wk,
 		LongDateFormats:        ld,
 		RelativeTimes:          rt,
 		Calendar:               cal,
@@ -174,6 +193,7 @@ func newLocale(code string, wd []string, wds []string, wdm []string, m []string,
 		MonthsShortRegex:       regexp.MustCompile(monthsShortRegex),
 		WeekdaysRegex:          regexp.MustCompile(weekdaysRegex),
 		WeekdaysShortRegex:     regexp.MustCompile(weekdaysShortRegex),
+		WeekdaysMinRegex:       regexp.MustCompile(weekdaysMinRegex),
 		DayOfMonthOrdinalRegex: regexp.MustCompile(domOrdinalRegex),
 	}
 }

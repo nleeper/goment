@@ -94,13 +94,30 @@ func (g *Goment) Clone() *Goment {
 }
 
 func fromDateTime(dt DateTime) (*Goment, error) {
+	tn := timeNow()
+
+	year := tn.Year()
+	if dt.Year != 0 {
+		year = dt.Year
+	}
+
+	month := tn.Month()
+	if dt.Month > 0 {
+		month = time.Month(dt.Month)
+	}
+
+	day := tn.Day()
+	if dt.Day > 0 {
+		day = dt.Day
+	}
+
 	// Default to local time if not provided.
-	loc := time.Local
+	loc := tn.Location()
 	if dt.Location != nil {
 		loc = dt.Location
 	}
 
-	d := time.Date(dt.Year, time.Month(dt.Month), dt.Day, dt.Hour, dt.Minute, dt.Second, dt.Nanosecond, loc)
+	d := time.Date(year, month, day, dt.Hour, dt.Minute, dt.Second, dt.Nanosecond, loc)
 	return fromExistingTime(d)
 }
 

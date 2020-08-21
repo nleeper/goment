@@ -104,6 +104,25 @@ func loadFormatReplacements() {
 		return strconv.Itoa(g.ISOWeek())
 	})
 
+	addFormatReplacement("", padding("gg", 2), "", func(g *Goment) string {
+		return strconv.Itoa(g.WeekYear() % 100)
+	})
+	addFormatReplacement("", padding("gggg", 4), "", func(g *Goment) string {
+		return strconv.Itoa(g.WeekYear())
+	})
+	addFormatReplacement("", padding("ggggg", 5), "", func(g *Goment) string {
+		return strconv.Itoa(g.WeekYear())
+	})
+	addFormatReplacement("", padding("GG", 2), "", func(g *Goment) string {
+		return strconv.Itoa(g.ISOWeekYear() % 100)
+	})
+	addFormatReplacement("", padding("GGGG", 4), "", func(g *Goment) string {
+		return strconv.Itoa(g.ISOWeekYear())
+	})
+	addFormatReplacement("", padding("GGGGG", 5), "", func(g *Goment) string {
+		return strconv.Itoa(g.ISOWeekYear())
+	})
+
 	addFormatReplacement("Q", emptyPadding(), "Qo", func(g *Goment) string {
 		return strconv.Itoa(g.Quarter())
 	})

@@ -12,6 +12,26 @@ func chicagoLocation() *time.Location {
 	return location
 }
 
+func simpleUnix(ts int64) *Goment {
+	lib, _ := Unix(ts)
+	return lib
+}
+
+func simpleUnixNano(ts int64) *Goment {
+	lib, _ := New(ts)
+	return lib
+}
+
+func simpleFormat(date string, format string) *Goment {
+	lib, _ := New(date, format)
+	return lib
+}
+
+func simpleFormatLocale(date string, format string, localeCode string) *Goment {
+	lib, _ := New(date, format, localeCode)
+	return lib
+}
+
 func simpleNow() *Goment {
 	lib, _ := New()
 	return lib
@@ -19,6 +39,12 @@ func simpleNow() *Goment {
 
 func simple(dateTime DateTime) *Goment {
 	lib, _ := New(dateTime)
+	return lib
+}
+
+func simpleLocale(dateTime DateTime, localeCode string) *Goment {
+	lib, _ := New(dateTime)
+	lib.SetLocale(localeCode)
 	return lib
 }
 

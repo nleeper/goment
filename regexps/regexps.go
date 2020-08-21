@@ -24,11 +24,17 @@ var TimeZoneRegex = regexp.MustCompile(`Z|[+-]\d\d(?::?\d\d)?`)
 // MatchOne is used to match a single digit.
 var MatchOne = regexp.MustCompile(`\d`)
 
-// MatchOneToTwo is used to match a one to two digits.
+// MatchOneToTwo is used to match one to two digits.
 var MatchOneToTwo = regexp.MustCompile(`\d\d?`)
 
-// MatchOneToFour is used to match a one to four digits.
+// MatchTwo is used to match exactly 2 digits.
+var MatchTwo = regexp.MustCompile(`\d\d`)
+
+// MatchOneToFour is used to match one to four digits.
 var MatchOneToFour = regexp.MustCompile(`\d{1,4}`)
+
+// MatchOneToSix is used to match one to 6 digits.
+var MatchOneToSix = regexp.MustCompile(`[+-]?\d{1,6}`)
 
 // MatchUnsigned is used to match unsigned digits.
 var MatchUnsigned = regexp.MustCompile(`\d+`)
