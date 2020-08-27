@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Added MonthByNumber method to return the month name by number.
+- Added MonthShortByNumber method to return the short month name by number.
+- Added WeekdayByNumber method to return the weekday name by number. This method is locale aware.
+
+### Changed
+- Updated Weekdays method to be locale aware if bool parameter is provided.
+- Updated WeekdaysShort method to be locale aware if bool parameter is provided.
+- Updated WeekdaysMin method to be locale aware if bool parameter is provided.
 
 ## [1.3.0] - 2020-08-20
 ### Added

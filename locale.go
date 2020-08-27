@@ -7,8 +7,6 @@ import (
 	"github.com/nleeper/goment/locales"
 )
 
-// TODO - add support for https://momentjs.com/docs/#/i18n/listing-months-weekdays/
-
 // DefaultLocaleCode is the default locale used by Goment if not set.
 const DefaultLocaleCode = "en"
 
@@ -66,24 +64,80 @@ func (g *Goment) Months() []string {
 	return g.locale.Months
 }
 
+// MonthByNumber returns the month name by number.
+func (g *Goment) MonthByNumber(num int) string {
+	if num < 1 || num > 12 {
+		return ""
+	}
+	return g.locale.Months[num-1]
+}
+
 // MonthsShort returns the list of abbreviated month names in the current locale.
 func (g *Goment) MonthsShort() []string {
 	return g.locale.MonthsShort
 }
 
-// Weekdays returns the list of weekdays in the current locale.
-func (g *Goment) Weekdays() []string {
-	return g.locale.Weekdays
+// MonthShortByNumber returns the month short name by number.
+func (g *Goment) MonthShortByNumber(num int) string {
+	if num < 1 || num > 12 {
+		return ""
+	}
+	return g.locale.MonthsShort[num-1]
 }
 
-// WeekdaysShort returns the list of abbreviated weekday names in the current locale.
-func (g *Goment) WeekdaysShort() []string {
-	return g.locale.WeekdaysShort
+// Weekdays returns the list of weekdays in the current locale. If the bool parameter is true, the list will be shifted to make the
+// locale's first day of the week the first value. If it is not provided or false, Sunday for the locale will be the first value.
+func (g *Goment) Weekdays(args ...interface{}) []string {
+	shifted := false
+	if len(args) == 1 {
+		shifted = args[0].(bool)
+	}
+	return g.locale.GetWeekdays(shifted)
 }
 
-// WeekdaysMin returns the list of weekdays in the current locale.
-func (g *Goment) WeekdaysMin() []string {
-	return g.locale.WeekdaysMin
+// WeekdaysShort returns the list of abbreviated weekday names in the current locale. If the bool parameter is true, the list will be shifted to make the
+// locale's first day of the week the first value. If it is not provided or false, Sunday for the locale will be the first value.
+func (g *Goment) WeekdaysShort(args ...interface{}) []string {
+	shifted := false
+	if len(args) == 1 {
+		shifted = args[0].(bool)
+	}
+	return g.locale.GetWeekdaysShort(shifted)
+}
+
+// WeekdaysMin returns the list of weekdays in the current locale. If the bool parameter is true, the list will be shifted to make the
+// locale's first day of the week the first value. If it is not provided or false, Sunday for the locale will be the first value.
+func (g *Goment) WeekdaysMin(args ...interface{}) []string {
+	shifted := false
+	if len(args) == 1 {
+		shifted = args[0].(bool)
+	}
+	return g.locale.GetWeekdaysMin(shifted)
+}
+
+// WeekdayByNumber returns the weekday name by number. If the first parameter is true, the day number parameter will take the locale's
+// first day of week into account when returning the day.
+func (g *Goment) WeekdayByNumber(args ...interface{}) string {
+	count := len(args)
+	if count < 1 || count > 2 {
+		return ""
+	}
+
+	shifted := false
+	num := -1
+
+	switch count {
+	case 1:
+		num = args[0].(int)
+	case 2:
+		shifted = args[0].(bool)
+		num = args[1].(int)
+	}
+
+	if num < 0 || num > 6 {
+		return ""
+	}
+	return g.locale.GetWeekdays(shifted)[num]
 }
 
 func getGlobalLocaleDetails() locales.LocaleDetails {

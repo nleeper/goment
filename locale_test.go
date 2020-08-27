@@ -76,7 +76,7 @@ func TestEnLocale(t *testing.T) {
 	shortMonths := []string{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"}
 	longMonths := []string{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
 
-	lib, _ := New()
+	lib := simpleNow()
 
 	assert.Equal("en", lib.Locale())
 	assert.Equal(longDays, lib.Weekdays())
@@ -84,6 +84,83 @@ func TestEnLocale(t *testing.T) {
 	assert.Equal(minDays, lib.WeekdaysMin())
 	assert.Equal(longMonths, lib.Months())
 	assert.Equal(shortMonths, lib.MonthsShort())
+}
+
+func TestEnMonthByNumber(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+
+	assert.Equal("January", lib.MonthByNumber(1))
+	assert.Equal("June", lib.MonthByNumber(6))
+	assert.Equal("December", lib.MonthByNumber(12))
+}
+
+func TestEnMonthByNumberInvalid(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+
+	assert.Equal("", lib.MonthByNumber(0))
+	assert.Equal("", lib.MonthByNumber(13))
+}
+
+func TestEnMonthShortByNumber(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+
+	assert.Equal("Jan", lib.MonthShortByNumber(1))
+	assert.Equal("Jun", lib.MonthShortByNumber(6))
+	assert.Equal("Dec", lib.MonthShortByNumber(12))
+}
+
+func TestEnMonthShortByNumberInvalid(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+
+	assert.Equal("", lib.MonthShortByNumber(0))
+	assert.Equal("", lib.MonthShortByNumber(13))
+}
+
+func TestEnWeekdayByNumber(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+
+	assert.Equal("Monday", lib.WeekdayByNumber(1))
+	assert.Equal("Wednesday", lib.WeekdayByNumber(3))
+	assert.Equal("Saturday", lib.WeekdayByNumber(6))
+}
+
+func TestEnWeekdayByNumberLocale(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+
+	assert.Equal("Sunday", lib.WeekdayByNumber(true, 0))
+	assert.Equal("Sunday", lib.WeekdayByNumber(0))
+	assert.Equal("Wednesday", lib.WeekdayByNumber(true, 3))
+	assert.Equal("Wednesday", lib.WeekdayByNumber(3))
+	assert.Equal("Saturday", lib.WeekdayByNumber(6))
+}
+
+func TestEnWeekdayByNumberInvalid(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+
+	assert.Equal("", lib.WeekdayByNumber())
+	assert.Equal("", lib.WeekdayByNumber(6, 1, true))
+}
+
+func TestEnWeekdaysWithLocaleDow(t *testing.T) {
+	longDays := []string{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}
+
+	lib := simpleNow()
+
+	assert.Equal(t, longDays, lib.Weekdays(true))
 }
 
 func TestEsLocale(t *testing.T) {
@@ -104,6 +181,46 @@ func TestEsLocale(t *testing.T) {
 	assert.Equal(minDays, lib.WeekdaysMin())
 	assert.Equal(longMonths, lib.Months())
 	assert.Equal(shortMonths, lib.MonthsShort())
+}
+
+func TestEsWeekdaysWithLocaleDow(t *testing.T) {
+	longDays := []string{"lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"}
+
+	lib := simpleNow()
+	lib.SetLocale("es")
+
+	assert.Equal(t, longDays, lib.Weekdays(true))
+}
+
+func TestEsWeekdaysShortWithLocaleDow(t *testing.T) {
+	longDays := []string{"lun.", "mar.", "mié.", "jue.", "vie.", "sáb.", "dom."}
+
+	lib := simpleNow()
+	lib.SetLocale("es")
+
+	assert.Equal(t, longDays, lib.WeekdaysShort(true))
+}
+
+func TestEsWeekdaysMinWithLocaleDow(t *testing.T) {
+	longDays := []string{"lu", "ma", "mi", "ju", "vi", "sá", "do"}
+
+	lib := simpleNow()
+	lib.SetLocale("es")
+
+	assert.Equal(t, longDays, lib.WeekdaysMin(true))
+}
+
+func TestEsWeekdayByNumberLocale(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+	lib.SetLocale("es")
+
+	assert.Equal("lunes", lib.WeekdayByNumber(true, 0))  // first dow per locale, Monday
+	assert.Equal("domingo", lib.WeekdayByNumber(0))      // first dow is Sunday, Sunday
+	assert.Equal("jueves", lib.WeekdayByNumber(true, 3)) // first dow per locale, Thursday
+	assert.Equal("miércoles", lib.WeekdayByNumber(3))    // first dow is Sunday, Wednesday
+	assert.Equal("sábado", lib.WeekdayByNumber(6))       // first dow is Sunday, Saturday
 }
 
 func TestEsFormat(t *testing.T) {
@@ -337,8 +454,9 @@ func TestEsFormatWeekdayParsing(t *testing.T) {
 func TestEsDayOfWeekParsing(t *testing.T) {
 	assert := assert.New(t)
 
-	date := "2020 08 19"
 	outputFormat := "YYYY MM DD"
+
+	date := simpleNow().Format(outputFormat)
 
 	assert.Equal(
 		simpleFormatLocale(date, outputFormat, "es").SetDay("lunes").Format(outputFormat),
@@ -566,6 +684,46 @@ func TestFrLocale(t *testing.T) {
 	assert.Equal(minDays, lib.WeekdaysMin())
 	assert.Equal(longMonths, lib.Months())
 	assert.Equal(shortMonths, lib.MonthsShort())
+}
+
+func TestFrWeekdaysWithLocaleDow(t *testing.T) {
+	longDays := []string{"lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"}
+
+	lib := simpleNow()
+	lib.SetLocale("fr")
+
+	assert.Equal(t, longDays, lib.Weekdays(true))
+}
+
+func TestFrWeekdaysShortWithLocaleDow(t *testing.T) {
+	longDays := []string{"lun.", "mar.", "mer.", "jeu.", "ven.", "sam.", "dim."}
+
+	lib := simpleNow()
+	lib.SetLocale("fr")
+
+	assert.Equal(t, longDays, lib.WeekdaysShort(true))
+}
+
+func TestFrWeekdaysMinWithLocaleDow(t *testing.T) {
+	longDays := []string{"lu", "ma", "me", "je", "ve", "sa", "di"}
+
+	lib := simpleNow()
+	lib.SetLocale("fr")
+
+	assert.Equal(t, longDays, lib.WeekdaysMin(true))
+}
+
+func TestFrWeekdayByNumberLocale(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+	lib.SetLocale("fr")
+
+	assert.Equal("lundi", lib.WeekdayByNumber(true, 0)) // first dow per locale, Monday
+	assert.Equal("dimanche", lib.WeekdayByNumber(0))    // first dow is Sunday, Sunday
+	assert.Equal("jeudi", lib.WeekdayByNumber(true, 3)) // first dow per locale, Thursday
+	assert.Equal("mercredi", lib.WeekdayByNumber(3))    // first dow is Sunday, Wednesday
+	assert.Equal("samedi", lib.WeekdayByNumber(6))      // first dow is Sunday, Saturday
 }
 
 func TestFrFormat(t *testing.T) {

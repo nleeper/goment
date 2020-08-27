@@ -149,6 +149,36 @@ func (ld *LocaleDetails) GetWeekdayMinNumber(wd string) int {
 	return -1
 }
 
+// GetWeekdays returns the list of weekdays for the locale. If the shifted param is true, the weekdays will
+// take the DayOfWeek for the locale and shift the weekdays so the first DayOfWeek is 0,
+func (ld *LocaleDetails) GetWeekdays(shifted bool) []string {
+	dow := 0
+	if shifted {
+		dow = ld.Week.Dow
+	}
+	return append(ld.Weekdays[dow:7], ld.Weekdays[0:dow]...)
+}
+
+// GetWeekdaysShort returns the list of short weekdays for the locale. If the shifted param is true, the short weekdays will
+// take the DayOfWeek for the locale and shift the short weekdays so the first DayOfWeek is 0,
+func (ld *LocaleDetails) GetWeekdaysShort(shifted bool) []string {
+	dow := 0
+	if shifted {
+		dow = ld.Week.Dow
+	}
+	return append(ld.WeekdaysShort[dow:7], ld.WeekdaysShort[0:dow]...)
+}
+
+// GetWeekdaysMin returns the list of min weekdays for the locale. If the shifted param is true, the min weekdays will
+// take the DayOfWeek for the locale and shift the min weekdays so the first DayOfWeek is 0,
+func (ld *LocaleDetails) GetWeekdaysMin(shifted bool) []string {
+	dow := 0
+	if shifted {
+		dow = ld.Week.Dow
+	}
+	return append(ld.WeekdaysMin[dow:7], ld.WeekdaysMin[0:dow]...)
+}
+
 func mapString(vs []string, f func(string) string) []string {
 	vsm := make([]string, len(vs))
 	for i, v := range vs {

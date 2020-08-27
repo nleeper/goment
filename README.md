@@ -688,30 +688,68 @@ g.Locale() // fr
 ```
 
 #### Weekdays
-Returns a list of weekdays in the current locale.
+Returns a list of weekdays in the current locale. If the parameter provided is a bool value of true,
+the list returned will take the current locale's first day of week into consideration. If no true parameter
+is provided, the first day will always be Sunday for the locale.
 ```
+g.SetLocale("en")
 g.Weekdays() // [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ]
+
+g.SetLocale("es")
+g.Weekdays(true) // ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
+g.Weekdays() // ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"]
 ```
 #### WeekdaysShort
-Returns a list of abbreviated weekdays in the current locale.
+Returns a list of abbreviated weekdays in the current locale. If the parameter provided is a bool value of true, the list returned will take the current locale's first day of week into consideration. If no true parameter is provided, the first day will always be Sunday for the locale.
 ```
+g.SetLocale("en")
 g.WeekdaysShort() // [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ]
+
+g.SetLocale("es")
+g.WeekdaysShort(true) // ["lun.", "mar.", "mié.", "jue.", "vie.", "sáb.", "dom."]
+g.WeedaysShort() // ["dom.", "lun.", "mar.", "mié.", "jue.", "vie.", "sáb."]
 ```
 #### WeekdaysMin
-Returns a list of abbreviated weekdays in the current locale.
+Returns a list of abbreviated weekdays in the current locale. If the parameter provided is a bool value of true, the list returned will take the current locale's first day of week into consideration. If no true parameter is provided, the first day will always be Sunday for the locale.
 ```
+g.SetLocale("en")
 g.WeekdaysMin() // [ "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" ]
+
+g.SetLocale("es")
+g.WeekdaysMin(true) // ["lu", "ma", "mi", "ju", "vi", "sá", "do"]
+g.WeedaysMin() // ["do", "lu", "ma", "mi", "ju", "vi", "sá"]
+```
+#### WeekdayByNumber
+Returns the weekday name by number in the current locale. If the first parameter is a bool value of true,
+the name returned will take the current locale's first day of week into consideration. If no true parameter is provided, the first day will always be Sunday for the locale.
+```
+g.SetLocale("en")
+g.WeekdayByNumber(0) // "Sunday"
+g.WeekdayByNumber(true, 0) // "Sunday"
+
+g.SetLocale("es")
+g.WeekdayByNumber(0) // "domingo"
+g.WeekdayByNumber(true, 0) // "lunes"
 ```
 #### Months
 Returns a list of months in the current locale.
 ```
 g.Months() // [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
 ```
-
+#### MonthByNumber
+Returns the month name by number in the current locale.
+```
+g.MonthByNumber(1) // "January"
+```
 #### MonthsShort
 Returns a list of abbreviated month names in the current locale.
 ```
 g.MonthsShort() // [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
+```
+#### MonthShortByNumber
+Returns the abbreviated month name by number in the current locale.
+```
+g.MonthShortByNumber(2) // "Feb"
 ```
 
 #### Adding a new locale
