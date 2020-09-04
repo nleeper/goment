@@ -26,6 +26,8 @@ func TestISOParsing(t *testing.T) {
 		testParseable{"20130208T093026.123", time.Date(2013, 2, 8, 9, 30, 26, calculateNanoseconds(123), time.UTC)},
 		testParseable{"2013-02-08 09:30:26.123-0600", time.Date(2013, 2, 8, 9, 30, 26, calculateNanoseconds(123), chicagoLocation())},
 		testParseable{"2013-02-08 09+0700", time.Date(2013, 2, 8, 9, 0, 0, 0, getLocation("Antarctica/Davis"))},
+		testParseable{"2013-02-08T09:30:26.123Z", time.Date(2013, 2, 8, 9, 30, 26, 123, time.UTC)},
+		testParseable{"2013-02-08T09:30:26Z", time.Date(2013, 2, 8, 9, 30, 26, 0, time.UTC)},
 		// testParseable{"2013-02-08 09+07:00", time.Date(2013, 2, 8, 9, 0, 0, 0, getLocation("America/Chicago"))}, // Need to support : in tz
 		// testParseable{"2013-02-08 09:30:26,123", time.Date(2013, 2, 8, 9, 30, 26, 123*1000*1000, chicagoLocation())}, comma in date string not supported by Go
 		// testParseable{"+002010-01-01", time.Date(2010, 1, 1, 0, 0, 0, 0, chicagoLocation())},
@@ -266,6 +268,14 @@ func TestParseWeekdayMismatch(t *testing.T) {
 
 	_, err2 := New("Thu 08-10-2017", "ddd MM-DD-YYYY") // 8-10-2017 is a Thursday
 	assert.NoError(err2)
+}
+
+func TestISO8601Timestamp(t *testing.T) {
+	assert := assert.New(t)
+
+	outputFormat := "YYYY-MM-DDTHH:mm:ssZ"
+
+	assert.Equal("2020-09-01T20:46:07+00:00", simpleFormat("2020-09-01T20:46:07Z", "YYYY-MM-DDTHH:mm:ssZ").Format(outputFormat))
 }
 
 func getLocation(locationName string) *time.Location {

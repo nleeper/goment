@@ -343,7 +343,10 @@ func parseISOString(date string) (time.Time, error) {
 		}
 
 		if match[4] != "" {
-			if regexps.TimeZoneRegex.MatchString(match[4]) {
+			timezoneMatch := regexps.TimeZoneRegex.FindString(match[4])
+			if timezoneMatch == "Z" {
+				tzFormat = "Z"
+			} else if timezoneMatch != "" {
 				tzFormat = "-0700"
 			} else {
 				return time.Time{}, errors.New("Invalid timezone format")
@@ -668,7 +671,10 @@ func handleOffset(input string, config *parseConfig, locale locales.LocaleDetail
 		offset := match[0]
 		parts := regexps.ChunkOffset.FindAllString(offset, -1)
 
-		minutes := (parseNumber(parts[1]) * 60) + parseNumber(parts[2])
+		minutes := 0
+		if len(parts) == 3 {
+			minutes = (parseNumber(parts[1]) * 60) + parseNumber(parts[2])
+		}
 		if minutes > 0 {
 			if parts[0] == "-" {
 				minutes *= -1
