@@ -43,7 +43,7 @@ func (g *Goment) startOfWeek() *Goment {
 }
 
 func (g *Goment) startOfISOWeek() *Goment {
-	return g.SetISOWeekday(1).startOfDay()
+	return g.SetDate(g.Date()-(g.ISOWeekday()-1)).StartOf("day")
 }
 
 func (g *Goment) startOfDay() *Goment {
