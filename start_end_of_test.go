@@ -39,9 +39,9 @@ func TestStartOfWeek(t *testing.T) {
 }
 
 func TestStartOfISOWeek(t *testing.T) {
-	start := time.Date(2017, 9, 4, 0, 0, 0, 0, time.UTC)
+	start := time.Date(2021, 4, 5, 0, 0, 0, 0, time.UTC)
 
-	lib := simpleString("2017-09-07 13:45:12")
+	lib := simpleString("2021-04-11 13:45:12")
 
 	lib.StartOf("isoWeek")
 	assert.Equal(t, simpleTime(start).Format(), lib.Format())
