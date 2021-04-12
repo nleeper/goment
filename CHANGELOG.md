@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.4.1] - 2021-04-11
+### Changed
+- Bugfix on `StartOf("isoWeek") not correct on Sunday #38` from kesyn
+
 ## [1.4.0] - 2020-09-04
 ### Added
 - Added MonthByNumber method to return the month name by number.
