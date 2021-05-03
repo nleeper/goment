@@ -755,6 +755,6 @@ g.MonthShortByNumber(2) // "Feb"
 #### Adding a new locale
 To add a new locale, there are a few steps to follow. You must first add a new file in the `/locales` folder. This should be named the locale code, e.g. `fr.go`. Inside this file, you need to create a new `LocaleDetails` object and provide the required values for month names, weekday names, ordinal function, etc. Please use one of the existing locales for reference.
 
-After you've created the locale file, add a line to `locale.go` in the `supportedLocales` map. This should be a map from the locale code to an instance of the `LocaleDetails` object you created above.
+After you've created the locale file, add a line to `locale.go` in the `SupportedLocales` map. This should be a map from the locale code to an instance of the `LocaleDetails` object you created above.
 
 Lastly, please add test cases to `locale_test.go` that test the different datetime formats, and the relative time formats.
