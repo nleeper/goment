@@ -45,6 +45,8 @@ func New(args ...interface{}) (*Goment, error) {
 			return fromUnixNanoseconds(v)
 		case *Goment:
 			return fromGoment(v)
+		case Goment:
+			return fromGoment(&v)
 		case DateTime:
 			return fromDateTime(v)
 		default:

@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+** [1.4.2] - 2021-06-08
+- Bugfix on `IsSame() and similar functions #40` from jftuga
+- IsSame and similar functions will now work if an object supplied is either a Goment struct or a pointer to a Goment struct.
+
 ## [1.4.1] - 2021-04-11
 ### Changed
 - Bugfix on `StartOf("isoWeek") not correct on Sunday #38` from kesyn
