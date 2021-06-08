@@ -1,7 +1,7 @@
 ![Go](https://github.com/nleeper/goment/workflows/Go/badge.svg)
 
 # Goment
-###### Current Version: 1.4.1
+###### Current Version: 1.4.2
 ###### [Changelog](CHANGELOG.md)
 
 Goment is a port of the popular Javascript datetime library [Moment.js](https://momentjs.com/). It follows the Moment.js API closely, with some changes to make it more Go-like (e.g. using nanoseconds instead of milliseconds). 
@@ -609,32 +609,32 @@ g.ToISOString() // 2016-04-12T19:46:47.286Z
 
 ### Query
 #### IsBefore
-IsBefore will check if a Goment is before another Goment.
+IsBefore will check if a Goment is before another Goment. Works with Goment struct or pointer to struct.
 ```
 g.IsBefore(goment.New()) // true
 ```
 #### IsAfter
-IsAfter will check if a Goment is after another Goment.
+IsAfter will check if a Goment is after another Goment. Works with Goment struct or pointer to struct.
 ```
 g.IsAfter(goment.New()) // false
 ```
 #### IsSame
-IsSame will check if a Goment is the same as another Goment.
+IsSame will check if a Goment is the same as another Goment. Works with Goment struct or pointer to struct. 
 ```
 g.IsSame(goment.New()) // true
 ```
 #### IsSameOrBefore
-IsSameOrBefore will check if a Goment is before or the same as another Goment.
+IsSameOrBefore will check if a Goment is before or the same as another Goment. Works with Goment struct or pointer to struct.
 ```
 g.IsSameOrBefore(goment.New()) // true
 ```
 #### IsSameOrAfter
-IsSameOrAfter will check if a Goment is after or the same as another Goment.
+IsSameOrAfter will check if a Goment is after or the same as another Goment. Works with Goment struct or pointer to struct.
 ```
 g.IsSameOrAfter(goment.New()) // false
 ```
 #### IsBetween
-IsBetween will check if a Goment is between two other Goments.
+IsBetween will check if a Goment is between two other Goments. Works with Goment struct or pointer to struct.
 ```
 g.IsBetween(goment.New(), goment.New().Add(5, 'days)) // true
 ```
@@ -654,7 +654,7 @@ IsTime will check if a variable is a time.Time object.
 g.IsTime(time.Now()) // true
 ```
 #### IsGoment
-IsGoment will check if a variable is a Goment object.
+IsGoment will check if a variable is a Goment object. Works with Goment struct or pointer to struct.
 ```
 g.IsGoment(goment.New()) // true
 ```

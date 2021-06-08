@@ -15,6 +15,7 @@ func TestIsGoment(t *testing.T) {
 	lib := simpleTime(testTime)
 
 	assert.True(IsGoment(lib))
+	assert.True(IsGoment(*lib))
 	assert.False(IsGoment("hi!"))
 	assert.False(IsGoment(testTime))
 }

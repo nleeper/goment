@@ -18,6 +18,10 @@ type dayOfYear struct {
 // IsGoment will check if a variable is a Goment object.
 func IsGoment(obj interface{}) bool {
 	_, ok := obj.(*Goment)
+	if !ok {
+		_, ok2 := obj.(Goment)
+		return ok2
+	}
 	return ok
 }
 

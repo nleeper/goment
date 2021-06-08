@@ -181,6 +181,16 @@ func TestIsSameNoUnits(t *testing.T) {
 	assert.True(t, lib.IsSame(lib), "goments are the same as themselves")
 }
 
+func TestIsSameDeref(t *testing.T) {
+	date := "2020-05-10"
+
+	lib := simpleString(date)
+	lib2 := *lib
+	lib3 := *lib
+
+	assert.True(t, lib2.IsSame(lib3), "deref goments are the same as themselves")
+}
+
 func TestIsSameYear(t *testing.T) {
 	scenario := getTestScenario("is_same", "year")
 
@@ -330,6 +340,16 @@ func TestIsSameOrBeforeNoUnits(t *testing.T) {
 	assert.True(t, lib.IsSameOrBefore(lib), "goments are the same as themselves")
 }
 
+func TestIsSameOrBeforeDeref(t *testing.T) {
+	date := "2020-05-10"
+
+	lib := simpleString(date)
+	lib2 := *lib
+	lib3 := *lib
+
+	assert.True(t, lib2.IsSameOrBefore(lib3), "deref goments are the same as themselves")
+}
+
 func TestIsSameOrBeforeYear(t *testing.T) {
 	scenario := getTestScenario("is_same_or_before", "year")
 
@@ -391,6 +411,16 @@ func TestIsSameOrAfterNoUnits(t *testing.T) {
 
 	runTestsForScenario(t, scenario, lib.IsSameOrAfter)
 	assert.True(t, lib.IsSameOrAfter(lib), "goments are the same as themselves")
+}
+
+func TestIsSameOrAfterDeref(t *testing.T) {
+	date := "2020-05-10"
+
+	lib := simpleString(date)
+	lib2 := *lib
+	lib3 := *lib
+
+	assert.True(t, lib2.IsSameOrAfter(lib3), "deref goments are the same as themselves")
 }
 
 func TestIsSameOrAfterYear(t *testing.T) {
