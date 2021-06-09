@@ -10,7 +10,8 @@ import (
 // DefaultLocaleCode is the default locale used by Goment if not set.
 const DefaultLocaleCode = "en"
 
-var supportedLocales = map[string]locales.LocaleDetails{
+// SupportedLocales exports the list of available locales.
+var SupportedLocales = map[string]locales.LocaleDetails{
 	"en": locales.EnLocale,
 	"es": locales.EsLocale,
 	"fr": locales.FrLocale,
@@ -152,7 +153,7 @@ func loadKnownLocale(localeCode string) locales.LocaleDetails {
 func loadLocale(localeCode string) (locales.LocaleDetails, error) {
 	normalizedCode := strings.ToLower(localeCode)
 
-	if locale, exist := supportedLocales[normalizedCode]; exist {
+	if locale, exist := SupportedLocales[normalizedCode]; exist {
 		return locale, nil
 	}
 
