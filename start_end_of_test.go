@@ -121,14 +121,22 @@ func TestEndOfMonth(t *testing.T) {
 
 func TestEndOfWeek(t *testing.T) {
 	assert.Equal(t, "Saturday", simpleNow().EndOf("week").Format("dddd"))
+
+	end := time.Date(2021, 9, 11, 23, 59, 59, 999999999, time.UTC)
+	lib := simpleString("2021-09-09 13:45:12")
+	lib.EndOf("week")
+
+	assert.Equal(t, simpleTime(end).Format(), lib.Format())
 }
 
 func TestEndOfISOWeek(t *testing.T) {
-	end := time.Date(2017, 9, 9, 0, 0, 0, 0, time.UTC)
+	assert.Equal(t, "Sunday", simpleNow().EndOf("isoWeek").Format("dddd"))
 
-	lib := simpleString("2017-09-03 13:45:12")
+	end := time.Date(2021, 9, 12, 23, 59, 59, 999999999, time.UTC)
 
+	lib := simpleString("2021-09-09 13:45:12")
 	lib.EndOf("isoWeek")
+
 	assert.Equal(t, simpleTime(end).Format(), lib.Format())
 }
 
