@@ -1,6 +1,7 @@
 package goment
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -31,7 +32,7 @@ func TestAddInvalidFirstArgTypeIgnored(t *testing.T) {
 	lib := simpleTime(testTime)
 
 	lib.Add("year")
-	assert.Equal(t, testTime, lib.ToTime())
+	assert.Equal(t, testTime, lib.ToTime(), fmt.Sprintf(`Date arguments must be equal, got %q, expected %q`, testTime, lib.ToTime()))
 }
 
 func TestAddInvalidSecondArgTypeIgnored(t *testing.T) {
