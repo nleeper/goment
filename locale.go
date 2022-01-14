@@ -11,9 +11,10 @@ import (
 const DefaultLocaleCode = "en"
 
 var supportedLocales = map[string]locales.LocaleDetails{
-	"en": locales.EnLocale,
-	"es": locales.EsLocale,
-	"fr": locales.FrLocale,
+	"en":    locales.EnLocale,
+	"es":    locales.EsLocale,
+	"fr":    locales.FrLocale,
+	"pt-br": locales.PtBRLocale,
 }
 
 var globalLocale = loadKnownLocale(DefaultLocaleCode)

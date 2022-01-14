@@ -360,44 +360,44 @@ func TestEsFormatParsing(t *testing.T) {
 	assert := assert.New(t)
 
 	formats := map[string][]string{
-		"YYYY-Q":                    []string{"2014-4"},
-		"MM-DD-YYYY":                []string{"12-02-1999"},
-		"DD-MM-YYYY":                []string{"12-02-1999"},
-		"DD/MM/YYYY":                []string{"12/02/1999"},
-		"DD_MM_YYYY":                []string{"12_02_1999"},
-		"DD:MM:YYYY":                []string{"12:02:1999"},
-		"D-M-YY":                    []string{"2-2-99"},
-		"Y":                         []string{"-0025"},
-		"YY":                        []string{"99"},
-		"DDD-YYYY":                  []string{"300-1999"},
-		"YYYY-DDD":                  []string{"1999-300"},
-		"YYYY MM Do":                []string{"2014 01 3º", "2015 11 21º"},
-		"MMM":                       []string{"abr"},
-		"MMMM":                      []string{"septiembre"},
-		"DD MMMM":                   []string{"11 septiembre"},
-		"Do MMMM":                   []string{"3º septiembre"},
-		"YYYY MMMM":                 []string{"2018 octubre"},
-		"D":                         []string{"3", "27"},
-		"DD":                        []string{"04", "23"},
-		"DDD":                       []string{"7", "300"},
-		"DDDD":                      []string{"008", "211", "312"},
-		"h":                         []string{"4"},
-		"H":                         []string{"1", "10", "23"},
-		"DD-MM-YYYY h:m:s":          []string{"12-02-1999 2:45:10"},
-		"DD-MM-YYYY h:m:s a":        []string{"12-02-1999 2:45:10 am", "12-02-1999 2:45:10 pm"},
-		"h:mm a":                    []string{"12:00 pm", "12:30 pm", "12:00 am", "12:30 am"},
-		"HH:mm":                     []string{"12:00"},
-		"kk:mm":                     []string{"12:00"},
-		"YYYY-MM-DDTHH:mm:ss":       []string{"2011-11-11T11:11:11"},
-		"MM-DD-YYYY [M]":            []string{"12-02-1999 M"},
-		"ddd MMM DD HH:mm:ss YYYY":  []string{"mié. abr 08 22:52:51 2009"},
-		"dddd MMM DD HH:mm:ss YYYY": []string{"sábado abr 11 22:52:51 2009"},
-		"HH:mm:ss":                  []string{"12:00:00", "12:30:11", "00:00:00"},
-		"kk:mm:ss":                  []string{"12:00:10", "12:30:42", "24:00:00", "09:00:00"},
-		"YYYY-MM-DD HH:mm:ss ZZ":    []string{"2000-05-15 17:08:00 -0700"},
-		"YYYY-MM-DD HH:mm Z":        []string{"2010-10-20 04:30 +00:00"},
-		"e":                         []string{"0", "5"},
-		"E":                         []string{"1", "7"},
+		"YYYY-Q":                    {"2014-4"},
+		"MM-DD-YYYY":                {"12-02-1999"},
+		"DD-MM-YYYY":                {"12-02-1999"},
+		"DD/MM/YYYY":                {"12/02/1999"},
+		"DD_MM_YYYY":                {"12_02_1999"},
+		"DD:MM:YYYY":                {"12:02:1999"},
+		"D-M-YY":                    {"2-2-99"},
+		"Y":                         {"-0025"},
+		"YY":                        {"99"},
+		"DDD-YYYY":                  {"300-1999"},
+		"YYYY-DDD":                  {"1999-300"},
+		"YYYY MM Do":                {"2014 01 3º", "2015 11 21º"},
+		"MMM":                       {"abr"},
+		"MMMM":                      {"septiembre"},
+		"DD MMMM":                   {"11 septiembre"},
+		"Do MMMM":                   {"3º septiembre"},
+		"YYYY MMMM":                 {"2018 octubre"},
+		"D":                         {"3", "27"},
+		"DD":                        {"04", "23"},
+		"DDD":                       {"7", "300"},
+		"DDDD":                      {"008", "211", "312"},
+		"h":                         {"4"},
+		"H":                         {"1", "10", "23"},
+		"DD-MM-YYYY h:m:s":          {"12-02-1999 2:45:10"},
+		"DD-MM-YYYY h:m:s a":        {"12-02-1999 2:45:10 am", "12-02-1999 2:45:10 pm"},
+		"h:mm a":                    {"12:00 pm", "12:30 pm", "12:00 am", "12:30 am"},
+		"HH:mm":                     {"12:00"},
+		"kk:mm":                     {"12:00"},
+		"YYYY-MM-DDTHH:mm:ss":       {"2011-11-11T11:11:11"},
+		"MM-DD-YYYY [M]":            {"12-02-1999 M"},
+		"ddd MMM DD HH:mm:ss YYYY":  {"mié. abr 08 22:52:51 2009"},
+		"dddd MMM DD HH:mm:ss YYYY": {"sábado abr 11 22:52:51 2009"},
+		"HH:mm:ss":                  {"12:00:00", "12:30:11", "00:00:00"},
+		"kk:mm:ss":                  {"12:00:10", "12:30:42", "24:00:00", "09:00:00"},
+		"YYYY-MM-DD HH:mm:ss ZZ":    {"2000-05-15 17:08:00 -0700"},
+		"YYYY-MM-DD HH:mm Z":        {"2010-10-20 04:30 +00:00"},
+		"e":                         {"0", "5"},
+		"E":                         {"1", "7"},
 		// "HH:mm:ss.S": []string{"00:30:00.1"},
 		// "HH:mm:ss SS":               "00:30:00 12",
 		// "HH:mm:ss SSS":              "00:30:00 123",
@@ -410,19 +410,19 @@ func TestEsFormatParsing(t *testing.T) {
 		// "kk:mm:ss S":   "24:30:00 7",
 		// "kk:mm:ss SS":  "24:30:00 78",
 		// "kk:mm:ss SSS": "24:30:00 789",
-		"X":    []string{"1234567890"},
-		"H Z":  []string{"6 -06:00"},
-		"H ZZ": []string{"5 -0700"},
-		"LT":   []string{"12:30"},
-		"LTS":  []string{"12:30:29"},
-		"L":    []string{"09/02/1999"},
-		"l":    []string{"9/2/1999"},
-		"LL":   []string{"2 de septiembre de 1999"},
-		"ll":   []string{"2 de sep de 1999"},
-		"LLL":  []string{"2 de septiembre de 1999 12:30"},
-		"lll":  []string{"2 de sep de 1999 12:30"},
-		"LLLL": []string{"jueves, 2 de septiembre de 1999 12:30"},
-		"llll": []string{"jue., 2 de sep de 1999 12:30"},
+		"X":    {"1234567890"},
+		"H Z":  {"6 -06:00"},
+		"H ZZ": {"5 -0700"},
+		"LT":   {"12:30"},
+		"LTS":  {"12:30:29"},
+		"L":    {"09/02/1999"},
+		"l":    {"9/2/1999"},
+		"LL":   {"2 de septiembre de 1999"},
+		"ll":   {"2 de sep de 1999"},
+		"LLL":  {"2 de septiembre de 1999 12:30"},
+		"lll":  {"2 de sep de 1999 12:30"},
+		"LLLL": {"jueves, 2 de septiembre de 1999 12:30"},
+		"llll": {"jue., 2 de sep de 1999 12:30"},
 	}
 
 	for format, dates := range formats {
@@ -905,44 +905,44 @@ func TestFrFormatParsing(t *testing.T) {
 	assert := assert.New(t)
 
 	formats := map[string][]string{
-		"YYYY-Q":                    []string{"2014-4"},
-		"MM-DD-YYYY":                []string{"12-02-1999"},
-		"DD-MM-YYYY":                []string{"12-02-1999"},
-		"DD/MM/YYYY":                []string{"12/02/1999"},
-		"DD_MM_YYYY":                []string{"12_02_1999"},
-		"DD:MM:YYYY":                []string{"12:02:1999"},
-		"D-M-YY":                    []string{"2-2-99"},
-		"Y":                         []string{"-0025"},
-		"YY":                        []string{"99"},
-		"DDD-YYYY":                  []string{"300-1999"},
-		"YYYY-DDD":                  []string{"1999-300"},
-		"YYYY MM Do":                []string{"2014 01 1er", "2015 11 21"},
-		"MMM":                       []string{"avr."},
-		"MMMM":                      []string{"septembre"},
-		"DD MMMM":                   []string{"11 septembre"},
-		"Do MMMM":                   []string{"3 septembre"},
-		"YYYY MMMM":                 []string{"2018 octobre"},
-		"D":                         []string{"3", "27"},
-		"DD":                        []string{"04", "23"},
-		"DDD":                       []string{"7", "300"},
-		"DDDD":                      []string{"008", "211", "312"},
-		"h":                         []string{"4"},
-		"H":                         []string{"1", "10", "23"},
-		"DD-MM-YYYY h:m:s":          []string{"12-02-1999 2:45:10"},
-		"DD-MM-YYYY h:m:s a":        []string{"12-02-1999 2:45:10 am", "12-02-1999 2:45:10 pm"},
-		"h:mm a":                    []string{"12:00 pm", "12:30 pm", "12:00 am", "12:30 am"},
-		"HH:mm":                     []string{"12:00"},
-		"kk:mm":                     []string{"12:00"},
-		"YYYY-MM-DDTHH:mm:ss":       []string{"2011-11-11T11:11:11"},
-		"MM-DD-YYYY [M]":            []string{"12-02-1999 M"},
-		"ddd MMM DD HH:mm:ss YYYY":  []string{"mer. avr. 08 22:52:51 2009"},
-		"dddd MMM DD HH:mm:ss YYYY": []string{"samedi avr. 11 22:52:51 2009"},
-		"HH:mm:ss":                  []string{"12:00:00", "12:30:11", "00:00:00"},
-		"kk:mm:ss":                  []string{"12:00:10", "12:30:42", "24:00:00", "09:00:00"},
-		"YYYY-MM-DD HH:mm:ss ZZ":    []string{"2000-05-15 17:08:00 -0700"},
-		"YYYY-MM-DD HH:mm Z":        []string{"2010-10-20 04:30 +00:00"},
-		"e":                         []string{"0", "5"},
-		"E":                         []string{"1", "7"},
+		"YYYY-Q":                    {"2014-4"},
+		"MM-DD-YYYY":                {"12-02-1999"},
+		"DD-MM-YYYY":                {"12-02-1999"},
+		"DD/MM/YYYY":                {"12/02/1999"},
+		"DD_MM_YYYY":                {"12_02_1999"},
+		"DD:MM:YYYY":                {"12:02:1999"},
+		"D-M-YY":                    {"2-2-99"},
+		"Y":                         {"-0025"},
+		"YY":                        {"99"},
+		"DDD-YYYY":                  {"300-1999"},
+		"YYYY-DDD":                  {"1999-300"},
+		"YYYY MM Do":                {"2014 01 1er", "2015 11 21"},
+		"MMM":                       {"avr."},
+		"MMMM":                      {"septembre"},
+		"DD MMMM":                   {"11 septembre"},
+		"Do MMMM":                   {"3 septembre"},
+		"YYYY MMMM":                 {"2018 octobre"},
+		"D":                         {"3", "27"},
+		"DD":                        {"04", "23"},
+		"DDD":                       {"7", "300"},
+		"DDDD":                      {"008", "211", "312"},
+		"h":                         {"4"},
+		"H":                         {"1", "10", "23"},
+		"DD-MM-YYYY h:m:s":          {"12-02-1999 2:45:10"},
+		"DD-MM-YYYY h:m:s a":        {"12-02-1999 2:45:10 am", "12-02-1999 2:45:10 pm"},
+		"h:mm a":                    {"12:00 pm", "12:30 pm", "12:00 am", "12:30 am"},
+		"HH:mm":                     {"12:00"},
+		"kk:mm":                     {"12:00"},
+		"YYYY-MM-DDTHH:mm:ss":       {"2011-11-11T11:11:11"},
+		"MM-DD-YYYY [M]":            {"12-02-1999 M"},
+		"ddd MMM DD HH:mm:ss YYYY":  {"mer. avr. 08 22:52:51 2009"},
+		"dddd MMM DD HH:mm:ss YYYY": {"samedi avr. 11 22:52:51 2009"},
+		"HH:mm:ss":                  {"12:00:00", "12:30:11", "00:00:00"},
+		"kk:mm:ss":                  {"12:00:10", "12:30:42", "24:00:00", "09:00:00"},
+		"YYYY-MM-DD HH:mm:ss ZZ":    {"2000-05-15 17:08:00 -0700"},
+		"YYYY-MM-DD HH:mm Z":        {"2010-10-20 04:30 +00:00"},
+		"e":                         {"0", "5"},
+		"E":                         {"1", "7"},
 		// "HH:mm:ss.S": []string{"00:30:00.1"},
 		// "HH:mm:ss SS":               "00:30:00 12",
 		// "HH:mm:ss SSS":              "00:30:00 123",
@@ -955,19 +955,19 @@ func TestFrFormatParsing(t *testing.T) {
 		// "kk:mm:ss S":   "24:30:00 7",
 		// "kk:mm:ss SS":  "24:30:00 78",
 		// "kk:mm:ss SSS": "24:30:00 789",
-		"X":    []string{"1234567890"},
-		"H Z":  []string{"6 -06:00"},
-		"H ZZ": []string{"5 -0700"},
-		"LT":   []string{"12:30"},
-		"LTS":  []string{"12:30:29"},
-		"L":    []string{"09/02/1999"},
-		"l":    []string{"9/2/1999"},
-		"LL":   []string{"2 septembre 1999"},
-		"ll":   []string{"2 sept. 1999"},
-		"LLL":  []string{"2 septembre 1999 12:30"},
-		"lll":  []string{"2 sept. 1999 12:30"},
-		"LLLL": []string{"jeudi 2 septembre 1999 12:30"},
-		"llll": []string{"jeu. 2 sept. 1999 12:30"},
+		"X":    {"1234567890"},
+		"H Z":  {"6 -06:00"},
+		"H ZZ": {"5 -0700"},
+		"LT":   {"12:30"},
+		"LTS":  {"12:30:29"},
+		"L":    {"09/02/1999"},
+		"l":    {"9/2/1999"},
+		"LL":   {"2 septembre 1999"},
+		"ll":   {"2 sept. 1999"},
+		"LLL":  {"2 septembre 1999 12:30"},
+		"lll":  {"2 sept. 1999 12:30"},
+		"LLLL": {"jeudi 2 septembre 1999 12:30"},
+		"llll": {"jeu. 2 sept. 1999 12:30"},
 	}
 
 	for format, dates := range formats {
@@ -1034,4 +1034,395 @@ func TestFrStartEndOfWeek(t *testing.T) {
 
 	assert.Equal(t, "lundi", now.StartOf("week").Format("dddd"))
 	assert.Equal(t, "dimanche", now.EndOf("week").Format("dddd"))
+}
+
+func TestPtBRLocale(t *testing.T) {
+	assert := assert.New(t)
+
+	longDays := []string{"domingo", "segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado"}
+	shortDays := []string{"dom", "seg", "ter", "qua", "qui", "sex", "sab"}
+	minDays := []string{"do", "se", "te", "qa", "qi", "se", "sa"}
+	shortMonths := []string{"jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"}
+	longMonths := []string{"janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"}
+
+	lib, _ := New()
+	lib.SetLocale("pt-br")
+
+	assert.Equal("pt-br", lib.Locale())
+	assert.Equal(longDays, lib.Weekdays())
+	assert.Equal(shortDays, lib.WeekdaysShort())
+	assert.Equal(minDays, lib.WeekdaysMin())
+	assert.Equal(longMonths, lib.Months())
+	assert.Equal(shortMonths, lib.MonthsShort())
+}
+
+func TestPtBRWeekdaysWithLocaleDow(t *testing.T) {
+	longDays := []string{"segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado", "domingo"}
+
+	lib := simpleNow()
+	lib.SetLocale("pt-br")
+
+	assert.Equal(t, longDays, lib.Weekdays(true))
+}
+
+func TestPtBRWeekdaysShortWithLocaleDow(t *testing.T) {
+	shortDays := []string{"seg", "ter", "qua", "qui", "sex", "sab", "dom"}
+
+	lib := simpleNow()
+	lib.SetLocale("pt-br")
+
+	assert.Equal(t, shortDays, lib.WeekdaysShort(true))
+}
+
+func TestPtBRWeekdaysMinWithLocaleDow(t *testing.T) {
+	minDays := []string{"se", "te", "qa", "qi", "se", "sa", "do"}
+
+	lib := simpleNow()
+	lib.SetLocale("pt-br")
+
+	assert.Equal(t, minDays, lib.WeekdaysMin(true))
+}
+
+func TestPtBRWeekdayByNumberLocale(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+	lib.SetLocale("pt-br")
+
+	assert.Equal("segunda-feira", lib.WeekdayByNumber(true, 0)) // first dow per locale, Monday
+	assert.Equal("domingo", lib.WeekdayByNumber(0))             // first dow is Sunday, Sunday
+	assert.Equal("quinta-feira", lib.WeekdayByNumber(true, 3))  // first dow per locale, Thursday
+	assert.Equal("quarta-feira", lib.WeekdayByNumber(3))        // first dow is Sunday, Wednesday
+	assert.Equal("sábado", lib.WeekdayByNumber(6))              // first dow is Sunday, Saturday
+}
+
+func TestPtBRFormat(t *testing.T) {
+	assert := assert.New(t)
+
+	formats := map[string]string{
+		"dddd, MMMM Do YYYY, h:mm:ss a": "domingo, fevereiro 14º 2010, 3:25:50 pm",
+		"ddd, hA":                       "dom, 3PM",
+		"M Mo MM MMMM MMM":              "2 2º 02 fevereiro fev",
+		"YYYY YY":                       "2010 10",
+		"D Do DD":                       "14 14º 14",
+		"d do dddd ddd dd":              "0 0º domingo dom do",
+		"DDD DDDo DDDD":                 "45 45º 045",
+		"w wo ww":                       "6 6º 06",
+		"YYYY-MMM-DD":                   "2010-fev-14",
+		"h hh":                          "3 03",
+		"H HH":                          "15 15",
+		"m mm":                          "25 25",
+		"s ss":                          "50 50",
+		"a A":                           "pm PM",
+		"[the] DDDo [day of the year]":  "the 45º day of the year",
+		"[the] DDDo [day of the year is after January]": "the 45º day of the year is after January",
+		"LT":            "15:25",
+		"LTS":           "15:25:50",
+		"L":             "14/02/2010",
+		"LL":            "14 de fevereiro de 2010",
+		"[today is] LL": "today is 14 de fevereiro de 2010",
+		"LLL":           "14 de fevereiro de 2010 15:25",
+		"LLLL":          "domingo, 14 de fevereiro de 2010 15:25",
+		"l":             "14/2/2010",
+		"ll":            "14 de fev de 2010",
+		"lll":           "14 de fev de 2010 15:25",
+		"llll":          "dom, 14 de fev de 2010 15:25",
+	}
+
+	lib := simpleTime(time.Date(2010, 2, 14, 15, 25, 50, 125000000, chicagoLocation()))
+	lib.SetLocale("pt-br")
+
+	for p, r := range formats {
+		assert.Equal(r, lib.Format(p), r)
+	}
+}
+
+func TestPtBRShortDayFormatWithUnicode(t *testing.T) {
+	lib := simpleTime(time.Date(2010, 2, 20, 15, 25, 50, 125000000, chicagoLocation()))
+	lib.SetLocale("es")
+
+	assert.Equal(t, "sá", lib.Format("dd"))
+}
+
+func TestPtBRRelativeTime(t *testing.T) {
+	assert := assert.New(t)
+
+	testTime := time.Date(2007, 1, 28, 0, 0, 0, 0, chicagoLocation())
+	lib := simpleTime(testTime)
+
+	lib.SetLocale("pt-br")
+
+	assert.Equal("há alguns segundos", lib.From(simpleTime(testTime).Add(44, "s")), "44 seconds = a few seconds ago")
+	assert.Equal("alguns segundos", lib.From(simpleTime(testTime).Add(44, "s"), true), "44 seconds = a few seconds")
+	assert.Equal("há um minuto", lib.From(simpleTime(testTime).Add(1, "m")), "1 minute = a minute ago")
+	assert.Equal("um minuto", lib.From(simpleTime(testTime).Add(1, "m"), true), "1 minute = a minute")
+	assert.Equal("há 44 minutos", lib.From(simpleTime(testTime).Add(44, "m")), "44 minutes = 44 minutes ago")
+	assert.Equal("44 minutos", lib.From(simpleTime(testTime).Add(44, "m"), true), "44 minutes = 44 minutes")
+	assert.Equal("há uma hora", lib.From(simpleTime(testTime).Add(1, "h")), "1 hour = an hour ago")
+	assert.Equal("uma hora", lib.From(simpleTime(testTime).Add(1, "h"), true), "1 hour = an hour")
+	assert.Equal("há 2 horas", lib.From(simpleTime(testTime).Add(2, "h")), "2 hours = 2 hours ago")
+	assert.Equal("2 horas", lib.From(simpleTime(testTime).Add(2, "h"), true), "2 hours = 2 hours")
+	assert.Equal("há um dia", lib.From(simpleTime(testTime).Add(1, "d")), "1 day = a day ago")
+	assert.Equal("um dia", lib.From(simpleTime(testTime).Add(1, "d"), true), "1 day = a day")
+	assert.Equal("há 5 dias", lib.From(simpleTime(testTime).Add(5, "d")), "5 days = 5 days ago")
+	assert.Equal("5 dias", lib.From(simpleTime(testTime).Add(5, "d"), true), "5 days = 5 days")
+	assert.Equal("há um mês", lib.From(simpleTime(testTime).Add(1, "M")), "1 month = a month ago")
+	assert.Equal("um mês", lib.From(simpleTime(testTime).Add(1, "M"), true), "1 month = a month")
+	assert.Equal("há 5 meses", lib.From(simpleTime(testTime).Add(5, "M")), "5 months = 5 months ago")
+	assert.Equal("5 meses", lib.From(simpleTime(testTime).Add(5, "M"), true), "5 months = 5 months")
+	assert.Equal("há um ano", lib.From(simpleTime(testTime).Add(1, "y")), "1 year = a year ago")
+	assert.Equal("um ano", lib.From(simpleTime(testTime).Add(1, "y"), true), "1 year = a year")
+	assert.Equal("há 5 anos", lib.From(simpleTime(testTime).Add(5, "y")), "5 years = 5 years ago")
+	assert.Equal("5 anos", lib.From(simpleTime(testTime).Add(5, "y"), true), "5 years = 5 years")
+}
+
+func TestPtBRCalendarDay(t *testing.T) {
+	assert := assert.New(t)
+
+	testTime := time.Date(2000, 12, 15, 12, 0, 0, 0, time.UTC)
+	timeNow = func() time.Time {
+		return testTime
+	}
+
+	SetLocale("pt-br")
+
+	refTime := simpleTime(testTime)
+
+	assert.Equal("hoje às 12:00", simpleGoment(refTime).Calendar(), "today at the same time")
+	assert.Equal("hoje às 12:25", simpleGoment(refTime).Add(25, "m").Calendar(), "now plus 25 min")
+	assert.Equal("hoje às 13:00", simpleGoment(refTime).Add(1, "h").Calendar(), "now plus 1 hour")
+	assert.Equal("amanhã às 12:00", simpleGoment(refTime).Add(1, "d").Calendar(), "tomorrow at the same time")
+	assert.Equal("hoje às 11:00", simpleGoment(refTime).Subtract(1, "h").Calendar(), "now minus 1 hour")
+	assert.Equal("ontem às 12:00", simpleGoment(refTime).Subtract(1, "d").Calendar(), "yesterday at the same time")
+
+	refTime = simpleTime(testTime)
+
+	assert.Equal("domingo às 12:00", refTime.Add(2, "d").Calendar(), "Today + 2 days current time")
+	refTime.StartOf("day")
+	assert.Equal("domingo às 0:00", refTime.Calendar(), "Today + 2 days beginning of day")
+	refTime.EndOf("day")
+	assert.Equal("domingo às 23:59", refTime.Calendar(), "Today + 2 days end of day")
+
+	refTime = simpleTime(testTime)
+
+	assert.Equal("na quarta-feira passada às 12:00", refTime.Subtract(2, "d").Calendar(), "Today - 2 days current time")
+	refTime.StartOf("day")
+	assert.Equal("na quarta-feira passada às 0:00", refTime.Calendar(), "Today - 2 days beginning of day")
+	refTime.EndOf("day")
+	assert.Equal("na quarta-feira passada às 23:59", refTime.Calendar(), "Today - 2 days end of day")
+
+	weeksAgo := simpleTime(testTime).Subtract(1, "w")
+	weeksFromNow := simpleTime(testTime).Add(1, "w")
+
+	assert.Equal("08/12/2000", weeksAgo.Calendar())
+	assert.Equal("22/12/2000", weeksFromNow.Calendar())
+
+	weeksAgo = simpleTime(testTime).Subtract(2, "w")
+	weeksFromNow = simpleTime(testTime).Add(2, "w")
+
+	assert.Equal("01/12/2000", weeksAgo.Calendar())
+	assert.Equal("29/12/2000", weeksFromNow.Calendar())
+
+	// Reset timeNow.
+	timeNow = time.Now
+
+	SetLocale("en")
+}
+
+func TestPtBRFormatParsing(t *testing.T) {
+	assert := assert.New(t)
+
+	formats := map[string][]string{
+		"YYYY-Q":                    {"2014-4"},
+		"MM-DD-YYYY":                {"12-02-1999"},
+		"DD-MM-YYYY":                {"12-02-1999"},
+		"DD/MM/YYYY":                {"12/02/1999"},
+		"DD_MM_YYYY":                {"12_02_1999"},
+		"DD:MM:YYYY":                {"12:02:1999"},
+		"D-M-YY":                    {"2-2-99"},
+		"Y":                         {"-0025"},
+		"YY":                        {"99"},
+		"DDD-YYYY":                  {"300-1999"},
+		"YYYY-DDD":                  {"1999-300"},
+		"YYYY MM Do":                {"2014 01 3º", "2015 11 21º"},
+		"MMM":                       {"abr"},
+		"MMMM":                      {"setembro"},
+		"DD MMMM":                   {"11 setembro"},
+		"Do MMMM":                   {"3º setembro"},
+		"YYYY MMMM":                 {"2018 outubro"},
+		"D":                         {"3", "27"},
+		"DD":                        {"04", "23"},
+		"DDD":                       {"7", "300"},
+		"DDDD":                      {"008", "211", "312"},
+		"h":                         {"4"},
+		"H":                         {"1", "10", "23"},
+		"DD-MM-YYYY h:m:s":          {"12-02-1999 2:45:10"},
+		"DD-MM-YYYY h:m:s a":        {"12-02-1999 2:45:10 am", "12-02-1999 2:45:10 pm"},
+		"h:mm a":                    {"12:00 pm", "12:30 pm", "12:00 am", "12:30 am"},
+		"HH:mm":                     {"12:00"},
+		"kk:mm":                     {"12:00"},
+		"YYYY-MM-DDTHH:mm:ss":       {"2011-11-11T11:11:11"},
+		"MM-DD-YYYY [M]":            {"12-02-1999 M"},
+		"ddd MMM DD HH:mm:ss YYYY":  {"qua abr 08 22:52:51 2009"},
+		"dddd MMM DD HH:mm:ss YYYY": {"sábado abr 11 22:52:51 2009"},
+		"HH:mm:ss":                  {"12:00:00", "12:30:11", "00:00:00"},
+		"kk:mm:ss":                  {"12:00:10", "12:30:42", "24:00:00", "09:00:00"},
+		"YYYY-MM-DD HH:mm:ss ZZ":    {"2000-05-15 17:08:00 -0700"},
+		"YYYY-MM-DD HH:mm Z":        {"2010-10-20 04:30 +00:00"},
+		"e":                         {"0", "5"},
+		"E":                         {"1", "7"},
+		"X":                         {"1234567890"},
+		"H Z":                       {"6 -06:00"},
+		"H ZZ":                      {"5 -0700"},
+		"LT":                        {"12:30"},
+		"LTS":                       {"12:30:29"},
+		"L":                         {"09/02/1999"},
+		"l":                         {"9/2/1999"},
+		"LL":                        {"2 de setembro de 1999"},
+		"ll":                        {"2 de set de 1999"},
+		"LLL":                       {"2 de setembro de 1999 12:30"},
+		"lll":                       {"2 de set de 1999 12:30"},
+		"LLLL":                      {"quinta-feira, 2 de setembro de 1999 12:30"},
+		"llll":                      {"dom, 14 de fev de 2010 15:25"},
+	}
+
+	for format, dates := range formats {
+		for _, date := range dates {
+			lib, _ := New(date, format, "pt-br")
+			assert.Equal(date, lib.Format(format), fmt.Sprintf("%v: %v", format, date))
+		}
+	}
+}
+
+func TestPtBRInvalidOrdinal(t *testing.T) {
+	date := "2014 01 4th"
+	format := "YYYY MM Do"
+
+	lib, _ := New(date, format, "pt-br")
+	assert.Equal(t, "2014 01 1º", lib.Format(format))
+}
+
+func TestPtBRFormatWeekdayParsing(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleFormatLocale("qua abr 08 22:52:51 2009", "ddd MMM DD HH:mm:ss YYYY", "pt-br")
+	assert.Equal("qua abr 08 22:52:51 2009", lib.Format("ddd MMM DD HH:mm:ss YYYY"))
+
+	lib2 := simpleFormatLocale("sábado abr 11 22:52:51 2009", "dddd MMM DD HH:mm:ss YYYY", "pt-br")
+	assert.Equal("sábado abr 11 22:52:51 2009", lib2.Format("dddd MMM DD HH:mm:ss YYYY"))
+}
+
+func TestPtBRDayOfWeekParsing(t *testing.T) {
+	assert := assert.New(t)
+
+	outputFormat := "YYYY MM DD"
+
+	date := simpleNow().Format(outputFormat)
+
+	assert.Equal(
+		simpleFormatLocale(date, outputFormat, "pt-br").SetDay("segunda-feira").Format(outputFormat),
+		simpleFormatLocale("0", "e", "pt-br").Format(outputFormat),
+	)
+	assert.Equal(
+		simpleFormatLocale(date, outputFormat, "pt-br").SetDay("quinta-feira").Format(outputFormat),
+		simpleFormatLocale("qui 0", "ddd e", "pt-br").Format(outputFormat),
+	)
+}
+
+func TestPtBRWeekYearParsing(t *testing.T) {
+	assert := assert.New(t)
+
+	outputFormat := "YYYY-MM-DD"
+
+	assert.Equal("2007-01-01", simpleFormatLocale("2007-01", "gggg-ww", "pt-br").Format(outputFormat))
+	assert.Equal("2007-12-31", simpleFormatLocale("2008-01", "gggg-ww", "pt-br").Format(outputFormat))
+	assert.Equal("2002-12-30", simpleFormatLocale("2003-01", "gggg-ww", "pt-br").Format(outputFormat))
+	assert.Equal("2008-12-29", simpleFormatLocale("2009-01", "gggg-ww", "pt-br").Format(outputFormat))
+	assert.Equal("2010-01-04", simpleFormatLocale("2010-01", "gggg-ww", "pt-br").Format(outputFormat))
+	assert.Equal("2011-01-03", simpleFormatLocale("2011-01", "gggg-ww", "pt-br").Format(outputFormat))
+	assert.Equal("2012-01-02", simpleFormatLocale("2012-01", "gggg-ww", "pt-br").Format(outputFormat))
+}
+
+func TestPtBRWeekWeekdayParsing(t *testing.T) {
+	assert := assert.New(t)
+
+	outputFormat := "YYYY MM DD"
+
+	assert.Equal("1999 09 16", simpleFormatLocale("1999 37 4", "GGGG WW EE", "pt-br").Format(outputFormat), "iso ignores locale")
+	assert.Equal("1999 09 19", simpleFormatLocale("1999 37 7", "GGGG WW EE", "pt-br").Format(outputFormat), "iso ignores locale")
+
+	assert.Equal("1999 09 13", simpleFormatLocale("1999 37 0", "gggg ww e", "pt-br").Format(outputFormat), "localized e uses local doy and dow: 0 = monday")
+	assert.Equal("1999 09 17", simpleFormatLocale("1999 37 4", "gggg ww e", "pt-br").Format(outputFormat), "localized e uses local doy and dow: 4 = friday")
+
+	assert.Equal("1999 09 13", simpleFormatLocale("1999 37 1", "gggg ww d", "pt-br").Format(outputFormat), "localized d uses 0-indexed days: 1 = monday")
+	assert.Equal("1999 09 13", simpleFormatLocale("1999 37 se", "gggg ww dd", "pt-br").Format(outputFormat), "localized d uses 0-indexed days: Mo")
+	assert.Equal("1999 09 13", simpleFormatLocale("1999 37 seg", "gggg ww ddd", "pt-br").Format(outputFormat), "localized d uses 0-indexed days: Mon")
+	assert.Equal("1999 09 13", simpleFormatLocale("1999 37 segunda-feira", "gggg ww dddd", "pt-br").Format(outputFormat), "localized d uses 0-indexed days: Monday")
+
+	assert.Equal("1999 09 16", simpleFormatLocale("1999 37 4", "gggg ww d", "pt-br").Format(outputFormat), "localized d uses 0-indexed days: 4")
+
+	// Sunday goes at the end of the week
+	assert.Equal("1999 09 19", simpleFormatLocale("1999 37 0", "gggg ww d", "pt-br").Format(outputFormat), "localized d uses 0-indexed days: 0 = sund")
+	assert.Equal("1999 09 19", simpleFormatLocale("1999 37 do", "gggg ww dd", "pt-br").Format(outputFormat), "localized d uses 0-indexed days: 0 = sund")
+}
+
+func TestPtBRWeekday(t *testing.T) {
+	assert := assert.New(t)
+
+	// es 1st day of week is Monday.
+	testTime := time.Date(2020, 7, 28, 18, 0, 0, 0, time.UTC) // Tuesday, July 28 2020
+
+	lib := simpleTime(testTime)
+	lib.SetLocale("pt-br")
+
+	assert.Equal(lib.Weekday(), 1)
+
+	lib2 := simpleString("2016-09-05") // Monday, September 5 2016
+	lib2.SetLocale("pt-br")
+
+	assert.Equal(0, lib2.Weekday()) // Monday
+	assert.Equal(5, lib2.Date())
+
+	lib2.SetWeekday(3) // Thursday
+	assert.Equal(8, lib2.Date())
+
+	lib2.SetWeekday(6) // Sunday
+	assert.Equal(11, lib2.Date())
+
+	lib2.SetDay("quarta-feira") // Wednesday
+	assert.Equal(14, lib2.Date())
+}
+
+func TestPtBRSetWeekdayRangeExceeded(t *testing.T) {
+	format := "YYYY-MM-DD"
+
+	lib := simpleFormatLocale("2020-07-26", format, "pt-br")
+	assert.Equal(t, lib.Format(format), "2020-07-26")
+
+	lib.SetWeekday(-7)
+	assert.Equal(t, lib.Format(format), "2020-07-13")
+
+	lib.SetWeekday(9)
+	assert.Equal(t, lib.Format(format), "2020-07-22")
+}
+
+func TestPtBRSetDayByName(t *testing.T) {
+	format := "YYYY-MM-DD"
+
+	lib := simpleFormatLocale("2016-09-04", format, "pt-br")
+	assert.Equal(t, 6, lib.Weekday())
+
+	lib.SetDay("quarta-feira") // Wednesday
+	assert.Equal(t, 7, lib.Date())
+
+	lib.SetDay("sábado") // Saturday
+	assert.Equal(t, 10, lib.Date())
+}
+
+func TestPtBRStartEndOfWeek(t *testing.T) {
+	now := simpleNow()
+	now.SetLocale("pt-br")
+
+	assert.Equal(t, "segunda-feira", now.StartOf("week").Format("dddd"))
+	assert.Equal(t, "domingo", now.EndOf("week").Format("dddd"))
 }
