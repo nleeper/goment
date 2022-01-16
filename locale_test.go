@@ -1426,3 +1426,314 @@ func TestPtBRStartEndOfWeek(t *testing.T) {
 	assert.Equal(t, "segunda-feira", now.StartOf("week").Format("dddd"))
 	assert.Equal(t, "domingo", now.EndOf("week").Format("dddd"))
 }
+
+func TestIdLocale(t *testing.T) {
+	assert := assert.New(t)
+
+	longDays := []string{"Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"}
+	shortDays := []string{"Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"}
+	minDays := []string{"Mg", "Sn", "Sl", "Rb", "Km", "Jm", "Sb"}
+	shortMonths := []string{"Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agt", "Sep", "Okt", "Nov", "Des"}
+	longMonths := []string{"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"}
+
+	lib := simpleNow()
+	lib.SetLocale("id")
+
+	assert.Equal("id", lib.Locale())
+	assert.Equal(longDays, lib.Weekdays())
+	assert.Equal(shortDays, lib.WeekdaysShort())
+	assert.Equal(minDays, lib.WeekdaysMin())
+	assert.Equal(longMonths, lib.Months())
+	assert.Equal(shortMonths, lib.MonthsShort())
+}
+
+func TestIdMonthByNumber(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+	lib.SetLocale("id")
+
+	assert.Equal("Januari", lib.MonthByNumber(1))
+	assert.Equal("Juni", lib.MonthByNumber(6))
+	assert.Equal("Desember", lib.MonthByNumber(12))
+}
+
+func TestIdMonthByNumberInvalid(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+
+	assert.Equal("", lib.MonthByNumber(0))
+	assert.Equal("", lib.MonthByNumber(13))
+}
+
+func TestIdMonthShortByNumber(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+	lib.SetLocale("id")
+
+	assert.Equal("Jan", lib.MonthShortByNumber(1))
+	assert.Equal("Jun", lib.MonthShortByNumber(6))
+	assert.Equal("Des", lib.MonthShortByNumber(12))
+}
+
+func TestIdMonthShortByNumberInvalid(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+	lib.SetLocale("id")
+
+	assert.Equal("", lib.MonthShortByNumber(0))
+	assert.Equal("", lib.MonthShortByNumber(13))
+}
+
+func TestIdWeekdayByNumber(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+	lib.SetLocale("id")
+
+	assert.Equal("Senin", lib.WeekdayByNumber(1))
+	assert.Equal("Rabu", lib.WeekdayByNumber(3))
+	assert.Equal("Sabtu", lib.WeekdayByNumber(6))
+}
+
+func TestIdWeekdayByNumberInvalid(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+	lib.SetLocale("id")
+
+	assert.Equal("", lib.WeekdayByNumber())
+	assert.Equal("", lib.WeekdayByNumber(6, 1, true))
+}
+
+func TestIdWeekdaysWithLocaleDow(t *testing.T) {
+	longDays := []string{"Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"}
+
+	lib := simpleNow()
+	lib.SetLocale("id")
+
+	assert.Equal(t, longDays, lib.Weekdays(true))
+}
+
+func TestIdWeekdaysShortWithLocaleDow(t *testing.T) {
+	shortDays := []string{"Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"}
+
+	lib := simpleNow()
+	lib.SetLocale("id")
+
+	assert.Equal(t, shortDays, lib.WeekdaysShort(true))
+}
+
+func TestIdWeekdaysMinWithLocaleDow(t *testing.T) {
+	minDays := []string{"Mg", "Sn", "Sl", "Rb", "Km", "Jm", "Sb"}
+
+	lib := simpleNow()
+	lib.SetLocale("id")
+
+	assert.Equal(t, minDays, lib.WeekdaysMin(true))
+}
+
+func TestIdWeekdayByNumberLocale(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+	lib.SetLocale("id")
+
+	assert.Equal("Minggu", lib.WeekdayByNumber(true, 0))
+	assert.Equal("Minggu", lib.WeekdayByNumber(0))
+	assert.Equal("Rabu", lib.WeekdayByNumber(true, 3))
+	assert.Equal("Rabu", lib.WeekdayByNumber(3))
+	assert.Equal("Sabtu", lib.WeekdayByNumber(6))
+}
+
+func TestIdFormat(t *testing.T) {
+	assert := assert.New(t)
+
+	formats := map[string]string{
+		"dddd, MMMM Do YYYY, h:mm:ss a": "Minggu, Februari 14 2010, 3:25:50 sore",
+		"ddd, hA":                       "Min, 3Sore",
+		"M Mo MM MMMM MMM":              "2 2 02 Februari Feb",
+		"YYYY YY":                       "2010 10",
+		"D Do DD":                       "14 14 14",
+		"d do dddd ddd dd":              "0 0 Minggu Min Mg",
+		"DDD DDDo DDDD":                 "45 45 045",
+		"w wo ww":                       "7 7 07",
+		"YYYY-MMM-DD":                   "2010-Feb-14",
+		"h hh":                          "3 03",
+		"H HH":                          "15 15",
+		"m mm":                          "25 25",
+		"s ss":                          "50 50",
+		"a A":                           "sore Sore",
+		"[the] DDDo [day of the year]":  "the 45 day of the year",
+		"[the] DDDo [day of the year is after January]": "the 45 day of the year is after January",
+		"LT":            "15:25",
+		"LTS":           "15:25:50",
+		"L":             "14/02/2010",
+		"LL":            "14 Februari 2010",
+		"[today is] LL": "today is 14 Februari 2010",
+		"LLL":           "14 Februari 2010, 15:25",
+		"LLLL":          "Minggu, 14 Februari 2010, 15:25",
+		"l":             "14/2/2010",
+		"ll":            "14 Feb 2010",
+		"lll":           "14 Feb 2010, 15:25",
+		"llll":          "Min, 14 Feb 2010, 15:25",
+	}
+
+	lib := simpleTime(time.Date(2010, 2, 14, 15, 25, 50, 125000000, chicagoLocation()))
+	lib.SetLocale("id")
+
+	for p, r := range formats {
+		assert.Equal(r, lib.Format(p), r)
+	}
+}
+
+func TestIdRelativeTime(t *testing.T) {
+	assert := assert.New(t)
+
+	testTime := time.Date(2007, 1, 28, 0, 0, 0, 0, chicagoLocation())
+	lib := simpleTime(testTime)
+
+	lib.SetLocale("id")
+
+	assert.Equal("beberapa detik yang lalu", lib.From(simpleTime(testTime).Add(44, "s")), "44 seconds = a few seconds ago")
+	assert.Equal("beberapa detik", lib.From(simpleTime(testTime).Add(44, "s"), true), "44 seconds = a few seconds")
+	assert.Equal("semenit yang lalu", lib.From(simpleTime(testTime).Add(1, "m")), "1 minute = a minute ago")
+	assert.Equal("semenit", lib.From(simpleTime(testTime).Add(1, "m"), true), "1 minute = a minute")
+	assert.Equal("44 menit yang lalu", lib.From(simpleTime(testTime).Add(44, "m")), "44 minutes = 44 minutes ago")
+	assert.Equal("44 menit", lib.From(simpleTime(testTime).Add(44, "m"), true), "44 minutes = 44 minutes")
+	assert.Equal("sejam yang lalu", lib.From(simpleTime(testTime).Add(1, "h")), "1 hour = an hour ago")
+	assert.Equal("sejam", lib.From(simpleTime(testTime).Add(1, "h"), true), "1 hour = an hour")
+	assert.Equal("2 jam yang lalu", lib.From(simpleTime(testTime).Add(2, "h")), "2 hours = 2 hours ago")
+	assert.Equal("2 jam", lib.From(simpleTime(testTime).Add(2, "h"), true), "2 hours = 2 hours")
+	assert.Equal("sehari yang lalu", lib.From(simpleTime(testTime).Add(1, "d")), "1 day = a day ago")
+	assert.Equal("sehari", lib.From(simpleTime(testTime).Add(1, "d"), true), "1 day = a day")
+	assert.Equal("5 hari yang lalu", lib.From(simpleTime(testTime).Add(5, "d")), "5 days = 5 days ago")
+	assert.Equal("5 hari", lib.From(simpleTime(testTime).Add(5, "d"), true), "5 days = 5 days")
+	assert.Equal("sebulan yang lalu", lib.From(simpleTime(testTime).Add(1, "M")), "1 month = a month ago")
+	assert.Equal("sebulan", lib.From(simpleTime(testTime).Add(1, "M"), true), "1 month = a month")
+	assert.Equal("5 bulan yang lalu", lib.From(simpleTime(testTime).Add(5, "M")), "5 months = 5 months ago")
+	assert.Equal("5 bulan", lib.From(simpleTime(testTime).Add(5, "M"), true), "5 months = 5 months")
+	assert.Equal("setahun yang lalu", lib.From(simpleTime(testTime).Add(1, "y")), "1 year = a year ago")
+	assert.Equal("setahun", lib.From(simpleTime(testTime).Add(1, "y"), true), "1 year = a year")
+	assert.Equal("5 tahun yang lalu", lib.From(simpleTime(testTime).Add(5, "y")), "5 years = 5 years ago")
+	assert.Equal("5 tahun", lib.From(simpleTime(testTime).Add(5, "y"), true), "5 years = 5 years")
+}
+
+func TestIdCalendarDay(t *testing.T) {
+	assert := assert.New(t)
+
+	testTime := time.Date(2000, 12, 15, 12, 0, 0, 0, time.UTC)
+	timeNow = func() time.Time {
+		return testTime
+	}
+
+	SetLocale("id")
+
+	refTime := simpleTime(testTime)
+
+	assert.Equal("hari ini pukul 12:00", simpleGoment(refTime).Calendar(), "today at the same time")
+	assert.Equal("hari ini pukul 12:25", simpleGoment(refTime).Add(25, "m").Calendar(), "now plus 25 min")
+	assert.Equal("hari ini pukul 13:00", simpleGoment(refTime).Add(1, "h").Calendar(), "now plus 1 hour")
+	assert.Equal("besok pukul 12:00", simpleGoment(refTime).Add(1, "d").Calendar(), "tomorrow at the same time")
+	assert.Equal("hari ini pukul 11:00", simpleGoment(refTime).Subtract(1, "h").Calendar(), "now minus 1 hour")
+	assert.Equal("kemarin pukul 12:00", simpleGoment(refTime).Subtract(1, "d").Calendar(), "yesterday at the same time")
+
+	refTime = simpleTime(testTime)
+
+	assert.Equal("Minggu pukul 12:00", refTime.Add(2, "d").Calendar(), "Today + 2 days current time")
+	refTime.StartOf("day")
+	assert.Equal("Minggu pukul 00:00", refTime.Calendar(), "Today + 2 days beginning of day")
+	refTime.EndOf("day")
+	assert.Equal("Minggu pukul 23:59", refTime.Calendar(), "Today + 2 days end of day")
+
+	refTime = simpleTime(testTime)
+
+	assert.Equal("Rabu lalu pukul 12:00", refTime.Subtract(2, "d").Calendar(), "Today - 2 days current time")
+	refTime.StartOf("day")
+	assert.Equal("Rabu lalu pukul 00:00", refTime.Calendar(), "Today - 2 days beginning of day")
+	refTime.EndOf("day")
+	assert.Equal("Rabu lalu pukul 23:59", refTime.Calendar(), "Today - 2 days end of day")
+
+	weeksAgo := simpleTime(testTime).Subtract(1, "w")
+	weeksFromNow := simpleTime(testTime).Add(1, "w")
+
+	assert.Equal("08/12/2000", weeksAgo.Calendar())
+	assert.Equal("22/12/2000", weeksFromNow.Calendar())
+
+	weeksAgo = simpleTime(testTime).Subtract(2, "w")
+	weeksFromNow = simpleTime(testTime).Add(2, "w")
+
+	assert.Equal("01/12/2000", weeksAgo.Calendar())
+	assert.Equal("29/12/2000", weeksFromNow.Calendar())
+
+	// Reset timeNow.
+	timeNow = time.Now
+
+	SetLocale("en")
+}
+
+func TestIdFormatParsing(t *testing.T) {
+	assert := assert.New(t)
+
+	formats := map[string][]string{
+		"YYYY-Q":                    {"2014-4"},
+		"MM-DD-YYYY":                {"12-02-1999"},
+		"DD-MM-YYYY":                {"12-02-1999"},
+		"DD/MM/YYYY":                {"12/02/1999"},
+		"DD_MM_YYYY":                {"12_02_1999"},
+		"DD:MM:YYYY":                {"12:02:1999"},
+		"D-M-YY":                    {"2-2-99"},
+		"Y":                         {"-0025"},
+		"YY":                        {"99"},
+		"DDD-YYYY":                  {"300-1999"},
+		"YYYY-DDD":                  {"1999-300"},
+		"YYYY MM Do":                {"2014 01 3", "2015 11 21"},
+		"MMM":                       {"Jan"},
+		"MMMM":                      {"Januari"},
+		"DD MMMM":                   {"11 Januari"},
+		"Do MMMM":                   {"3 Januari"},
+		"YYYY MMMM":                 {"2018 Januari"},
+		"D":                         {"3", "27"},
+		"DD":                        {"04", "23"},
+		"DDD":                       {"7", "300"},
+		"DDDD":                      {"008", "211", "312"},
+		"h":                         {"4"},
+		"H":                         {"1", "10", "23"},
+		"DD-MM-YYYY h:m:s":          {"12-02-1999 2:45:10"},
+		"DD-MM-YYYY h:m:s a":        {"12-02-1999 2:45:10 dini hari", "12-02-1999 2:45:10 dini hari"},
+		"h:mm a":                    {"12:00 siang", "12:30 siang", "12:00 siang", "12:30 siang"},
+		"HH:mm":                     {"12:00"},
+		"kk:mm":                     {"12:00"},
+		"YYYY-MM-DDTHH:mm:ss":       {"2011-11-11T11:11:11"},
+		"MM-DD-YYYY [M]":            {"12-02-1999 M"},
+		"ddd MMM DD HH:mm:ss YYYY":  {"Kam Jan 08 22:52:51 2009"},
+		"dddd MMM DD HH:mm:ss YYYY": {"Minggu Jan 11 22:52:51 2009"},
+		"HH:mm:ss":                  {"12:00:00", "12:30:11", "00:00:00"},
+		"kk:mm:ss":                  {"12:00:10", "12:30:42", "24:00:00", "09:00:00"},
+		"YYYY-MM-DD HH:mm:ss ZZ":    {"2000-05-15 17:08:00 -0700"},
+		"YYYY-MM-DD HH:mm Z":        {"2010-10-20 04:30 +00:00"},
+		"X":                         {"1234567890"},
+		"H Z":                       {"6 -06:00"},
+		"H ZZ":                      {"5 -0700"},
+		"LT":                        {"12:30"},
+		"LTS":                       {"12:30:29"},
+		"L":                         {"09/02/1999"},
+		"l":                         {"9/2/1999"},
+		"LL":                        {"2 Januari 1999"},
+		"ll":                        {"2 Jan 1999"},
+		"LLL":                       {"2 Januari 1999, 12:30"},
+		"lll":                       {"2 Jan 1999, 12:30"},
+		"LLLL":                      {"Sabtu, 2 Januari 1999, 12:30"},
+		"llll":                      {"Kam, 14 Jan 2010, 15:25"},
+	}
+
+	for format, dates := range formats {
+		for _, date := range dates {
+			lib, _ := New(date, format, "id")
+			assert.Equal(date, lib.Format(format), fmt.Sprintf("%v: %v", format, date))
+		}
+	}
+}

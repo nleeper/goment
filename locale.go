@@ -15,6 +15,7 @@ var supportedLocales = map[string]locales.LocaleDetails{
 	"es":    locales.EsLocale,
 	"fr":    locales.FrLocale,
 	"pt-br": locales.PtBRLocale,
+	"id":    locales.IdLocale,
 }
 
 var globalLocale = loadKnownLocale(DefaultLocaleCode)
