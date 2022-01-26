@@ -1560,7 +1560,7 @@ func TestIdFormat(t *testing.T) {
 		"D Do DD":                       "14 14 14",
 		"d do dddd ddd dd":              "0 0 Minggu Min Mg",
 		"DDD DDDo DDDD":                 "45 45 045",
-		"w wo ww":                       "7 7 07",
+		"w wo ww":                       "8 8 08",
 		"YYYY-MMM-DD":                   "2010-Feb-14",
 		"h hh":                          "3 03",
 		"H HH":                          "15 15",
@@ -1582,12 +1582,20 @@ func TestIdFormat(t *testing.T) {
 		"llll":          "Min, 14 Feb 2010, 15:25",
 	}
 
-	lib := simpleTime(time.Date(2010, 2, 14, 15, 25, 50, 125000000, chicagoLocation()))
+	testTime := time.Date(2010, 2, 14, 15, 25, 50, 125000000, chicagoLocation())
+	timeNow = func() time.Time {
+		return testTime
+	}
+
+	lib := simpleTime(testTime)
 	lib.SetLocale("id")
 
 	for p, r := range formats {
 		assert.Equal(r, lib.Format(p), r)
 	}
+
+	timeNow = time.Now
+	SetLocale("en")
 }
 
 func TestIdRelativeTime(t *testing.T) {
