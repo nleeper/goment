@@ -1582,20 +1582,12 @@ func TestIdFormat(t *testing.T) {
 		"llll":          "Min, 14 Feb 2010, 15:25",
 	}
 
-	testTime := time.Date(2010, 2, 14, 15, 25, 50, 125000000, chicagoLocation())
-	timeNow = func() time.Time {
-		return testTime
-	}
-
-	lib := simpleTime(testTime)
+	lib := simpleTime(time.Date(2010, 2, 14, 15, 25, 50, 125000000, time.UTC))
 	lib.SetLocale("id")
 
 	for p, r := range formats {
 		assert.Equal(r, lib.Format(p), r)
 	}
-
-	timeNow = time.Now
-	SetLocale("en")
 }
 
 func TestIdRelativeTime(t *testing.T) {
