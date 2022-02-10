@@ -14,6 +14,7 @@ var supportedLocales = map[string]locales.LocaleDetails{
 	"en":    locales.EnLocale,
 	"es":    locales.EsLocale,
 	"fr":    locales.FrLocale,
+	"fa":	 locales.FaLocale,
 	"pt-br": locales.PtBRLocale,
 	"id":    locales.IdLocale,
 }
