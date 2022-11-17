@@ -1737,3 +1737,109 @@ func TestIdFormatParsing(t *testing.T) {
 		}
 	}
 }
+
+func TestRuLocale(t *testing.T) {
+	assert := assert.New(t)
+
+	longDays := []string{"Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"}
+	shortDays := []string{"Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"}
+	minDays := []string{"Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"}
+	shortMonths := []string{"Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"}
+	longMonths := []string{"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"}
+
+	lib := simpleNow()
+	assert.Equal(DefaultLocaleCode, lib.Locale())
+
+	lib.SetLocale("ru")
+
+	assert.Equal("ru", lib.Locale())
+	assert.Equal(longDays, lib.Weekdays())
+	assert.Equal(shortDays, lib.WeekdaysShort())
+	assert.Equal(minDays, lib.WeekdaysMin())
+	assert.Equal(longMonths, lib.Months())
+	assert.Equal(shortMonths, lib.MonthsShort())
+}
+
+func TestRuMonthByNumber(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+	lib.SetLocale("ru")
+
+	assert.Equal("Январь", lib.MonthByNumber(1))
+	assert.Equal("Июнь", lib.MonthByNumber(6))
+	assert.Equal("Декабрь", lib.MonthByNumber(12))
+}
+
+func TestRuMonthByNumberInvalid(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+
+	assert.Equal("", lib.MonthByNumber(0))
+	assert.Equal("", lib.MonthByNumber(13))
+}
+
+func TestRuMonthShortByNumber(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+	lib.SetLocale("ru")
+
+	assert.Equal("Янв", lib.MonthShortByNumber(1))
+	assert.Equal("Июн", lib.MonthShortByNumber(6))
+	assert.Equal("Дек", lib.MonthShortByNumber(12))
+}
+
+func TestRuMonthShortByNumberInvalid(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+	lib.SetLocale("ru")
+
+	assert.Equal("", lib.MonthShortByNumber(0))
+	assert.Equal("", lib.MonthShortByNumber(13))
+}
+
+func TestRuWeekdayByNumber(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+	lib.SetLocale("ru")
+
+	assert.Equal("Понедельник", lib.WeekdayByNumber(1))
+	assert.Equal("Среда", lib.WeekdayByNumber(3))
+	assert.Equal("Суббота", lib.WeekdayByNumber(6))
+}
+
+func TestRuWeekdayByNumberLocale(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+	lib.SetLocale("ru")
+
+	assert.Equal("Понедельник", lib.WeekdayByNumber(true, 0))
+	assert.Equal("Понедельник", lib.WeekdayByNumber(1))
+	assert.Equal("Среда", lib.WeekdayByNumber(true, 2))
+	assert.Equal("Среда", lib.WeekdayByNumber(3))
+	assert.Equal("Суббота", lib.WeekdayByNumber(6))
+}
+
+func TestRuWeekdayByNumberInvalid(t *testing.T) {
+	assert := assert.New(t)
+
+	lib := simpleNow()
+	lib.SetLocale("ru")
+
+	assert.Equal("", lib.WeekdayByNumber())
+	assert.Equal("", lib.WeekdayByNumber(6, 1, true))
+}
+
+func TestRuWeekdaysWithLocaleDow(t *testing.T) {
+	longDays := []string{"Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"}
+
+	lib := simpleNow()
+	lib.SetLocale("ru")
+
+	assert.Equal(t, longDays, lib.Weekdays(true))
+}
