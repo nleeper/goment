@@ -2,6 +2,7 @@ package goment
 
 import (
 	"errors"
+	"sync"
 	"time"
 
 	"github.com/nleeper/goment/locales"
@@ -27,10 +28,14 @@ type DateTime struct {
 	Location   *time.Location
 }
 
+var loadReplacementsOnce sync.Once = sync.Once{}
+
 // New creates an instance of the Goment library.
 func New(args ...interface{}) (*Goment, error) {
-	loadParseReplacements()
-	loadFormatReplacements()
+	loadReplacementsOnce.Do(func() {
+		loadParseReplacements()
+		loadFormatReplacements()
+	})
 
 	switch len(args) {
 	case 0:
