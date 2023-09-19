@@ -27,7 +27,7 @@ func (d diff) InWeeks() int {
 
 // InDays returns the duration in number of days.
 func (d diff) InDays() int {
-	return absFloor(math.Floor(float64(d.InHours()) / 24))
+	return absFloor(float64(d.InHours()) / 24)
 }
 
 // InHours returns the duration in number of hours.
