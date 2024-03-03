@@ -19,12 +19,12 @@ Goment is still a work in progress. Please feel free to fork and contribute miss
 ### Parsing
 #### From now
 Creates a Goment object for the current local time returned by time.Now().
-```
+```golang
 goment.New()
 ```
 #### From ISO 8601 string
 Creates a Goment object by parsing the string as an ISO 8601 date time. The timezone will be UTC unless supplied in the string.
-```
+```golang
 goment.New('2013-02-08 09:30:26')
 ```
 #### From string + format
@@ -52,7 +52,7 @@ Goment's parser is strict, and defaults to being accurate over forgiving.
 | Quarter | Q | 1 2 3 4 |
 | Unix Timestamp | X | 1360013296 |
 | | | |
-```
+```golang
 goment.New("12-25-1995", "MM-DD-YYYY")
 ```
 
@@ -108,33 +108,33 @@ As of Goment 1.2.0, a locale can now be supplied to parse locale-specific dates 
 | Month name, day of month, day of week, year, time	| LLLL |	Thursday, September 4, 1986 8:30 PM |
 | | llll | Thu, Sep 4, 1986 8:30 PM |
 | | | |
-```
+```golang
 goment.New("2 de septiembre de 1999 12:30", "LLL", "es")
 ```
 
 #### From Unix nanoseconds
 Creates a Goment object from the Unix nanoseconds since the Unix Epoch.
-```
+```golang
 goment.New(time.Now().UnixNano())
 ```
 #### From Unix seconds
 Creates a Goment object from the Unix timestamp (seconds since the Unix Epoch).
-```
+```golang
 goment.Unix(1318781876)
 ```
 #### From [Go Time object](https://golang.org/pkg/time/#Time)
 Creates a Goment object from the supplied Go time object.
-```
+```golang
 goment.New(time.Date(2015, 11, 10, 5, 30, 0, 0, time.UTC))
 ```
 #### From a Goment clone
 Creates a Goment object from a clone of the supplied Goment object.
-```
+```golang
 goment.New(goment.New('2011-05-08'))
 ```
 #### From Goment DateTime object
 Creates a Goment object from a Goment DateTime object.
-``` 
+```golang
 goment.New(DateTime{
     Year:  2015,
     Month: 1,
@@ -157,57 +157,57 @@ Get is a string getter using the supplied units.
 * ms, millisecond, milliseconds
 * ns, nanosecond, nanoseconds
 
-```
+```golang
 g.Get('hours') // 22
 ```
 #### Nanosecond
 Gets the nanoseconds of the Goment object.
-```
+```golang
 g.Nanosecond() // 600
 ```
 #### Millisecond
 Gets the milliseconds of the Goment object.
-```
+```golang
 g.Millisecond() // 330
 ```
 #### Second
 Gets the seconds of the Goment object.
-```
+```golang
 g.Second() // 33
 ```
 #### Minute
 Gets the minutes of the Goment object.
-```
+```golang
 g.Minute() // 45
 ```
 #### Hour
 Gets the hours of the Goment object.
-```
+```golang
 g.Hour() // 22
 ```
 #### Day of Month
 Gets the day of the month of the Goment object.
-```
+```golang
 g.Date() // 19
 ```
 #### Day of Week
 Gets the day of the week (Sunday = 0...) of the Goment object.
-```
+```golang
 g.Day() // 2
 ```
 #### Day of Week (Locale Aware)
 Gets the day of the week according to the locale of the Goment object.
-```
+```golang
 g.Weekday() // 3
 ```
 #### ISO Day of Week
 Gets the Goment object ISO day of the week with 1 being Monday and 7 being Sunday.
-```
+```golang
 g.ISOWeekday() // 4
 ```
 #### Day of Year
 Gets the day of the year of the Goment object.
-```
+```golang
 g.DayOfYear() // 100
 ```
 #### Week of Year
@@ -220,27 +220,27 @@ For example, in the United States, Sunday is the first day of the week. The week
 In France, Monday is the first day of the week, and the week with January 4th is the first week of the year.
 
 The output of `g.Week()` will depend on the locale for the Goment object.
-```
+```golang
 g.Week() // 52
 ```
 #### Week of Year (ISO)
 Gets the ISO week of the year of the Goment object.
-```
+```golang
 g.ISOWeek() // 6
 ```
 #### Month
 Gets the month (January = 1...) of the Goment object.
-```
+```golang
 g.Month() // 2
 ```
 #### Quarter
 Gets the quarter (1 to 4) of the Goment object.
-```
+```golang
 g.Quarter() // 1
 ```
 #### Year
 Gets the year of the Goment object.
-```
+```golang
 g.Year() // 2013
 ```
 #### Week Year
@@ -249,22 +249,22 @@ Gets the week-year according to the Goment object's locale.
 Because the first day of the first week does not always fall on the first day of the year, sometimes the week-year will differ from the month year.
 
 For example, in the US, the week that contains Jan 1 is always the first week. In the US, weeks also start on Sunday. If Jan 1 was a Monday, Dec 31 would belong to the same week as Jan 1, and thus the same week-year as Jan 1. Dec 30 would have a different week-year than Dec 31.
-```
+```golang
 g.WeekYear() // 2012
 ```
 #### Week Year (ISO)
 Gets the ISO week-year of the Goment object.
-```
+```golang
 g.ISOWeekYear() // 2013
 ```
 #### Weeks In Year
 Gets the number of weeks according to locale in the current Goment's year.
-```
+```golang
 g.WeekYear() // 53
 ```
 #### Weeks In Year (ISO)
 Gets the number of weeks in the current Goment's year, according to ISO weeks.
-```
+```golang
 g.ISOWeeksInYear() // 52
 ```
 #### Set
@@ -280,100 +280,100 @@ Set is a generic setter, accepting units as the first argument, and value as the
 * ms, millisecond, milliseconds
 * ns, nanosecond, nanoseconds
 
-```
+```golang
 g.Set(6, 'hour')
 ```
 #### Set Nanosecond
 Sets the nanoseconds for the Goment object.
-```
+```golang
 g.SetNanosecond(60000)
 ```
 #### Set Millisecond
 Sets the milliseconds for the Goment object.
-```
+```golang
 g.SetMillisecond(5000)
 ```
 #### Set Second
 Sets the seconds for the Goment object.
-```
+```golang
 g.SetSecond(55)
 ```
 #### Set Minute
 Sets the minutes for the Goment object.
-```
+```golang
 g.SetMinute(15)
 ```
 #### Set Hour
 Sets the hours for the Goment object.
-```
+```golang
 g.SetHour(5)
 ```
 #### Set Day of Month
 Sets the day of the month for the Goment object. If the date passed in is greater than the number of days in the month, then the day is set to the last day of the month.
-```
+```golang
 g.SetDate(21)
 ```
 #### Set Day of Week
 Sets the day of the week (Sunday = 0...) for the Goment object.
-```
+```golang
 g.SetDay(1)
 ```
 As of 1.3.0, a day name is also supported. This is parsed in the Goment object's locale.
-```
+```golang
 g.SetDay("lunes")
 ```
 #### Set Day of Week (Locale Aware)
 Sets the day of the week according to the locale of the Goment object.
 
 If the locale assigns Monday as the first day of the week, `g.SetWeekday(0)` will be Monday. If Sunday is the first day of the week, `g.SetWeekday(0)` will be Sunday.
-```
+```golang
 g.SetWeekday(0)
 ```
 #### Set Day of Week (ISO)
 Sets the Goment object ISO day of the week with 1 being Monday and 7 being Sunday.
-```
+```golang
 g.SetISOWeekday(2)
 ```
 #### Set Day of Year
 Sets the day of the year for the Goment object. For non-leap years, 366 is treated as 365.
-```
+```golang
 g.SetDayOfYear(100)
 ```
 #### Set Week of Year
 Sets the localized week of the year for the Goment object. When setting the week of the year, the day of the week is retained.
-```
+```golang
 get.SetWeek(50)
 ```
 #### Set Week of Year (ISO)
 Sets the ISO week of the year for the Goment object.
 
 When setting the week of the year, the day of the week is retained.
-```
+```golang
 g.SetISOWeek(52)
 ```
 #### Set Month
 Sets the month (January = 1...) of the Goment object. If new month has less days than current month, the date is pinned to the end of the target month.
-```
+```golang
 g.SetMonth(3)
 ```
 #### Set Quarter
 Sets the quarter (1 to 4) for the Goment object.
-```
+```golang
 g.SetQuarter(2)
 ```
 #### Set Year
 Sets the year for the Goment object.
-```
+```golang
 g.SetYear(2010)
 ```
 #### Set Week Year
 Sets the week-year according to the Goment object's locale.
-```
+```golang
 g.SetWeekYear(2014)
 ```
 #### Set Week Year (ISO)
 Sets the ISO week-year of the Goment object.
-```
+```golang
 g.SetISOWeekYear(2018)
 ```
 
@@ -393,7 +393,7 @@ Add mutates the Goment object by adding time. The first argument can either be a
 * ms, millisecond, milliseconds
 * ns, nanosecond, nanoseconds
 
-```
+```golang
 g.Add(1, 'days')
 ```
 #### Subtract
@@ -411,7 +411,7 @@ Subtract mutates the Goment object by subtracting time. The first argument can e
 * ms, millisecond, milliseconds
 * ns, nanosecond, nanoseconds
 
-```
+```golang
 g.Subtract(5, 'hours')
 ```
 #### StartOf
@@ -428,7 +428,7 @@ StartOf mutates the Goment object by setting it to the start of a unit of time.
 * m, minute, minutes
 * s, second, seconds
 
-```
+```golang
 g.StartOf('day')
 ```
 #### EndOf
@@ -444,27 +444,27 @@ EndOf mutates the Goment object by setting it to the end of a unit of time.
 * m, minute, minutes
 * s, second, seconds
 
-```
+```golang
 g.EndOf('month')
 ```
 #### Local
 Local will set the Goment to use local time.
-```
+```golang
 g.Local()
 ```
 #### UTC
 UTC will set the Goment to use UTC time.
-```
+```golang
 g.UTC()
 ```
 #### UTCOffset
 UTCOffset gets the Goment's UTC offset in minutes.
-```
+```golang
 g.UTCOffset() // -6
 ```
 #### SetUTCOffset
 SetUTCOffset sets the Goment's UTC offset in minutes. If the offset is less than 16 and greater than -16, the value is treated as hours.
-```
+```golang
 g.SetUTCOffset(120)
 ```
 
@@ -538,124 +538,124 @@ Format takes a string of tokens and replaces them with their corresponding value
 | Month name, day of month, day of week, year, time	| LLLL |	Thursday, September 4, 1986 8:30 PM |
 | | llll | Thu, Sep 4, 1986 8:30 PM |
 
-```
+```golang
 g.Format('YYYY-MM-DD') // 2020-05-01
 ```
 #### FromNow
 FromNow returns the relative time from now to the Goment time.
-```
+```golang
 g.FromNow() // 10 months ago
 ```
 #### ToNow
 ToNow returns the relative time to now to the Goment time.
-```
+```golang
 g.ToNow() // minutes
 ```
 #### From
 From returns the relative time from the supplied time to the Goment time.
-```
+```golang
 g.From(goment.New()) // a day ago
 ```
 #### To
 To returns the relative time from the Goment time to the supplied time.
-```
+```golang
 g.To(goment.New()) // in a minute
 ```
 #### Calendar
 Calendar displays time relative to a given referenceTime (defaults to now).
-```
+```golang
 g.Calendar() // Today at 1:00 PM
 ```
 #### Difference
 Diff returns the difference between two Goments as an integer.
-```
+```golang
 g.Diff(goment.New(), 'years') // 3
 ```
 #### ToUnix
 ToUnix returns the Unix timestamp (the number of seconds since the Unix Epoch).
-```
+```golang
 g.ToUnix() // 1360310950
 ```
 #### DaysInMonth
 DaysInMonth returns the number of days in the set month.
-```
+```golang
 g.DaysInMonth() // 28
 ```
 #### ToTime
 ToTime returns the time.Time object that is wrapped by Goment.
-```
+```golang
 g.ToTime()
 ```
 #### ToArray
 ToArray returns an array that mirrors the parameters from time.Date().
-```
+```golang
 g.ToArray() // [2013 2 8 8 9 10 0]
 ```
 #### ToDateTime
 ToDateTime returns a Goment.DateTime struct.
-```
+```golang
 g.ToDateTime() // {2013 2 8 8 9 10 0 UTC}
 ```
 #### ToString
 ToString returns an English string representation of the Goment time.
-```
+```golang
 g.ToString() // 2006-01-02 15:04:05.999999999 -0700 MST
 ```
 #### ToISOString
 ToISOString returns a ISO8601 standard representation of the Goment time.
-```
+```golang
 g.ToISOString() // 2016-04-12T19:46:47.286Z
 ```
 
 ### Query
 #### IsBefore
 IsBefore will check if a Goment is before another Goment. Works with Goment struct or pointer to struct.
-```
+```golang
 g.IsBefore(goment.New()) // true
 ```
 #### IsAfter
 IsAfter will check if a Goment is after another Goment. Works with Goment struct or pointer to struct.
-```
+```golang
 g.IsAfter(goment.New()) // false
 ```
 #### IsSame
 IsSame will check if a Goment is the same as another Goment. Works with Goment struct or pointer to struct. 
-```
+```golang
 g.IsSame(goment.New()) // true
 ```
 #### IsSameOrBefore
 IsSameOrBefore will check if a Goment is before or the same as another Goment. Works with Goment struct or pointer to struct.
-```
+```golang
 g.IsSameOrBefore(goment.New()) // true
 ```
 #### IsSameOrAfter
 IsSameOrAfter will check if a Goment is after or the same as another Goment. Works with Goment struct or pointer to struct.
-```
+```golang
 g.IsSameOrAfter(goment.New()) // false
 ```
 #### IsBetween
 IsBetween will check if a Goment is between two other Goments. Works with Goment struct or pointer to struct.
-```
+```golang
 g.IsBetween(goment.New(), goment.New().Add(5, 'days)) // true
 ```
 #### IsDST
 IsDST checks if the Goment is in daylight saving time.
-```
+```golang
 g.IsDST() // true
 ```
 #### IsLeapYear
 IsLeapYear returns true if the Goment's year is a leap year, and false if it is not.
-```
+```golang
 g.IsLeapYear() // false
 ```
 #### IsTime
 IsTime will check if a variable is a time.Time object.
-```
+```golang
 g.IsTime(time.Now()) // true
 ```
 #### IsGoment
 IsGoment will check if a variable is a Goment object. Works with Goment struct or pointer to struct.
-```
+```golang
 g.IsGoment(goment.New()) // true
 ```
 
@@ -668,22 +668,22 @@ In addition to assigning a global locale, you can assign a locale to a specific 
 
 #### Changing global locale
 By default, Goment uses English (United States) locale strings. Changing the global locale does not affect existing Goment instances.
-```
+```golang
 SetLocale("es")
 ```
 
 #### Getting global locale
-```
+```golang
 Locale() // es
 ```
 
 #### Changing locale for Goment instance
-```
+```golang
 g.SetLocale("fr")
 ```
 
 #### Getting locale for Goment instance
-```
+```golang
 g.Locale() // fr
 ```
 
@@ -691,7 +691,7 @@ g.Locale() // fr
 Returns a list of weekdays in the current locale. If the parameter provided is a bool value of true,
 the list returned will take the current locale's first day of week into consideration. If no true parameter
 is provided, the first day will always be Sunday for the locale.
-```
+```golang
 g.SetLocale("en")
 g.Weekdays() // [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ]
 
@@ -701,7 +701,7 @@ g.Weekdays() // ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes"
 ```
 #### WeekdaysShort
 Returns a list of abbreviated weekdays in the current locale. If the parameter provided is a bool value of true, the list returned will take the current locale's first day of week into consideration. If no true parameter is provided, the first day will always be Sunday for the locale.
-```
+```golang
 g.SetLocale("en")
 g.WeekdaysShort() // [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ]
 
@@ -711,7 +711,7 @@ g.WeedaysShort() // ["dom.", "lun.", "mar.", "mié.", "jue.", "vie.", "sáb."]
 ```
 #### WeekdaysMin
 Returns a list of abbreviated weekdays in the current locale. If the parameter provided is a bool value of true, the list returned will take the current locale's first day of week into consideration. If no true parameter is provided, the first day will always be Sunday for the locale.
-```
+```golang
 g.SetLocale("en")
 g.WeekdaysMin() // [ "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" ]
 
@@ -722,7 +722,7 @@ g.WeedaysMin() // ["do", "lu", "ma", "mi", "ju", "vi", "sá"]
 #### WeekdayByNumber
 Returns the weekday name by number in the current locale. If the first parameter is a bool value of true,
 the name returned will take the current locale's first day of week into consideration. If no true parameter is provided, the first day will always be Sunday for the locale.
-```
+```golang
 g.SetLocale("en")
 g.WeekdayByNumber(0) // "Sunday"
 g.WeekdayByNumber(true, 0) // "Sunday"
@@ -733,22 +733,22 @@ g.WeekdayByNumber(true, 0) // "lunes"
 ```
 #### Months
 Returns a list of months in the current locale.
-```
+```golang
 g.Months() // [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
 ```
 #### MonthByNumber
 Returns the month name by number in the current locale.
-```
+```golang
 g.MonthByNumber(1) // "January"
 ```
 #### MonthsShort
 Returns a list of abbreviated month names in the current locale.
-```
+```golang
 g.MonthsShort() // [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
 ```
 #### MonthShortByNumber
 Returns the abbreviated month name by number in the current locale.
-```
+```golang
 g.MonthShortByNumber(2) // "Feb"
 ```
 
